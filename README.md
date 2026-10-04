@@ -52,7 +52,9 @@ one-line change. `.github/workflows/pages.yml` builds, runs `check:docs` and `ch
   `Flow` (cox event stream, ketch install/rollback), `Picture`, `Icon`.
 - `src/data/showcase.ts` — terminal scripts and flow steps; `src/lib/site.ts` — brand, themes, license,
   caveats, Pro placeholders; `src/lib/catalog.ts` — collection helpers.
-- `src/styles/global.css` — the design system; `src/scripts/main.ts` — progressive enhancement.
+- `src/styles/global.css` — the design system (it imports the brand tokens and components from
+  `@pyrlyn/brand`, see [Brand tokens](#brand-tokens)); `src/styles/base.css` — reset and background mesh;
+  `src/scripts/main.ts` — progressive enhancement.
 - `src/styles/tailwind.css` — Tailwind v4 (`@tailwindcss/vite`), theme + utilities only, **no preflight**,
   default theme replaced by the tokens from `global.css`. Responsive fixes go in markup as prefixed
   utilities (`tw:max-sm:px-3!`); the `tw:` prefix keeps them apart from the site's own class names
@@ -77,6 +79,45 @@ buttons and a "Copied" toast, tables in scrollable regions, callouts for blockqu
 Accessibility: AA contrast, skip link, 44px targets, keyboard hotspots and menu (Esc closes), content
 visible without JS, opaque fallbacks for `prefers-reduced-transparency` and missing `backdrop-filter`,
 `prefers-reduced-motion` stops drift, float, tilt, typing, parallax, step reveals and hover motion.
+
+## Brand tokens
+
+The visual identity comes from the [`pyrlyn/brand`](https://github.com/pyrlyn/brand) package,
+installed from git and pinned to a tag in `package.json`:
+
+```json
+"@pyrlyn/brand": "github:pyrlyn/brand#v0.2.0"
+```
+
+What the site takes from it:
+
+| From `@pyrlyn/brand` | Used in | What |
+|---|---|---|
+| `tokens.css` | `global.css` (1st import) | rtok brand variables `--rtok-*` (dark default, light via `[data-theme="light"]`/`.light`). Exposed for use; the page CSS does not reference them yet, and no landing variable or selector shares their names. |
+| `landing/tokens.css` | `global.css` (2nd import) | This site's tokens under their usual names: `--accent` (home `#4C8DFF`), `--accent-2`, `--accent-light`, `--bg`, `--fg*`, `--muted`, `--subtle`, `--surface*`, `--glass-*`, `--hairline*`, `--blur-*`, `--shadow-*`, `--glow`, `--focus`, `--font-sans`, `--font-mono`, `--fs-*`, `--s-1`…`--s-10`, `--r-*`, `--container`, `--ease`. Page themes still override `--accent` / `--accent-2` / `--accent-light` / `--bg` on `<html>` (`src/lib/site.ts`). |
+| `landing/components.css` | `global.css` (after `base.css`) | `.glass`, `.shine`, `.btn*`, `.eyebrow`, `.pill`, `.badge*`, `.brand`, `.brand__mark`, `.pyrlyn-by*` |
+| `logo/pyrlyn/pyrlyn-{lockup,mark}-on-dark.svg?raw` | `Base.astro` | The header logo, inlined (paper → `currentColor`, amber cursor → `--accent`) |
+| `logo/pyrlyn/*` | `public/pyrlyn/` | Favicons, apple-touch icon and the `<img>` lockups, copied by `npm run brand` |
+| `logo/listepo/listepo-favicon.svg` | `public/favicon.svg` | The previous (unlinked) favicon, kept at its old URL |
+
+`npm run brand` (run automatically by `predev` and `prebuild`) calls the package's `pyrlyn-brand-copy`
+helper, which copies the logo files into `public/pyrlyn/` and `public/favicon.svg`; both are git-ignored,
+so the URLs (`/landing/pyrlyn/pyrlyn-favicon.svg` …) stay the same without keeping copies in this repo.
+The import order in `global.css` (brand tokens → `base.css` → brand components → page CSS) is the cascade
+order the rules had when they lived in this repo, so moving them changed nothing visually.
+
+Not from the package: Inter is self-hosted through `@fontsource-variable/inter` and the monospace stack
+is system fonts; product art, hero images and OG cards in `public/images/` (drawn by `art/`) are content.
+
+To update: tag a new version in `pyrlyn/brand`, then
+
+```sh
+npm install github:pyrlyn/brand#vX.Y.Z   # updates package.json and package-lock.json
+npm run build                             # check the pages before committing
+```
+
+and commit `package.json` and `package-lock.json`. To change a landing token or brand component, edit
+`themes/landing/` in `pyrlyn/brand` (not `global.css`) and bump the tag.
 
 ## Placeholders
 
