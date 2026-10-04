@@ -7,3 +7,7 @@ _prototype-vite/dist/
 .scaffold-import.tgz
 .transfer/
 .agents/
+
+# Copied from @pyrlyn/brand by `npm run brand` (predev/prebuild)
+public/pyrlyn/
+public/favicon.svg
