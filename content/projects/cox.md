@@ -4,7 +4,7 @@ tagline: A modular terminal coding agent in Rust with a safe, event-driven core.
 repo: https://github.com/pyrlyn/cox
 homepage: https://pyrlyn.github.io/cox/
 install: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/cox/releases/latest/download/cox-installer.sh | sh"
-version: "0.1.0"
+version: "0.1.2-test.1"
 accent: "#A8E06C"
 accentLight: "#3D8B3A"
 order: 3
