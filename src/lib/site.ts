@@ -58,8 +58,9 @@ export const THEMES: Record<ThemeKey, Theme> = {
   ketch: { accent: "#3DDCB0", accent2: "#5CC8FF", accentLight: "#0F6F5C", bg: "#06100F", images: "ketch", heroAlt: "" },
 };
 
-/** README facts the synced site copy does not carry but the page must keep. Source: each repo's README.md.
+/** README facts the synced site copy does not carry but the page must keep, worded as a plain note (no "From the README:" prefix).
+ *  Source: each repo's README.md (rtok: the limitations list).
  *  (cox's "under active development, APIs not stable" status is already in its synced Overview and the hero status card.) */
 export const CAVEATS: Partial<Record<ThemeKey, string>> = {
-  rtok: "From the README: estimates are a chars-per-token heuristic until matched with provider usage, and no live A/B cost reduction has been established yet.",
+  rtok: "Token savings are estimates from a chars-per-token heuristic until matched against provider usage. No live A/B cost reduction has been established yet.",
 };

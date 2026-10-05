@@ -326,14 +326,17 @@
 .breadcrumb { display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--muted); }
 .breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
 .breadcrumb a:hover { color: var(--fg-strong); }
+/* Neutral fact note (e.g. README caveats): page surface + hairline, accent icon. Not a warning, so no
+   --accent-2 / --danger tint (rtok's --accent-2 is coral and read as an alarm). Icon centre = first line centre:
+   (fs-sm 14px × 1.6 = 22.4px line − 16px icon) / 2 ≈ 3px. */
 .note {
   display: flex; gap: var(--s-3); align-items: flex-start; max-width: 64ch;
   padding: var(--s-3) var(--s-4); border-radius: var(--r-md);
-  font-size: var(--fs-sm); line-height: 1.6; color: var(--fg);
-  background: color-mix(in oklch, var(--accent-2) 8%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent-2) 32%, transparent);
+  font-size: var(--fs-sm); line-height: 1.6; color: var(--muted);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
 }
-.note svg { flex: none; margin-top: 3px; color: var(--accent-2); }
+.note svg { flex: none; margin-top: 3px; color: var(--accent); }
 .install-hero { width: 100%; max-width: 560px; }
 .install-hero .code { font-size: .78rem; }
 .prose { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-4); max-width: 68ch; font-size: var(--fs-lg); line-height: 1.7; color: var(--muted); }
