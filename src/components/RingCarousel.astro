@@ -5,7 +5,7 @@
 import Icon from "./Icon.astro";
 import Picture from "./Picture.astro";
 import { u } from "../lib/site";
-import { proFor } from "../lib/catalog";
+import { proFor, versionLabel } from "../lib/catalog";
 import type { CollectionEntry } from "astro:content";
 interface Hotspot { tool: string; label: string; text: string }
 interface Props { tools: CollectionEntry<"projects">[]; hotspots: Hotspot[] }
@@ -22,7 +22,7 @@ const n = tools.length;
             <div class="ring__face">
               <a class="ring__card glass glass--thick" href={u(`/${t.id}/`)} draggable="false">
                 <Picture class="ring__art" dir={t.id} name="prop" widths={[400]} sizes="240px" w={400} h={400} loading="eager" />
-                <span class="ring__meta"><span class="badge badge--version" style={`--accent:${t.data.accent}`}>v{t.data.version}</span></span>
+                <span class="ring__meta"><span class="badge badge--version" style={`--accent:${t.data.accent}`}>{versionLabel(t)}</span></span>
                 <strong class="ring__title">{t.data.title}<span>.</span></strong>
                 <span class="ring__tag">{t.data.tagline}</span>
                 <span class="ring__foot"><span>Free · Pro {proFor(t).price}*</span><Icon name="arrow" size={16} /></span>

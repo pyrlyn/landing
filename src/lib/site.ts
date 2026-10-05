@@ -26,9 +26,10 @@ export const FREE_HIGHLIGHTS: Record<string, string[]> = {
   rtok: ["Hooks, MCP server and API proxy", "Lossless archive with rtok expand", "Local stats and doctor"],
   cox: ["Terminal UI and headless runs", "Sandboxed tools by default", "Local cost ledger"],
   ketch: ["Install from any GitHub release", "SHA-256 verification", "Rollback, lock and sync"],
+  runa: ["Fit check before any download", "Local GGUF and cloud APIs, same controls", "OpenAI-compatible runa serve"],
 };
 
-/** One license wording for all three projects (rtok, cox and ketch share the same triple license). */
+/** One license wording for every project (rtok, cox, ketch and runa share the same triple license). */
 export const LICENSE = {
   short: "GPLv3, royalty-free or commercial — your choice",
   items: [
@@ -38,7 +39,7 @@ export const LICENSE = {
   ],
 };
 
-export type ThemeKey = "home" | "rtok" | "cox" | "ketch";
+export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa";
 
 export interface Theme {
   accent: string;
@@ -56,6 +57,7 @@ export const THEMES: Record<ThemeKey, Theme> = {
   rtok: { accent: "#5CE1FF", accent2: "#FF6B4A", accentLight: "#0B7FA0", bg: "#06101A", images: "rtok", heroAlt: "" },
   cox: { accent: "#A8E06C", accent2: "#6FD6B4", accentLight: "#3D8B3A", bg: "#070B09", images: "cox", heroAlt: "" },
   ketch: { accent: "#3DDCB0", accent2: "#5CC8FF", accentLight: "#0F6F5C", bg: "#06100F", images: "ketch", heroAlt: "" },
+  runa: { accent: "#E85A3C", accent2: "#FFB088", accentLight: "#C94830", bg: "#120E0C", images: "runa", heroAlt: "" },
 };
 
 /** README facts the synced site copy does not carry but the page must keep. Source: each repo's README.md.

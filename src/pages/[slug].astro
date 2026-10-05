@@ -44,12 +44,14 @@ const iconSets: Record<string, string[]> = {
   rtok: ["plug", "terminal", "undo", "graph", "layers", "chart", "box", "eye"],
   cox: ["stream", "shield", "undo", "coin", "layers", "terminal", "editor", "eye"],
   ketch: ["download", "shield", "app", "tree", "history", "lock", "plug", "box"],
+  runa: ["chart", "cloud", "graph", "plug", "eye", "stream", "layers", "box"],
 };
 const icons = iconSets[slug] ?? iconSets.rtok;
 const heroAlt: Record<string, string> = {
   rtok: "Abstract 4 by 4 grid of glass cubes: cyan cubes kept, dim cubes thinned, dashed coral outlines cut.",
   cox: "Abstract interlocking glass rings glowing lime green on a dark background.",
   ketch: "Abstract floating glass app window listing verified packages, with glass spheres around it.",
+  runa: "The runa mark: a geometric rune stave with an ember glowing at its base, on warm charcoal glass.",
 };
 const pageTitle = productTitle(entry);
 const pageDescription = productDescription(entry, s["overview"]);
@@ -65,7 +67,7 @@ const jsonLd = [
     <div class="hero__copy">
       <nav class="breadcrumb" aria-label="Breadcrumb"><a href={u("/#catalog")}>Open source</a><span aria-hidden="true">/</span><span aria-current="page">{d.title}</span></nav>
       <div class="p-meta">
-        <span class="badge badge--version">v{d.version}</span>
+        <span class="badge badge--version">{d.status ?? `v${d.version}`}</span>
         <span class="badge badge--line">{LICENSE.short}</span>
         <a class="pyrlyn-by pyrlyn-by--hero tw:max-[459px]:pl-0! tw:max-[459px]:before:hidden!" href="https://github.com/pyrlyn" aria-label="Pyrlyn"><span class="pyrlyn-by__by" aria-hidden="true">by</span><img src={u("/pyrlyn/pyrlyn-lockup-on-dark.svg")} alt="" width="122" height="28" /></a>
       </div>
@@ -107,6 +109,15 @@ const jsonLd = [
               <div class="status-row"><span>APIs</span><b>Not yet stable</b></div>
               <div class="status-row"><span>Release</span><b>v{d.version}</b></div>
               <div class="status-row"><span>Surfaces</span><b>TUI · headless · ACP · MCP</b></div>
+            </div>
+          </div>
+        )}
+        {slug === "runa" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip float">
+              <span><span class="dim">$</span> runa fit --recommend --use code</span>
+              <span class="ok">✓ memory + speed forecast · before any download</span>
+              <span><span class="dim">$</span> <span class="caret"></span></span>
             </div>
           </div>
         )}

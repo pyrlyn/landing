@@ -4,7 +4,7 @@ import { PRO, PRO_FALLBACK, THEMES, type ThemeKey } from "./site";
 
 export type Tool = CollectionEntry<"projects">;
 
-const DEFAULT_ORDER = ["rtok", "cox", "ketch"];
+const DEFAULT_ORDER = ["rtok", "cox", "ketch", "runa"];
 const rank = (t: Tool) => t.data.order ?? (DEFAULT_ORDER.includes(t.id) ? DEFAULT_ORDER.indexOf(t.id) : 1000);
 
 export async function getTools(): Promise<Tool[]> {
@@ -29,6 +29,9 @@ export function accentsFor(t: Tool) {
     accentLight: t.data.accentLight ?? theme?.accentLight ?? t.data.accent,
   };
 }
+
+/** Short version badge label: `v1.2.3`, or "no release yet" when the card sets a `status` (a tag without a published release). */
+export const versionLabel = (t: Tool) => (t.data.status ? "no release yet" : `v${t.data.version}`);
 
 /** Short one-line install for cards: prefer a `ketch install …` alternative, else the primary command. */
 export const cardInstall = (t: Tool) => t.data.install_alternatives?.find((c) => c.startsWith("ketch ")) ?? t.data.install;
