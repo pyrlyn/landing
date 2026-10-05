@@ -76,6 +76,23 @@
 .copy:hover { color: var(--fg-strong); }
 .copy[data-state="copied"] { color: var(--ok); }
 .copy[hidden] { display: none; }
+/* Copy button: it sits over the end of the line, so on hover-capable devices it (and its fade) stays
+   hidden until the block is hovered or anything in it has focus (keyboard users tab to it), and while
+   it shows "Copied". Touch devices cannot hover: there the button is always visible, beside the code
+   instead of over it. */
+@media (hover: hover) {
+  .codeblock .copy, .codeblock::after { opacity: 0; transition: opacity .15s ease-out; }
+  .codeblock .copy { transition: opacity .15s ease-out, color .18s ease-out, background-color .18s ease-out, scale .12s ease-out; }
+  .codeblock:hover .copy, .codeblock:focus-within .copy, .codeblock .copy[data-state="copied"],
+  .codeblock:hover::after, .codeblock:focus-within::after, .codeblock:has(.copy[data-state="copied"])::after { opacity: 1; }
+}
+@media (hover: none) {
+  .codeblock:has(.copy:not([hidden])) { display: flex; align-items: center; gap: var(--s-2); }
+  .codeblock:has(.copy:not([hidden])) .code { flex: 1; min-width: 0; padding-right: var(--s-5); }
+  .codeblock:has(.copy:not([hidden]))::after { display: none; }
+  .codeblock .copy { position: static; flex: none; }
+}
+@media (prefers-reduced-motion: reduce) { .codeblock .copy, .codeblock::after { transition: none; } }
 
 /* ---------- Layout ---------- */
 .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--s-5); }
