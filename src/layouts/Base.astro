@@ -4,10 +4,7 @@ import "@fontsource-variable/inter";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import "../styles/tailwind.css";
-// Pyrlyn logo from @pyrlyn/brand (see README "Brand tokens"). Inlined in the header so it takes the page
-// tokens: the paper chevron and wordmark become currentColor (--fg-strong via .brand), the amber cursor --accent.
-import pyrlynLockup from "@pyrlyn/brand/logo/pyrlyn/pyrlyn-lockup-on-dark.svg?raw";
-import pyrlynMark from "@pyrlyn/brand/logo/pyrlyn/pyrlyn-mark-on-dark.svg?raw";
+import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
 import { u, BRAND, THEMES, type ThemeKey } from "../lib/site";
 import { getTools, proFor } from "../lib/catalog";
@@ -40,8 +37,6 @@ const current = tools.find((x) => x.id === theme);
 const withDocs = new Set(productsWithDocs());
 const docTools = tools.filter((x) => withDocs.has(x.id));
 const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
-const svgInner = (svg: string) =>
-  svg.trim().replace(/^<svg[^>]*>|<\/svg>$/g, "").replace(/#F4F2ED/gi, "currentColor").replace(/#F2B33D/gi, "var(--accent)");
 ---
 <!doctype html>
 <html lang="en" style={vars} data-theme={theme} class={inDocs ? "is-still" : undefined}>
@@ -94,12 +89,7 @@ const svgInner = (svg: string) =>
 
     <header class="nav tw:max-[459px]:px-2!">
       <div class="nav__inner tw:max-[459px]:gap-2! tw:max-[459px]:pl-3! tw:max-[359px]:gap-1!">
-        <!-- Pyrlyn Prompt logo (@pyrlyn/brand/logo/pyrlyn/pyrlyn-*-on-dark.svg), inline so it takes the page's
-             brand tokens: --fg-strong (via currentColor on .brand) for the chevron and wordmark, --accent for the cursor. -->
-        <a class="brand tw:max-[459px]:pr-0!" href={u("/")} aria-label="Pyrlyn">
-          <svg class="tw:block tw:max-[459px]:hidden!" viewBox="-2 4 109 26" width="101" height="24" aria-hidden="true" focusable="false" set:html={svgInner(pyrlynLockup)}></svg>
-          <svg class="tw:block tw:min-[460px]:hidden!" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false" set:html={svgInner(pyrlynMark)}></svg>
-        </a>
+        <PyrlynLogo />
         <nav aria-label="Primary">
           <ul class="nav__links">
             <li class="menu">
@@ -153,13 +143,7 @@ const svgInner = (svg: string) =>
 
     <footer class="footer container">
       <div class="footer__row">
-        <div class="footer__brands">
-          <a class="brand" href={u("/")}><span class="brand__mark" aria-hidden="true"></span><span>listepo <span class="brand__sub">tools</span></span></a>
-          <a class="pyrlyn-by pyrlyn-by--footer" href="https://github.com/pyrlyn" aria-label="Pyrlyn">
-            <span class="pyrlyn-by__by" aria-hidden="true">by</span>
-            <img src={u("/pyrlyn/pyrlyn-lockup-on-dark.svg")} alt="" width="113" height="26" loading="lazy" />
-          </a>
-        </div>
+        <PyrlynLogo />
         <nav aria-label="Footer">
           <ul class="footer__links">
             {tools.map((x) => <li><a href={u(`/${x.id}/`)}>{x.data.title}</a></li>)}

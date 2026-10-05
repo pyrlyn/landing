@@ -9,7 +9,7 @@
      1. @pyrlyn/brand/tokens.css             rtok brand variables (--rtok-*), unused by the page CSS
      2. @pyrlyn/brand/landing/tokens.css     this site's tokens (--accent, --bg, --fg, --s-*, --r-* …)
      3. ./base.css                           @property, base reset, background mesh (local)
-     4. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by
+     4. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by (the page no longer uses .pyrlyn-by / .brand__mark)
      5. the rest of this file                page layout, sections, project pages, fallbacks
    ========================================================================== */
 
@@ -110,7 +110,6 @@
   box-shadow: var(--glass-edge), var(--shadow-2);
   -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
 }
-.footer__brands { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
 .nav__links { display: none; align-items: center; gap: 2px; margin-right: auto; }
 .nav__links a {
   display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 var(--s-3); border-radius: var(--r-full);
@@ -442,7 +441,6 @@
    terminal demo, token bitset, flow.
    ========================================================================== */
 
-.brand__sub { color: var(--muted); font-weight: 500; }
 
 /* Products mega-menu (details/summary: works without JS; JS adds Esc/outside close) */
 .menu { position: relative; }
@@ -623,7 +621,6 @@
 @media (max-width: 899px) { .flow__node::after { left: 28px; bottom: calc(-1 * var(--s-3)); width: 2px; height: var(--s-3); } }
 @keyframes flow-pulse { from { background-position: 200% 0; } to { background-position: 0 0; } }
 .brand { white-space: nowrap; }
-@media (max-width: 400px) { .brand__sub { display: none; } }
 
 /* ==========================================================================
    Per-product faux-3D techniques
