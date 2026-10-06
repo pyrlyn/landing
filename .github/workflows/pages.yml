@@ -1,6 +1,6 @@
 name: Deploy to GitHub Pages
 
-# Astro build + docs and SEO checks, deployed to GitHub Pages through pyrlyn/infra's pages.yml.
+# Astro build + docs and SEO checks, deployed to GitHub Pages through pyrlyn/ci's pages.yml.
 on:
   push:
     branches: [main]
@@ -18,7 +18,7 @@ concurrency:
 
 jobs:
   pages:
-    uses: pyrlyn/infra/.github/workflows/pages.yml@0603d0ae610af9f792c5caf925041292a857e480
+    uses: pyrlyn/ci/.github/workflows/pages.yml@0603d0ae610af9f792c5caf925041292a857e480
     permissions:
       contents: read
       pages: write
