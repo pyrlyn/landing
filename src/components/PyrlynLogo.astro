@@ -1,0 +1,15 @@
+---
+// Pyrlyn Prompt logo from @pyrlyn/brand (see README "Brand tokens"), inlined so it takes the page's brand
+// tokens: the paper chevron and wordmark become currentColor (--fg-strong via .brand), the amber cursor --accent.
+// Full lockup from 460px up, mark only below. A home link; used by the header and the footer.
+import pyrlynLockup from "@pyrlyn/brand/logo/pyrlyn/pyrlyn-lockup-on-dark.svg?raw";
+import pyrlynMark from "@pyrlyn/brand/logo/pyrlyn/pyrlyn-mark-on-dark.svg?raw";
+import { u } from "../lib/site";
+
+const svgInner = (svg: string) =>
+  svg.trim().replace(/^<svg[^>]*>|<\/svg>$/g, "").replace(/#F4F2ED/gi, "currentColor").replace(/#F2B33D/gi, "var(--accent)");
+---
+<a class="brand tw:max-[459px]:pr-0!" href={u("/")} aria-label="Pyrlyn">
+  <svg class="tw:block tw:max-[459px]:hidden!" viewBox="-2 4 109 26" width="101" height="24" aria-hidden="true" focusable="false" set:html={svgInner(pyrlynLockup)}></svg>
+  <svg class="tw:block tw:min-[460px]:hidden!" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false" set:html={svgInner(pyrlynMark)}></svg>
+</a>

@@ -9,7 +9,7 @@
      1. @pyrlyn/brand/tokens.css             rtok brand variables (--rtok-*), unused by the page CSS
      2. @pyrlyn/brand/landing/tokens.css     this site's tokens (--accent, --bg, --fg, --s-*, --r-* …)
      3. ./base.css                           @property, base reset, background mesh (local)
-     4. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by
+     4. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by (the page no longer uses .pyrlyn-by / .brand__mark)
      5. the rest of this file                page layout, sections, project pages, fallbacks
    ========================================================================== */
 
@@ -76,6 +76,23 @@
 .copy:hover { color: var(--fg-strong); }
 .copy[data-state="copied"] { color: var(--ok); }
 .copy[hidden] { display: none; }
+/* Copy button: it sits over the end of the line, so on hover-capable devices it (and its fade) stays
+   hidden until the block is hovered or anything in it has focus (keyboard users tab to it), and while
+   it shows "Copied". Touch devices cannot hover: there the button is always visible, beside the code
+   instead of over it. */
+@media (hover: hover) {
+  .codeblock .copy, .codeblock::after { opacity: 0; transition: opacity .15s ease-out; }
+  .codeblock .copy { transition: opacity .15s ease-out, color .18s ease-out, background-color .18s ease-out, scale .12s ease-out; }
+  .codeblock:hover .copy, .codeblock:focus-within .copy, .codeblock .copy[data-state="copied"],
+  .codeblock:hover::after, .codeblock:focus-within::after, .codeblock:has(.copy[data-state="copied"])::after { opacity: 1; }
+}
+@media (hover: none) {
+  .codeblock:has(.copy:not([hidden])) { display: flex; align-items: center; gap: var(--s-2); }
+  .codeblock:has(.copy:not([hidden])) .code { flex: 1; min-width: 0; padding-right: var(--s-5); }
+  .codeblock:has(.copy:not([hidden]))::after { display: none; }
+  .codeblock .copy { position: static; flex: none; }
+}
+@media (prefers-reduced-motion: reduce) { .codeblock .copy, .codeblock::after { transition: none; } }
 
 /* ---------- Layout ---------- */
 .container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--s-5); }
@@ -110,9 +127,10 @@
   box-shadow: var(--glass-edge), var(--shadow-2);
   -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px);
 }
-.footer__brands { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
 .nav__links { display: none; align-items: center; gap: 2px; margin-right: auto; }
-.nav__links a {
+/* Top-level nav pills. Not the Products menu rows: this rule outranks .menu__item and used to turn the
+   row grid into inline-flex, so each mark shrank to its letters and the text columns started at different x. */
+.nav__links a:not(.menu__item) {
   display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 var(--s-3); border-radius: var(--r-full);
   font-size: var(--fs-sm); font-weight: 500; color: var(--muted); transition: color .2s, background-color .2s;
 }
@@ -326,14 +344,17 @@
 .breadcrumb { display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--muted); }
 .breadcrumb a { display: inline-flex; align-items: center; min-height: 44px; color: var(--muted); }
 .breadcrumb a:hover { color: var(--fg-strong); }
+/* Neutral fact note (e.g. README caveats): page surface + hairline, accent icon. Not a warning, so no
+   --accent-2 / --danger tint (rtok's --accent-2 is coral and read as an alarm). Icon centre = first line centre:
+   (fs-sm 14px × 1.6 = 22.4px line − 16px icon) / 2 ≈ 3px. */
 .note {
   display: flex; gap: var(--s-3); align-items: flex-start; max-width: 64ch;
   padding: var(--s-3) var(--s-4); border-radius: var(--r-md);
-  font-size: var(--fs-sm); line-height: 1.6; color: var(--fg);
-  background: color-mix(in oklch, var(--accent-2) 8%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent-2) 32%, transparent);
+  font-size: var(--fs-sm); line-height: 1.6; color: var(--muted);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--hairline-strong);
 }
-.note svg { flex: none; margin-top: 3px; color: var(--accent-2); }
+.note svg { flex: none; margin-top: 3px; color: var(--accent); }
 .install-hero { width: 100%; max-width: 560px; }
 .install-hero .code { font-size: .78rem; }
 .prose { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-4); max-width: 68ch; font-size: var(--fs-lg); line-height: 1.7; color: var(--muted); }
@@ -439,7 +460,6 @@
    terminal demo, token bitset, flow.
    ========================================================================== */
 
-.brand__sub { color: var(--muted); font-weight: 500; }
 
 /* Products mega-menu (details/summary: works without JS; JS adds Esc/outside close) */
 .menu { position: relative; }
@@ -457,7 +477,7 @@
 .menu__details[open] .menu__trigger svg { transform: rotate(180deg); }
 .menu__current { color: var(--accent); font-weight: 600; }
 .menu__panel {
-  position: absolute; top: calc(100% + 12px); left: -12px; z-index: 60; width: min(560px, calc(100vw - 32px));
+  position: absolute; top: calc(100% + 12px); left: -12px; z-index: 60; width: min(744px, calc(100vw - 32px));
   display: grid; gap: var(--s-2); padding: var(--s-3); border-radius: var(--r-lg);
   background: var(--glass-fill), color-mix(in oklch, var(--bg) 78%, #1b2130);
   /* The header is sticky, so the panel never scrolls with the page: let it scroll itself on
@@ -467,23 +487,24 @@
 .menu__label { padding: var(--s-1) var(--s-3); font-size: var(--fs-xs); font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--subtle); }
 .menu__grid { display: grid; gap: 2px; }
 .menu__item {
-  position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: var(--s-3);
+  position: relative; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: start; gap: var(--s-3);
   min-height: 64px; padding: var(--s-3); border-radius: var(--r-md); color: var(--fg);
   transition: background-color .2s;
 }
 .menu__item:hover, .menu__item[aria-current="page"] { background: rgb(255 255 255 / .05); }
 .menu__item:focus-visible { border-radius: var(--r-md); }
 .menu__mark {
-  display: grid; place-items: center; width: 40px; height: 40px; border-radius: var(--r-sm);
+  display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: var(--r-sm);
   font-family: var(--font-mono); font-weight: 700; font-size: var(--fs-sm); color: var(--card-accent);
   background: radial-gradient(51% 92% at 51% 8%, color-mix(in oklch, var(--card-accent) 26%, transparent), color-mix(in oklch, var(--card-accent) 6%, transparent));
   box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--card-accent) 32%, transparent), inset 0 1px #ffffff26;
 }
-.menu__text { display: grid; gap: 2px; min-width: 0; }
-.menu__text strong { font-family: var(--font-mono); color: var(--fg-strong); font-size: var(--fs-md); }
+/* Name line (fs-md, 24px line) centred on the 40px mark: (40 - 24) / 2 = 8px. */
+.menu__text { display: grid; gap: 2px; min-width: 0; padding-top: var(--s-2); }
+.menu__text strong { font-family: var(--font-mono); color: var(--fg-strong); font-size: var(--fs-md); line-height: 24px; }
 .menu__ver { font-size: var(--fs-xs); color: var(--card-accent); font-weight: 600; margin-left: 4px; }
-.menu__text small { color: var(--muted); font-size: var(--fs-xs); line-height: 1.45; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-.menu__price { font-size: var(--fs-xs); color: var(--muted); white-space: nowrap; }
+.menu__text small { color: var(--muted); font-size: var(--fs-xs); line-height: 1.45; }
+.menu__price { align-self: center; justify-self: end; font-size: var(--fs-xs); color: var(--muted); white-space: nowrap; }
 .menu__foot { display: flex; justify-content: space-between; align-items: center; gap: var(--s-3); padding: var(--s-2) var(--s-3) var(--s-1); border-top: 1px solid var(--hairline); font-size: var(--fs-xs); color: var(--subtle); }
 .menu__foot a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: var(--accent); font-size: var(--fs-sm); }
 @media (max-width: 899px) {
@@ -620,7 +641,6 @@
 @media (max-width: 899px) { .flow__node::after { left: 28px; bottom: calc(-1 * var(--s-3)); width: 2px; height: var(--s-3); } }
 @keyframes flow-pulse { from { background-position: 200% 0; } to { background-position: 0 0; } }
 .brand { white-space: nowrap; }
-@media (max-width: 400px) { .brand__sub { display: none; } }
 
 /* ==========================================================================
    Per-product faux-3D techniques
