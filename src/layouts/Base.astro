@@ -7,7 +7,7 @@ import "../styles/tailwind.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
 import { u, BRAND, THEMES, type ThemeKey } from "../lib/site";
-import { getTools, proFor } from "../lib/catalog";
+import { getTools, proFor, versionLabel } from "../lib/catalog";
 import { productsWithDocs } from "../lib/docs";
 import { graph } from "../lib/seo";
 
@@ -105,7 +105,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
                       <li>
                         <a class="menu__item shine" href={u(`/${x.id}/`)} style={`--card-accent:${x.data.accent}`} aria-current={x.id === theme ? "page" : undefined}>
                           <span class="menu__mark" aria-hidden="true">{x.data.title.slice(0, 2)}</span>
-                          <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">v{x.data.version}</span></strong><small>{x.data.tagline}</small></span>
+                          <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">{versionLabel(x)}</span></strong><small>{x.data.tagline}</small></span>
                           <span class="menu__price">Free · Pro {proFor(x).price}*</span>
                         </a>
                       </li>

@@ -5,7 +5,7 @@ import Picture from "../components/Picture.astro";
 import Terminal from "../components/Terminal.astro";
 import RingCarousel from "../components/RingCarousel.astro";
 import { u, BRAND, LICENSE, THEMES, FREE_HIGHLIGHTS } from "../lib/site";
-import { getTools, featuredTool, proFor, cardInstall } from "../lib/catalog";
+import { getTools, featuredTool, proFor, cardInstall, versionLabel } from "../lib/catalog";
 import { parseFeatures, splitSections } from "../lib/sections";
 import { DEMOS, demoFromUsage } from "../data/showcase";
 import { parseUsage } from "../lib/sections";
@@ -30,7 +30,7 @@ const jsonLd = [
     itemListElement: tools.map((p, i) => ({ "@type": "ListItem", position: i + 1, name: p.data.title, url: abs(`/${p.id}/`), item: { "@id": appId(p.id) } })),
   },
 ];
-const glyph: Record<string, string> = { rtok: "Δ", cox: "◎", ketch: "↓" };
+const glyph: Record<string, string> = { rtok: "Δ", cox: "◎", ketch: "↓", runa: "ᛉ" };
 
 /* Hero hotspots — real features, taken from each project's synced site copy. Positions are % of the art layer. */
 const hotspots = [
@@ -85,7 +85,7 @@ const hotspots = [
   <section class="section container" id="featured" aria-labelledby="feat-title">
     <div class="featured glass glass--thick" style={`--card-accent:${featured.data.accent};--accent:${featured.data.accent}`}>
       <div class="featured__copy">
-        <div class="section-flag"><p class="eyebrow">Featured tool</p><span class="badge badge--version">v{featured.data.version}</span></div>
+        <div class="section-flag"><p class="eyebrow">Featured tool</p><span class="badge badge--version">{versionLabel(featured)}</span></div>
         <h2 id="feat-title" class="featured__title">{featured.data.title}<span>.</span></h2>
         <p class="lead">{featured.data.tagline}</p>
         <ul class="featured__list">
@@ -117,7 +117,7 @@ const hotspots = [
           <Picture class="oss-card__preview" dir={p.id} name="hero" widths={[800, 1200]} sizes="300px" w={2400} h={1600} />
           <div class="oss-card__top">
             <span class="icon" aria-hidden="true">{glyph[p.id] ?? p.data.title.slice(0, 1)}</span>
-            <span class="badge badge--version" style={`--accent:${p.data.accent}`}>v{p.data.version}</span>
+            <span class="badge badge--version" style={`--accent:${p.data.accent}`}>{versionLabel(p)}</span>
           </div>
           <h3 class="oss-card__title">{p.data.title}<span>.</span></h3>
           <p>{p.data.tagline}</p>

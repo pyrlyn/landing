@@ -86,5 +86,33 @@
       "research": "Internal research notes",
       "qa/": "Internal QA audits"
     }
+  },
+  "runa": {
+    "groups": [
+      { "label": "Start", "items": [
+        { "file": "getting-started.md", "title": "Getting started" },
+        { "file": "guide.md", "title": "User guide" },
+        { "file": "config.md", "title": "Configuration" }
+      ] },
+      { "label": "Concepts", "items": [
+        { "file": "thinking.md", "title": "Thinking" },
+        { "file": "structured.md", "title": "Structured output & tools" },
+        { "file": "media.md", "title": "Audio, video and vision" }
+      ] }
+    ],
+    "exclude": {
+      "README.md": "Repository docs index, mostly links to internal pages",
+      "fit.md": "Fit-checker internals: estimator formulas and calibration",
+      "memory.md": "Internal crate API of the memory manager",
+      "versions.md": "Maintainer notes on version pins and release artifacts",
+      "tasks.md": "Internal task-claim registry",
+      "baselines.md": "Maintainer benchmark reference numbers",
+      "perf-nightly.md": "Maintainer notes on the nightly perf workflow",
+      "kernels.md": "Kernel benchmark results and adoption gates",
+      "profiles.md": "Profiling results and polyglot evaluation",
+      "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud",
+      "adr/": "Internal architecture decision records",
+      "notes/": "Internal spike write-ups"
+    }
   }
 }

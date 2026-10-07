@@ -15,6 +15,8 @@ const projects = defineCollection({
     install: z.string().min(1),
     install_alternatives: z.array(z.string()).optional(),
     version: z.string().regex(/^\d+\.\d+\.\d+(-[\w.]+)?$/, "semver without a leading v"),
+    /** Optional release status shown instead of the version badge (e.g. no release published yet). */
+    status: z.string().max(48).optional(),
     accent: hex,
     /** Optional second accent (e.g. rtok's coral). Falls back to the site theme table. */
     accent2: hex.optional(),
