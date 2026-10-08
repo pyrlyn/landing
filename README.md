@@ -26,6 +26,21 @@ npm run preview   # serve dist
 one-line change. `.github/workflows/pages.yml` builds, runs `check:docs` and `check:seo` and deploys on every push to
 `main`; pull requests run the build and the check without deploying.
 
+## Run with Docker
+
+The `Dockerfile` builds the site for the domain root (`SITE_URL=https://pyrlyn.dev`, `SITE_BASE=/`) in a
+Node 22 stage and serves `dist/` with nginx (`docker/nginx.conf`: static files, `404.html` for unknown
+paths, gzip, long-lived cache headers for `/_astro/`). The container listens on port 80.
+
+```sh
+docker build -t pyrlyn-landing .
+docker run -d --name pyrlyn-landing -p 127.0.0.1:8080:80 pyrlyn-landing   # http://localhost:8080/
+```
+
+Build args: `SITE_URL`, `SITE_BASE` (e.g. `--build-arg SITE_BASE=/landing/` for the GitHub Pages layout),
+`NODE_VERSION` (22), `NGINX_VERSION` (`1.30-alpine`). The build stage needs network access to GitHub:
+`@pyrlyn/brand` is a GitHub dependency, fetched over HTTPS inside the image.
+
 ## Structure
 
 - `content/projects/*.md` — one file per product (frontmatter + README-derived sections). See

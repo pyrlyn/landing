@@ -1,0 +1,13 @@
+.git
+.github
+.astro
+.agents
+.transfer
+node_modules
+dist
+_prototype-vite
+art
+Dockerfile
+.dockerignore
+*.md
+!content/**/*.md

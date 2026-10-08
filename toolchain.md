@@ -4,6 +4,7 @@
 | --- | --- | --- | --- |
 | node | nodejs.org. CI requests Node 22 | Run Astro, the doc and SEO checks, and the tests | https://nodejs.org/ |
 | npm | bundled with node | Install packages and run scripts | https://github.com/npm/cli |
+| Docker | any engine (Docker Engine, OrbStack, Colima). Optional | `docker build` / `docker run` of the `Dockerfile` (images `node:22-bookworm-slim`, `nginx:1.30-alpine`) | https://docs.docker.com/ |
 
 | Package | Where | Source | Why here |
 | --- | --- | --- | --- |
