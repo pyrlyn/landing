@@ -60,9 +60,24 @@ export const THEMES: Record<ThemeKey, Theme> = {
   runa: { accent: "#E85A3C", accent2: "#FFB088", accentLight: "#C94830", bg: "#120E0C", images: "runa", heroAlt: "" },
 };
 
+/**
+ * Release status per product, owned by this site so the next docs sync cannot drop it.
+ * Every product is in active development. rtok, ketch and cox publish 0.x builds on GitHub, but none
+ * is a stable release yet; runa has a tag and no published release. A `status` in a product's synced
+ * front matter wins over this table; products missing from both get RELEASE_STATUS_FALLBACK.
+ */
+export const RELEASE_STATUS: Record<string, string> = {
+  rtok: "In development · no stable release yet",
+  ketch: "In development · no stable release yet",
+  cox: "In development · no stable release yet",
+  runa: "In development · no release yet",
+};
+export const RELEASE_STATUS_FALLBACK = "In development";
+
 /** README facts the synced site copy does not carry but the page must keep, worded as a plain note (no "From the README:" prefix).
- *  Source: each repo's README.md (rtok: the limitations list).
+ *  Source: each repo's README.md (rtok: the limitations list; runa: the status paragraph its synced Overview carries).
  *  (cox's "under active development, APIs not stable" status is already in its synced Overview and the hero status card.) */
 export const CAVEATS: Partial<Record<ThemeKey, string>> = {
+  runa: "runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
   rtok: "Token savings are estimates from a chars-per-token heuristic until matched against provider usage. No live A/B cost reduction has been established yet.",
 };

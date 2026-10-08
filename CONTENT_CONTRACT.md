@@ -18,7 +18,7 @@ violation. `content/projects/README.md` is excluded from the collection.
 | `install` | yes | string | Primary install command, one line (hero install block with copy button) |
 | `install_alternatives` | no | list of strings | Other install commands, README order (the home card prefers a `ketch install …` one) |
 | `version` | yes | semver, no `v` | Latest published release |
-| `status` | no | string, ≤ 48 chars | Release status shown instead of the `v<version>` badge (e.g. `In development · no release yet` while a tag has no published release) |
+| `status` | no | string, ≤ 48 chars | Release status shown in the product hero badge (e.g. `In development · no release yet` while a tag has no published release). Without it the site uses `RELEASE_STATUS` in `src/lib/site.ts`; cards, the carousel and the Products menu show `in development` |
 | `accent` | yes | `#RRGGBB` | Dark-theme accent of the project's own site → page `--accent` |
 | `accent2` | no | `#RRGGBB` | Second accent (e.g. rtok coral `#FF6B4A`) → page `--accent-2` |
 | `accentLight` | no | `#RRGGBB` | Darker accent for light surfaces (e.g. cox `#3D8B3A`, ketch `#0F6F5C`) → `--accent-light` |

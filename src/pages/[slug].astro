@@ -10,7 +10,7 @@ import TokenParticles from "../components/TokenParticles.astro";
 import CoxScenes from "../components/CoxScenes.astro";
 import KetchRoute from "../components/KetchRoute.astro";
 import { u, BRAND, LICENSE, CAVEATS, THEMES, FREE_HIGHLIGHTS, type ThemeKey } from "../lib/site";
-import { proFor } from "../lib/catalog";
+import { proFor, statusFor } from "../lib/catalog";
 import { getProductDocs, productsWithDocs, docsHref } from "../lib/docs";
 import { DEMOS, FLOWS, COX_SCENES, demoFromUsage } from "../data/showcase";
 import { splitSections, parseFeatures, parseUsage, parseLinks, renderMd, codeBlock } from "../lib/sections";
@@ -67,7 +67,7 @@ const jsonLd = [
     <div class="hero__copy">
       <nav class="breadcrumb" aria-label="Breadcrumb"><a href={u("/#catalog")}>Open source</a><span aria-hidden="true">/</span><span aria-current="page">{d.title}</span></nav>
       <div class="p-meta">
-        <span class="badge badge--version">{d.status ?? `v${d.version}`}</span>
+        <span class="badge badge--version">{statusFor(entry)}</span>
         <span class="badge badge--line">{LICENSE.short}</span>
       </div>
       <h1 id="p-title" class="p-title">{d.title}<span>.</span></h1>
@@ -106,7 +106,7 @@ const jsonLd = [
             <div class="chip glass glass--thick status-card float">
               <div class="status-row"><span>Status</span><span style="display:inline-flex;align-items:center;gap:8px"><span class="status-led" aria-hidden="true"></span><b>Active development</b></span></div>
               <div class="status-row"><span>APIs</span><b>Not yet stable</b></div>
-              <div class="status-row"><span>Release</span><b>v{d.version}</b></div>
+              <div class="status-row"><span>Release</span><b>No stable release yet</b></div>
               <div class="status-row"><span>Surfaces</span><b>TUI · headless · ACP · MCP</b></div>
             </div>
           </div>
