@@ -1,0 +1,7 @@
+- T1. Home share card advertises the wrong brand ("Tiller")
+- T2. rtok's newest doc falls into the uncurated "More" tab
+- T3. Contract violation: product art is mandatory, not optional
+- T4. Deduplicate the copy-button markup and esc()
+- T5. Share slug/nav logic between the site and its CI checks
+- T6. Fix the hardcoded CTA label and dead theme fields
+- T7. Robustness and cleanup batch
