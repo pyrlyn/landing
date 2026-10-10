@@ -4,7 +4,7 @@ import { PRO, PRO_FALLBACK, RELEASE_STATUS, RELEASE_STATUS_FALLBACK, THEMES, typ
 
 export type Tool = CollectionEntry<"projects">;
 
-const DEFAULT_ORDER = ["rtok", "cox", "ketch", "runa"];
+const DEFAULT_ORDER = ["rtok", "cox", "ketch", "runa", "mailune"];
 const rank = (t: Tool) => t.data.order ?? (DEFAULT_ORDER.includes(t.id) ? DEFAULT_ORDER.indexOf(t.id) : 1000);
 
 export async function getTools(): Promise<Tool[]> {
