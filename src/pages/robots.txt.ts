@@ -1,6 +1,5 @@
 // robots.txt with the sitemap location (absolute, under SITE_URL + SITE_BASE).
-// Note: on a GitHub Pages project site crawlers read robots.txt from the host root, so this file
-// mainly advertises the sitemap; the sitemap is also linked from every page's <head>.
+// The sitemap is also linked from every page's <head>.
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = ({ site }) => {

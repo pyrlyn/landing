@@ -96,7 +96,7 @@ test("seo text stays inside the meta limits and omits pro prices", async () => {
   assert.equal("aggregateRating" in app, false);
   assert.equal(app.operatingSystem, "macOS");
   assert.equal(organization().name, "listepo");
-  assert.equal(abs("/rtok/"), "https://pyrlyn.github.io/landing/rtok/");
+  assert.equal(abs("/rtok/"), "https://pyrlyn.dev/landing/rtok/");
   assert.deepEqual(breadcrumbs([{ name: "Home", url: abs("/") }]).itemListElement[0].position, 1);
   assert.equal(graph([organization()])["@context"], "https://schema.org");
 });

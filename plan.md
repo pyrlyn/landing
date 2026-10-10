@@ -2,7 +2,7 @@
 
 <https://github.com/pyrlyn/landing>
 
-Astro static storefront ("listepo tools", https://pyrlyn.github.io/landing/) marketing rtok, cox and ketch; product pages and docs sections are generated from Markdown synced from each product repository, with post-build CI validators for docs coverage, links, and SEO.
+Astro static storefront ("listepo tools") marketing rtok, cox and ketch; product pages and docs sections are generated from Markdown synced from each product repository, with post-build CI validators for docs coverage, links, and SEO.
 
 | # | Status | Priority | Complexity | Readiness | Agent |
 | --- | --- | --- | --- | --- | --- |

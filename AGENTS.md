@@ -2,7 +2,7 @@
 
 If an AGENTS.md or CLAUDE.md exists higher in the tree, follow it too. On conflict, ask the creator.
 
-Astro storefront for rtok, cox, and ketch ("listepo tools"). Product copy is `content/projects/*.md`. Synced docs are `content/docs/<product>/`. Internal links go through `u()` in `src/lib/site.ts`. `astro.config.mjs` reads `SITE_URL` (default `https://pyrlyn.github.io`) and `SITE_BASE` (default `/landing/`).
+Astro storefront for rtok, cox, and ketch ("listepo tools"). Product copy is `content/projects/*.md`. Synced docs are `content/docs/<product>/`. Internal links go through `u()` in `src/lib/site.ts`. `astro.config.mjs` reads `SITE_URL` (default `https://pyrlyn.dev`) and `SITE_BASE` (default `/landing/`).
 
 ```sh
 npm ci

@@ -1,6 +1,6 @@
 # Done
 
-The storefront, the three product pages, and the docs section already build. CI (`.github/workflows/pages.yml`) runs the Astro build, `check`, `check:docs`, and `check:seo`, then deploys `main` to GitHub Pages.
+The storefront, the three product pages, and the docs section already build. Run the Astro build, `check`, `check:docs`, and `check:seo` locally.
 
 ### T8. Add the required project files
 
