@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "listepo tools — a storefront for AI developer tools (rtok, cox, ketch), built with Astro for GitHub Pages.",
+  "description": "listepo tools — a storefront for AI developer tools (rtok, cox, ketch), built with Astro.",
   "scripts": {
     "brand": "pyrlyn-brand-copy public pyrlyn --favicon listepo/listepo-favicon.svg",
     "predev": "npm run brand",

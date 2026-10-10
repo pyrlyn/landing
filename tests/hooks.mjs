@@ -10,7 +10,7 @@ export function installLandingHooks() {
   if (globalThis.__landingHooks) return;
   globalThis.__landingHooks = true;
   globalThis.__viteEnv ??= {
-    SITE: "https://pyrlyn.github.io",
+    SITE: "https://pyrlyn.dev",
     BASE_URL: "/landing/",
   };
   globalThis.__viteGlob ??= () => ({});

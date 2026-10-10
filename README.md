@@ -20,7 +20,7 @@ npm run check:seo   # after a build: title/description/canonical/OG per page, on
 npm run preview   # serve dist
 ```
 
-`astro.config.mjs` reads `SITE_URL` (default `https://pyrlyn.github.io`) and `SITE_BASE` (default
+`astro.config.mjs` reads `SITE_URL` (default `https://pyrlyn.dev`) and `SITE_BASE` (default
 `/landing/`). Every internal link and asset goes through `u()` in `src/lib/site.ts`, so moving the site is a
 one-line change. There is no hosted deploy: run `npm run build`, `check:docs` and `check:seo` locally.
 
@@ -35,7 +35,7 @@ docker build -t pyrlyn-landing .
 docker run -d --name pyrlyn-landing -p 127.0.0.1:8080:80 pyrlyn-landing   # http://localhost:8080/
 ```
 
-Build args: `SITE_URL`, `SITE_BASE` (e.g. `--build-arg SITE_BASE=/landing/` for the GitHub Pages layout),
+Build args: `SITE_URL`, `SITE_BASE` (e.g. `--build-arg SITE_BASE=/landing/` to serve under a subpath),
 `NODE_VERSION` (22), `NGINX_VERSION` (`1.30-alpine`). The build stage needs network access to GitHub:
 `@pyrlyn/brand` is a GitHub dependency, fetched over HTTPS inside the image.
 
