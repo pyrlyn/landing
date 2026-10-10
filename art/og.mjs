@@ -4,6 +4,7 @@ const cards = {
   rtok: { t: "rtok", s: "Token-reduction CLI for AI coding agents — hooks, an MCP server and an API proxy in one Rust binary.", k: "Open source · v0.10.0", a: "#5CE1FF", b: "#FF6B4A", mono: true },
   cox: { t: "cox", s: "A modular terminal coding agent in Rust with a safe, event-driven core.", k: "Open source · v0.1.0", a: "#A8E06C", b: "#6FD6B4", mono: true },
   ketch: { t: "ketch", s: "Catch releases straight from GitHub.", k: "Open source · v0.6.0", a: "#3DDCB0", b: "#5CC8FF", mono: true },
+  mailune: { t: "Mailune", s: "A local-first mail client with private AI, for every platform.", k: "Open source · in development", a: "#8FB4D9", b: "#B7D0E8", mono: false, brand: "listepo tools" },
 };
 for (const [k, c] of Object.entries(cards)) {
   writeFileSync(`og-${k}.html`, `<!doctype html><html><head><style>
@@ -21,5 +22,5 @@ for (const [k, c] of Object.entries(cards)) {
   .edge{position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
   </style></head><body><div class="bg"></div><div class="fade"></div>
   <div class="c"><div class="k">${c.k}</div><div class="t">${c.t}<span>.</span></div><div class="s">${c.s}</div></div>
-  <div class="brand"><span class="m"></span>Tiller</div><div class="edge"></div></body></html>`);
+  <div class="brand"><span class="m"></span>${c.brand ?? "Tiller"}</div><div class="edge"></div></body></html>`);
 }

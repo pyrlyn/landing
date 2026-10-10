@@ -30,7 +30,7 @@ const jsonLd = [
     itemListElement: tools.map((p, i) => ({ "@type": "ListItem", position: i + 1, name: p.data.title, url: abs(`/${p.id}/`), item: { "@id": appId(p.id) } })),
   },
 ];
-const glyph: Record<string, string> = { rtok: "Δ", cox: "◎", ketch: "↓", runa: "ᛉ" };
+const glyph: Record<string, string> = { rtok: "Δ", cox: "◎", ketch: "↓", runa: "ᛉ", mailune: "✉" };
 
 /* Hero hotspots — real features, taken from each project's synced site copy. Positions are % of the art layer. */
 const hotspots = [

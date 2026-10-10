@@ -9,6 +9,7 @@ source repository instead.
 | `rtok.md` | [`pyrlyn/rtok` `docs/site.md`](https://github.com/pyrlyn/rtok/blob/main/docs/site.md) |
 | `cox.md` | [`pyrlyn/cox` `docs/site.md`](https://github.com/pyrlyn/cox/blob/main/docs/site.md) |
 | `ketch.md` | [`pyrlyn/ketch` `docs/site.md`](https://github.com/pyrlyn/ketch/blob/main/docs/site.md) |
+| `mailune.md` | [`pyrlyn/mailune` `docs/site.md`](https://github.com/pyrlyn/mailune/blob/main/docs/site.md) (copied by hand until Mailune has a `sync-docs.yml`) |
 
 ## How files arrive
 
