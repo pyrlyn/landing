@@ -1,11 +1,10 @@
 # listepo tools — AI developer tool storefront
 
-A marketplace landing for AI developer tools, built with [Astro](https://astro.build) and deployed to
-GitHub Pages. The home page is the storefront (catalog, featured tool, how it works, per-tool pricing,
+A marketplace landing for AI developer tools, built with [Astro](https://astro.build). The home page is the storefront (catalog, featured tool, how it works, per-tool pricing,
 FAQ); every product gets its own showcase page generated from one Markdown file, and a docs section
 generated from the product's own `docs/` folder.
 
-Live: https://pyrlyn.github.io/landing/ — showcase pages `/landing/rtok/`, `/landing/cox/`,
+Showcase pages `/landing/rtok/`, `/landing/cox/`,
 `/landing/ketch/`; docs under `/landing/<product>/docs/` (overview) and `/landing/<product>/docs/<slug>/`.
 
 > The previous site in this repository is preserved in branch and tag `archive/toha-landing-2026-09-27`.
@@ -23,8 +22,7 @@ npm run preview   # serve dist
 
 `astro.config.mjs` reads `SITE_URL` (default `https://pyrlyn.github.io`) and `SITE_BASE` (default
 `/landing/`). Every internal link and asset goes through `u()` in `src/lib/site.ts`, so moving the site is a
-one-line change. `.github/workflows/pages.yml` builds, runs `check:docs` and `check:seo` and deploys on every push to
-`main`; pull requests run the build and the check without deploying.
+one-line change. There is no hosted deploy: run `npm run build`, `check:docs` and `check:seo` locally.
 
 ## Run with Docker
 
