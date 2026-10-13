@@ -27,9 +27,10 @@ export const FREE_HIGHLIGHTS: Record<string, string[]> = {
   cox: ["Terminal UI and headless runs", "Sandboxed tools by default", "Local cost ledger"],
   ketch: ["Install from any GitHub release", "SHA-256 verification", "Rollback, lock and sync"],
   runa: ["Fit check before any download", "Local GGUF and cloud APIs, same controls", "OpenAI-compatible runa serve"],
+  mailune: ["Direct to IMAP, JMAP, Gmail and Graph", "On-device AI by default", "Encrypted mail stays local"],
 };
 
-/** One license wording for every project (rtok, cox, ketch and runa share the same triple license). */
+/** One license wording for every project (rtok, cox, ketch, runa and Mailune share the same triple license). */
 export const LICENSE = {
   short: "GPLv3, royalty-free or commercial — your choice",
   items: [
@@ -39,7 +40,7 @@ export const LICENSE = {
   ],
 };
 
-export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa";
+export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa" | "mailune";
 
 export interface Theme {
   accent: string;
@@ -58,12 +59,13 @@ export const THEMES: Record<ThemeKey, Theme> = {
   cox: { accent: "#A8E06C", accent2: "#6FD6B4", accentLight: "#3D8B3A", bg: "#070B09", images: "cox", heroAlt: "" },
   ketch: { accent: "#3DDCB0", accent2: "#5CC8FF", accentLight: "#0F6F5C", bg: "#06100F", images: "ketch", heroAlt: "" },
   runa: { accent: "#E85A3C", accent2: "#FFB088", accentLight: "#C94830", bg: "#120E0C", images: "runa", heroAlt: "" },
+  mailune: { accent: "#8FB4D9", accent2: "#B7D0E8", accentLight: "#335C8C", bg: "#171714", images: "mailune", heroAlt: "" },
 };
 
 /**
  * Release status per product, owned by this site so the next docs sync cannot drop it.
  * Every product is in active development. rtok, ketch and cox publish 0.x builds on GitHub, but none
- * is a stable release yet; runa has a tag and no published release. A `status` in a product's synced
+ * is a stable release yet; runa has a tag and no published release; Mailune has neither. A `status` in a product's synced
  * front matter wins over this table; products missing from both get RELEASE_STATUS_FALLBACK.
  */
 export const RELEASE_STATUS: Record<string, string> = {
@@ -71,6 +73,7 @@ export const RELEASE_STATUS: Record<string, string> = {
   ketch: "In development · no stable release yet",
   cox: "In development · no stable release yet",
   runa: "In development · no release yet",
+  mailune: "In development · no release yet",
 };
 export const RELEASE_STATUS_FALLBACK = "In development";
 

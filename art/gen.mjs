@@ -202,5 +202,40 @@ scenes["ketch-prop"] = () => {
   return page(W, H, s + finish(W, H));
 };
 
+/* Mailune: brand seal blue on ink (pyrlyn/brand brands/mailune), a sealed glass envelope. */
+function envelope(x, y, w, h, A, sealR) {
+  const g = id("eg");
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".30"/><stop offset=".5" stop-color="${A}" stop-opacity=".14"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient></defs>
+  <rect x="${x + w*0.04}" y="${y + h*0.12}" width="${w}" height="${h}" rx="${h*0.06}" fill="#000" opacity=".6" filter="url(#blur30)"/>
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h*0.06}" fill="#1f1f1c" opacity=".55"/>
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${h*0.06}" fill="url(#${g})" stroke="#fff" stroke-opacity=".38" stroke-width="2.5"/>
+  <path d="M${x + w*0.03} ${y + h*0.08} L${x + w/2} ${y + h*0.58} L${x + w*0.97} ${y + h*0.08}" fill="none" stroke="${A}" stroke-opacity=".9" stroke-width="${h*0.035}" stroke-linejoin="round"/>
+  <circle cx="${x + w/2}" cy="${y + h*0.5}" r="${sealR*1.8}" fill="${A}" opacity=".35" filter="url(#blur12)"/>
+  ${sphere(x + w/2, y + h*0.5, sealR, A)}`;
+}
+
+scenes["mailune-hero"] = () => {
+  const W = 2400, H = 1600, A = "#8FB4D9", B = "#335C8C";
+  let s = defsCommon(W, H) + bg(W, H, "#171714", [[900, 600, 700, 420, B, .45], [1700, 1050, 560, 360, A, .22], [1600, 300, 420, 240, "#F5F2ED", .06]]);
+  s += `<g transform="translate(1180 560) skewY(-6)">
+    ${[0,1,2,3,4].map(i => `<g transform="translate(0 ${i*110})">
+      <rect width="980" height="84" rx="18" fill="#fff" opacity="${i===0?.10:.045}" stroke="#fff" stroke-opacity="${i===0?.25:.08}"/>
+      <circle cx="46" cy="42" r="20" fill="${A}" opacity="${i===0?.8:.35}"/>
+      <rect x="90" y="24" width="${200 + (i*83)%180}" height="14" rx="7" fill="#fff" opacity=".55"/>
+      <rect x="90" y="50" width="${320 + (i*61)%200}" height="10" rx="5" fill="#fff" opacity=".2"/>
+    </g>`).join("")}
+  </g>`;
+  s += envelope(820, 360, 760, 500, A, 46);
+  s += sphere(2080, 420, 60, A) + sphere(700, 1180, 80, B) + sphere(2060, 1220, 110, A);
+  return page(W, H, s + finish(W, H));
+};
+scenes["mailune-prop"] = () => {
+  const W = 800, H = 800, A = "#8FB4D9", B = "#335C8C";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#171714"/>`;
+  s += `<g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="${B}" opacity=".5"/><circle cx="560" cy="560" r="140" fill="${A}" opacity=".2"/></g>`;
+  s += envelope(150, 250, 500, 330, A, 34) + sphere(640, 220, 30, A);
+  return page(W, H, s + finish(W, H));
+};
+
 for (const [name, fn] of Object.entries(scenes)) writeFileSync(`${name}.html`, fn());
 console.log(Object.keys(scenes).join(" "));
