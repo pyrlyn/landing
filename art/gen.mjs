@@ -237,5 +237,93 @@ scenes["mailune-prop"] = () => {
   return page(W, H, s + finish(W, H));
 };
 
+/* Weft: woven glass. Indigo warp threads crossed by gold weft threads (over-under), with a screen
+   tree of nodes pinned on the crossings — the format's tree of ids on a woven ground. */
+function weave(x0, y0, cols, rows, gap, A, B, skew) {
+  let warp = "", weftT = "";
+  for (let c = 0; c < cols; c++) {
+    const x = x0 + c * gap;
+    warp += `<rect x="${x - 7}" y="${y0 - 20}" width="14" height="${rows * gap + 40}" rx="7" fill="${A}" opacity="${c % 3 === 1 ? .75 : .32}"/>`;
+  }
+  for (let r = 0; r < rows; r++) {
+    const y = y0 + r * gap;
+    let d = `M${x0 - 30} ${y}`;
+    for (let c = 0; c < cols; c++) { const x = x0 + c * gap; d += ` Q${x - gap / 2} ${y + ((c + r) % 2 ? 9 : -9)} ${x} ${y}`; }
+    d += ` L${x0 + cols * gap} ${y}`;
+    weftT += `<path d="${d}" fill="none" stroke="${B}" stroke-width="10" stroke-linecap="round" opacity="${r % 4 === 2 ? .85 : .3}"/>`;
+    for (let c = (r % 2); c < cols; c += 2) weftT += `<rect x="${x0 + c * gap - 7}" y="${y - 9}" width="14" height="18" rx="5" fill="${A}" opacity=".5"/>`;
+  }
+  return `<g transform="${skew}">${warp}${weftT}</g>`;
+}
+function weftTree(A, B) {
+  const nodes = [[1500, 430, "screen"], [1300, 660, "form"], [1720, 660, "stack"], [1180, 900, "field"], [1420, 900, "button"], [1720, 900, "text"]];
+  const edges = [[0, 1], [0, 2], [1, 3], [1, 4], [2, 5]];
+  let s = edges.map(([a, b]) => `<path d="M${nodes[a][0]} ${nodes[a][1]} C${nodes[a][0]} ${(nodes[a][1] + nodes[b][1]) / 2} ${nodes[b][0]} ${(nodes[a][1] + nodes[b][1]) / 2} ${nodes[b][0]} ${nodes[b][1]}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>`).join("");
+  for (const [x, y, t] of nodes) {
+    const w = 40 + t.length * 22;
+    s += `<rect x="${x - w / 2 + 10}" y="${y - 32 + 18}" width="${w}" height="64" rx="16" fill="#000" opacity=".55" filter="url(#blur12)"/>
+    <rect x="${x - w / 2}" y="${y - 32}" width="${w}" height="64" rx="16" fill="#15132a" opacity=".85" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+    <text x="${x}" y="${y + 11}" text-anchor="middle" font-family="DejaVu Sans Mono, Menlo, monospace" font-size="30" fill="#fff"><tspan fill="${B}">&lt;</tspan>${t}<tspan fill="${B}">/&gt;</tspan></text>`;
+  }
+  return s;
+}
+scenes["weft-hero"] = () => {
+  const W = 2400, H = 1600, A = "#A89BFF", B = "#F2C46D";
+  let s = defsCommon(W, H) + bg(W, H, "#0C0B16", [[1300, 700, 760, 480, "#5B4BD1", .5], [1800, 1100, 520, 320, B, .16], [700, 400, 420, 260, A, .18]]);
+  s += weave(760, 300, 22, 18, 64, A, B, "translate(0 0) skewX(-14) rotate(-4 1500 800)");
+  s += `<rect width="${W}" height="${H}" fill="#0C0B16" opacity=".35"/>`;
+  s += weftTree(A, B);
+  s += sphere(2060, 360, 64, A) + sphere(640, 1220, 86, B) + sphere(2080, 1240, 104, A);
+  return page(W, H, s + finish(W, H));
+};
+scenes["weft-prop"] = () => {
+  const W = 800, H = 800, A = "#A89BFF", B = "#F2C46D";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#0C0B16"/>`;
+  s += `<g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#5B4BD1" opacity=".55"/><circle cx="560" cy="560" r="140" fill="${B}" opacity=".18"/></g>`;
+  s += weave(190, 200, 8, 7, 60, A, B, "rotate(-8 400 400)") + sphere(620, 210, 32, B);
+  return page(W, H, s + finish(W, H));
+};
+
+/* swarfr: helical shavings in temper colours (straw, bronze, purple, blue) curling off a glass block. */
+function curl(cx, cy, r, turns, len, rot, stops, w) {
+  const g = id("tg");
+  let d = "";
+  const N = 160;
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, a = t * turns * Math.PI * 2;
+    const x = cx + Math.cos(a) * r * (1 - t * .25) + t * len, y = cy + Math.sin(a) * r * .42 * (1 - t * .25) + t * len * .35;
+    d += `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
+  }
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="0">${stops.map((c, i) => `<stop offset="${i / (stops.length - 1)}" stop-color="${c}"/>`).join("")}</linearGradient></defs>
+  <path d="${d}" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="${w + 8}" stroke-linecap="round" filter="url(#blur12)" transform="rotate(${rot} ${cx} ${cy}) translate(10 24)"/>
+  <path d="${d}" fill="none" stroke="url(#${g})" stroke-width="${w}" stroke-linecap="round" transform="rotate(${rot} ${cx} ${cy})"/>
+  <path d="${d}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="${Math.max(2, w * .18)}" stroke-linecap="round" transform="rotate(${rot} ${cx} ${cy}) translate(0 -${w * .25})"/>`;
+}
+const TEMPER = ["#E9B45A", "#C9824A", "#8E6FB8", "#7FA8D6"];
+scenes["swarfr-hero"] = () => {
+  const W = 2400, H = 1600, A = "#E9B45A", B = "#7FA8D6";
+  let s = defsCommon(W, H) + bg(W, H, "#0E0D0B", [[1200, 760, 720, 440, "#9A6A16", .4], [1800, 1100, 520, 320, B, .18], [700, 420, 420, 240, A, .12]]);
+  /* glass stock block with a machined step */
+  s += `<g transform="translate(860 560)">
+    <rect x="30" y="50" width="760" height="420" rx="26" fill="#000" opacity=".6" filter="url(#blur30)"/>
+    <path d="M0 40 Q0 0 40 0 H560 V140 H760 Q780 140 780 180 V420 Q780 460 740 460 H40 Q0 460 0 420 Z" fill="#1c1a16" opacity=".6" stroke="#fff" stroke-opacity=".35" stroke-width="2.5"/>
+    <path d="M560 0 V140 H780" fill="none" stroke="${A}" stroke-opacity=".9" stroke-width="4"/>
+    ${[0,1,2,3,4,5,6,7,8,9,10,11].map(i => `<rect x="${40 + i*42}" y="410" width="2" height="${i % 4 === 0 ? 30 : 16}" fill="#fff" opacity=".35"/>`).join("")}
+  </g>`;
+  s += curl(1420, 560, 120, 3.2, 520, -18, TEMPER, 26);
+  s += curl(1520, 520, 80, 2.6, 380, 12, TEMPER.slice().reverse(), 18);
+  s += curl(1700, 640, 60, 3, 300, 30, TEMPER, 14);
+  s += curl(1100, 1160, 70, 2.4, 260, -40, TEMPER, 14);
+  s += sphere(2060, 380, 58, A) + sphere(640, 1220, 84, B);
+  return page(W, H, s + finish(W, H));
+};
+scenes["swarfr-prop"] = () => {
+  const W = 800, H = 800, A = "#E9B45A", B = "#7FA8D6";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#0E0D0B"/>`;
+  s += `<g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#9A6A16" opacity=".45"/><circle cx="560" cy="560" r="140" fill="${B}" opacity=".2"/></g>`;
+  s += curl(260, 360, 110, 3, 320, -10, TEMPER, 24) + sphere(620, 200, 30, A);
+  return page(W, H, s + finish(W, H));
+};
+
 for (const [name, fn] of Object.entries(scenes)) writeFileSync(`${name}.html`, fn());
 console.log(Object.keys(scenes).join(" "));

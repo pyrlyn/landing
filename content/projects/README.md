@@ -10,6 +10,8 @@ source repository instead.
 | `cox.md` | [`pyrlyn/cox` `docs/site.md`](https://github.com/pyrlyn/cox/blob/main/docs/site.md) |
 | `ketch.md` | [`pyrlyn/ketch` `docs/site.md`](https://github.com/pyrlyn/ketch/blob/main/docs/site.md) |
 | `mailune.md` | [`pyrlyn/mailune` `docs/site.md`](https://github.com/pyrlyn/mailune/blob/main/docs/site.md) (copied by hand until Mailune has a `sync-docs.yml`) |
+| `weft.md` | Written for this site from [`pyrlyn/weft`](https://github.com/pyrlyn/weft) README and `docs/` (no `docs/site.md` yet; copied by hand) |
+| `swarfr.md` | Written for this site from [`pyrlyn/swarfr`](https://github.com/pyrlyn/swarfr) README and `docs/` (no `docs/site.md` yet; copied by hand) |
 
 ## How files arrive
 

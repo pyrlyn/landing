@@ -1,0 +1,74 @@
+/* Per-product signature touches for products added after the original four.
+   Same tokens, layout and components as rtok, cox, ketch and runa; each product only adds a motif
+   on top, scoped by the <html data-theme> that Base.astro sets on its product and docs pages. */
+
+/* ---------- Weft: woven threads. Indigo warp, gold weft, markup brackets. ---------- */
+[data-theme="weft"] {
+  --weave: repeating-linear-gradient(90deg, color-mix(in oklch, var(--accent) 70%, transparent) 0 6px, transparent 6px 12px),
+           repeating-linear-gradient(0deg, color-mix(in oklch, var(--accent-2) 55%, transparent) 0 2px, transparent 2px 4px);
+}
+/* The title's full stop becomes a woven square: one warp and one weft thread crossing. */
+[data-theme="weft"] .p-title span {
+  display: inline-block; width: .28em; height: .28em; margin-left: .06em; vertical-align: baseline;
+  color: transparent; overflow: hidden; border-radius: 2px;
+  background: linear-gradient(90deg, transparent 38%, var(--accent) 38% 62%, transparent 62%),
+              linear-gradient(0deg, transparent 38%, var(--accent-2) 38% 62%, transparent 62%),
+              color-mix(in oklch, var(--accent) 22%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent) 50%, transparent);
+}
+/* Eyebrows read as markup tags. */
+[data-theme="weft"] .eyebrow { font-family: var(--font-mono); letter-spacing: .06em; text-transform: none; }
+[data-theme="weft"] .eyebrow::before { content: "<"; color: var(--accent-2); }
+[data-theme="weft"] .eyebrow::after { content: "/>"; color: var(--accent-2); }
+/* A short woven band under every section heading. */
+[data-theme="weft"] .section__head::after {
+  content: ""; display: block; width: 96px; height: 6px; border-radius: 2px; background: var(--weave); opacity: .8;
+}
+[data-theme="weft"] .section__head--center::after { margin-inline: auto; }
+/* Feature icons get a stitched (dashed) frame. */
+[data-theme="weft"] .feature .icon { border-radius: 6px; outline: 1px dashed color-mix(in oklch, var(--accent-2) 55%, transparent); outline-offset: 3px; }
+[data-theme="weft"] .weft-chip__attr { color: var(--accent); }
+[data-theme="weft"] .weft-chip__val { color: var(--accent-2); }
+/* Docs: the current page is stitched to the rail; h2 headings carry a thread crossing. */
+[data-theme="weft"] .dnav__item[aria-current="page"] {
+  box-shadow: none;
+  background: linear-gradient(0deg, var(--accent-2) 50%, transparent 50%) left / 2px 6px repeat-y,
+              color-mix(in oklch, var(--accent) 12%, transparent);
+}
+[data-theme="weft"] .prose--doc h2::before {
+  content: ""; display: inline-block; width: .5em; height: .5em; margin-right: .45em; vertical-align: .08em; border-radius: 2px;
+  background: linear-gradient(90deg, transparent 35%, var(--accent) 35% 65%, transparent 65%),
+              linear-gradient(0deg, transparent 35%, var(--accent-2) 35% 65%, transparent 65%);
+}
+[data-theme="weft"] .prose--doc :not(pre) > code { color: color-mix(in oklch, var(--accent-2) 80%, white); }
+
+/* ---------- swarfr: machined metal. Temper colours (straw to blue), ruler ticks, chamfers. ---------- */
+[data-theme="swarfr"] {
+  --temper: linear-gradient(90deg, var(--accent) 0%, #C9824A 38%, #8E6FB8 68%, var(--accent-2) 100%);
+  --ticks: repeating-linear-gradient(90deg, color-mix(in oklch, var(--accent) 80%, transparent) 0 1px, transparent 1px 8px);
+}
+[data-theme="swarfr"] .p-title span { background: var(--temper); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* Eyebrows sit on a measuring scale; numbers are tabular everywhere. */
+[data-theme="swarfr"] body { font-variant-numeric: tabular-nums; }
+[data-theme="swarfr"] .eyebrow::before { content: ""; width: 33px; height: 8px; background: var(--ticks), linear-gradient(var(--accent), var(--accent)) left bottom / 100% 1px no-repeat; opacity: .85; }
+[data-theme="swarfr"] .section__head::after { content: ""; display: block; width: 100%; max-width: 220px; height: 2px; background: var(--temper); opacity: .7; }
+[data-theme="swarfr"] .section__head--center::after { margin-inline: auto; }
+/* Feature cards are machined parts: one chamfered corner. */
+[data-theme="swarfr"] .feature { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
+[data-theme="swarfr"] .feature .icon { border-radius: 4px; }
+/* Hero gauge: real numbers from docs/bench.md. */
+.swarf-gauge { flex-direction: column; align-items: stretch; gap: 8px; width: 280px; font-size: .8rem; }
+.swarf-gauge__label { color: var(--muted); font-size: .72rem; letter-spacing: .04em; }
+.swarf-gauge__row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 8px; font-family: var(--font-mono); }
+.swarf-gauge__row span { color: var(--muted); }
+.swarf-gauge__row i { display: block; height: 8px; width: var(--w); border-radius: 2px; background: color-mix(in oklch, var(--fg) 30%, transparent); }
+.swarf-gauge__row--after i { background: var(--temper, var(--accent)); }
+.swarf-gauge__row--after b { color: var(--accent); }
+.swarf-gauge small { color: var(--muted); font-size: .68rem; }
+/* Docs: temper-coloured rail on the current page; a scale tick before h2. */
+[data-theme="swarfr"] .dnav__item[aria-current="page"] { box-shadow: none; background: var(--temper) left / 2px 100% no-repeat, color-mix(in oklch, var(--accent) 10%, transparent); }
+[data-theme="swarfr"] .prose--doc h2 { padding-top: var(--s-4); background: var(--ticks) left top / 64px 6px no-repeat; }
+
+@media (max-width: 640px) {
+  .swarf-gauge { width: min(260px, 88vw); }
+}

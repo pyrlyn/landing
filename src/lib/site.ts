@@ -28,9 +28,11 @@ export const FREE_HIGHLIGHTS: Record<string, string[]> = {
   ketch: ["Install from any GitHub release", "SHA-256 verification", "Rollback, lock and sync"],
   runa: ["Fit check before any download", "Local GGUF and cloud APIs, same controls", "OpenAI-compatible runa serve"],
   mailune: ["Direct to IMAP, JMAP, Gmail and Graph", "On-device AI by default", "Encrypted mail stays local"],
+  weft: ["The weft command: validate, fmt, explain", "MCP server and editor plugins", "Render to HTML, React, SwiftUI and Slint"],
+  swarfr: ["Lossless compress and dedupe", "Seed new worktrees from a sibling", "Read-only status and advise"],
 };
 
-/** One license wording for every project (rtok, cox, ketch, runa and Mailune share the same triple license). */
+/** One license wording for every project (rtok, cox, ketch, runa, Mailune and swarfr share the same triple license; Weft overrides it in LICENSE_OVERRIDES). */
 export const LICENSE = {
   short: "GPLv3, royalty-free or commercial — your choice",
   items: [
@@ -40,7 +42,20 @@ export const LICENSE = {
   ],
 };
 
-export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa" | "mailune";
+/** Products under another license than LICENSE (Weft is Apache-2.0). */
+export const LICENSE_OVERRIDES: Record<string, { short: string; lead: string; items: { name: string; text: string }[] }> = {
+  weft: {
+    short: "Apache License 2.0",
+    lead: "Weft is licensed under the Apache License 2.0:",
+    items: [{ name: "Apache License 2.0", text: "use, modify and distribute it, including in proprietary software, under the terms in LICENSE." }],
+  },
+};
+export const licenseFor = (slug: string) => {
+  const o = LICENSE_OVERRIDES[slug];
+  return o ?? { short: LICENSE.short, lead: "", items: LICENSE.items };
+};
+
+export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa" | "mailune" | "weft" | "swarfr";
 
 export interface Theme {
   accent: string;
@@ -60,6 +75,8 @@ export const THEMES: Record<ThemeKey, Theme> = {
   ketch: { accent: "#3DDCB0", accent2: "#5CC8FF", accentLight: "#0F6F5C", bg: "#06100F", images: "ketch", heroAlt: "" },
   runa: { accent: "#E85A3C", accent2: "#FFB088", accentLight: "#C94830", bg: "#120E0C", images: "runa", heroAlt: "" },
   mailune: { accent: "#8FB4D9", accent2: "#B7D0E8", accentLight: "#335C8C", bg: "#171714", images: "mailune", heroAlt: "" },
+  weft: { accent: "#A89BFF", accent2: "#F2C46D", accentLight: "#5B4BD1", bg: "#0C0B16", images: "weft", heroAlt: "" },
+  swarfr: { accent: "#E9B45A", accent2: "#7FA8D6", accentLight: "#9A6A16", bg: "#0E0D0B", images: "swarfr", heroAlt: "" },
 };
 
 /**
@@ -74,6 +91,8 @@ export const RELEASE_STATUS: Record<string, string> = {
   cox: "In development · no stable release yet",
   runa: "In development · no release yet",
   mailune: "In development · no release yet",
+  weft: "Prototype · no release yet",
+  swarfr: "In development · no stable release yet",
 };
 export const RELEASE_STATUS_FALLBACK = "In development";
 
