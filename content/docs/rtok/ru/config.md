@@ -460,6 +460,10 @@ config_path   = "~/.continue/config.yaml"        # Continue (VS Code, JetBrains,
 config_path   = "~/.config/crush/crush.json" # Crush: global JSON config (mcp.rtok); CRUSH_GLOBAL_CONFIG or XDG_CONFIG_HOME move it
 [setup.openhands]
 mcp_path      = "~/.openhands/mcp.json"     # OpenHands: пользовательский файл MCP-серверов (mcpServers)
+[setup.augment]
+settings_path = "~/.augment/settings.json"   # Auggie CLI: пользовательские настройки, mcpServers
+[setup.reasonix]
+dir           = "~/.reasonix"                # Reasonix: config.toml (MCP-серверы в [[plugins]]); REASONIX_HOME переносит каталог (Windows: %APPDATA%/reasonix)
 
 [expand]                              # rtok expand <id>
 max_lines = 0                         # 0 = unlimited   (--lines a-b is per call)
