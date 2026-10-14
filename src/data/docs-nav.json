@@ -4,9 +4,12 @@
     "groups": [
       { "label": "Start", "items": [
         { "file": "getting-started.md", "title": "Getting started" },
+        { "file": "install.md", "title": "Install" },
         { "file": "config.md", "title": "Configuration" }
       ] },
       { "label": "Guides", "items": [
+        { "file": "claude-code.md", "title": "Claude Code setup" },
+        { "file": "examples.md", "title": "Examples" },
         { "file": "agents.md", "title": "Agents" },
         { "file": "cmd-rules.md", "title": "Command rules" },
         { "file": "prompt-cache.md", "title": "Prompt cache" },
@@ -18,10 +21,12 @@
         { "file": "plugin-versions.md", "title": "Plugin versions" }
       ] },
       { "label": "Background", "items": [
-        { "file": "comparison.md", "title": "Comparison" }
+        { "file": "comparison.md", "title": "Comparison" },
+        { "file": "measuring.md", "title": "Measuring a reduction" }
       ] }
     ],
     "exclude": {
+      "development.md": "Contributor gate, test selection and packaging notes",
       "release.md": "Maintainer release runbook (signing, notarisation, registry publishing)",
       "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud",
       "plugin-plan-template.md": "Internal template for plugin proposals",
@@ -57,6 +62,7 @@
     ],
     "exclude": {
       "design/": "Internal design notes, scope gates and proposals",
+      "development.md": "Contributor toolchain, checks and crate layout",
       "brand/": "Visual design system of the cox website",
       "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud",
       "assets/": "Notes about image assets, not documentation",
@@ -72,6 +78,8 @@
         { "file": "COMMANDS.md", "title": "Commands" }
       ] },
       { "label": "Guides", "items": [
+        { "file": "GUIDE.md", "title": "Guide" },
+        { "file": "CONFIGURATION.md", "title": "Configuration" },
         { "file": "MANIFESTS.md", "title": "Manifests" },
         { "file": "LOCKFILE.md", "title": "Lockfile" },
         { "file": "REGISTRY.md", "title": "Registry" },
@@ -79,9 +87,13 @@
       ] },
       { "label": "Help", "items": [
         { "file": "TROUBLESHOOTING.md", "title": "Troubleshooting" }
+      ] },
+      { "label": "Background", "items": [
+        { "file": "COMPARISON.md", "title": "Comparison" }
       ] }
     ],
     "exclude": {
+      "DEVELOPMENT.md": "Contributor build, CI and release runbook",
       "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud",
       "research": "Internal research notes",
       "qa/": "Internal QA audits"
@@ -102,6 +114,7 @@
     ],
     "exclude": {
       "README.md": "Repository docs index, mostly links to internal pages",
+      "development.md": "Contributor layout, gates, CI and release notes",
       "fit.md": "Fit-checker internals: estimator formulas and calibration",
       "memory.md": "Internal crate API of the memory manager",
       "versions.md": "Maintainer notes on version pins and release artifacts",
