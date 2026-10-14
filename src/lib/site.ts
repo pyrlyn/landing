@@ -28,6 +28,13 @@ export const FREE_HIGHLIGHTS: Record<string, string[]> = {
   ketch: ["Install from any GitHub release", "SHA-256 verification", "Rollback, lock and sync"],
   runa: ["Fit check before any download", "Local GGUF and cloud APIs, same controls", "OpenAI-compatible runa serve"],
   mailune: ["Direct to IMAP, JMAP, Gmail and Graph", "On-device AI by default", "Encrypted mail stays local"],
+  swarfr: ["Lossless compress and dedupe of target/", "Seed new worktrees from a sibling", "Lossy passes only when named"],
+  weft: ["Strict XML subset for models", "Typed JSON validated against a catalog", "validate, fmt and explain CLI"],
+  aulo: ["Switchable speech engines", "MCP client and server", "Local or remote models"],
+  stator: ["TypeScript to native binaries", "Typed and untyped code in one pipeline", "Per-construct explain report"],
+  bindsmith: ["One YAML, six Flutter platforms", "Review markers for unmapped APIs", "Pinned dependencies in a lock"],
+  scull: ["Rust terminal core", "SwiftUI on macOS, WinUI on Windows", "Native text stacks"],
+  kerf: ["Small Rust core", "Sandboxed WASM plugins", "LSP and DAP as processes"],
 };
 
 /** One license wording for every project (rtok, cox, ketch, runa and Mailune share the same triple license). */
@@ -74,13 +81,23 @@ export const RELEASE_STATUS: Record<string, string> = {
   cox: "In development · no stable release yet",
   runa: "In development · no release yet",
   mailune: "In development · no release yet",
+  swarfr: "In development · early release",
+  weft: "Prototype · no release yet",
+  aulo: "Early development · no release yet",
+  stator: "Research compiler · no release yet",
+  bindsmith: "In development · no release yet",
+  scull: "Early development · no release yet",
+  kerf: "Research · no code yet",
 };
 export const RELEASE_STATUS_FALLBACK = "In development";
 
 /** README facts the synced site copy does not carry but the page must keep, worded as a plain note (no "From the README:" prefix).
  *  Source: each repo's README.md (rtok: the limitations list; runa: the status paragraph its synced Overview carries).
  *  (cox's "under active development, APIs not stable" status is already in its synced Overview and the hero status card.) */
-export const CAVEATS: Partial<Record<ThemeKey, string>> = {
+export const CAVEATS: Partial<Record<string, string>> = {
+  weft: "Weft is licensed under the Apache License 2.0, not under the license choice shown below.",
+  scull: "Scull has no license file yet; the license choice below is the one shared by the other pyrlyn projects.",
+  kerf: "Kerf is in the research stage and has no code yet.",
   runa: "runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
   rtok: "Token savings are estimates from a chars-per-token heuristic until matched against provider usage. No live A/B cost reduction has been established yet.",
 };

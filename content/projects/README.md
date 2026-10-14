@@ -10,6 +10,13 @@ source repository instead.
 | `cox.md` | [`pyrlyn/cox` `docs/site.md`](https://github.com/pyrlyn/cox/blob/main/docs/site.md) |
 | `ketch.md` | [`pyrlyn/ketch` `docs/site.md`](https://github.com/pyrlyn/ketch/blob/main/docs/site.md) |
 | `mailune.md` | [`pyrlyn/mailune` `docs/site.md`](https://github.com/pyrlyn/mailune/blob/main/docs/site.md) (copied by hand until Mailune has a `sync-docs.yml`) |
+| `swarfr.md` | [`pyrlyn/swarfr` `docs/site.md`](https://github.com/pyrlyn/swarfr/blob/main/docs/site.md) |
+| `weft.md` | [`pyrlyn/weft` `docs/site.md`](https://github.com/pyrlyn/weft/blob/main/docs/site.md) |
+| `aulo.md` | [`pyrlyn/aulo` `docs/site.md`](https://github.com/pyrlyn/aulo/blob/main/docs/site.md) |
+| `stator.md` | [`pyrlyn/stator` `docs/site.md`](https://github.com/pyrlyn/stator/blob/main/docs/site.md) |
+| `bindsmith.md` | [`pyrlyn/bindsmith` `docs/site.md`](https://github.com/pyrlyn/bindsmith/blob/main/docs/site.md) |
+| `scull.md` | [`pyrlyn/scull` `docs/site.md`](https://github.com/pyrlyn/scull/blob/main/docs/site.md) |
+| `kerf.md` | [`pyrlyn/kerf` `docs/site.md`](https://github.com/pyrlyn/kerf/blob/main/docs/site.md) |
 
 ## How files arrive
 

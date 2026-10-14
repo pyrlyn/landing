@@ -28,7 +28,7 @@ interface Props {
   noindex?: boolean;
 }
 const { title, description, theme, ogType = "website", imageAlt, jsonLd = [], noindex = false, ...over } = Astro.props;
-const t = { ...THEMES[theme], ...Object.fromEntries(Object.entries(over).filter(([, v]) => v)) };
+const t = { ...(THEMES[theme] ?? THEMES.home), ...Object.fromEntries(Object.entries(over).filter(([, v]) => v)) };
 const vars = `--accent:${t.accent};--accent-2:${t.accent2};--accent-light:${t.accentLight};--bg:${t.bg}`;
 const og = new URL(u(`/images/${t.images}/og.jpg`), Astro.site).href;
 const canonical = new URL(Astro.url.pathname.replace(/\/?$/, "/"), Astro.site).href;
