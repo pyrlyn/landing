@@ -4,6 +4,7 @@ import "@fontsource-variable/inter";
 import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import "../styles/tailwind.css";
+import "../styles/motion.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
 import { u, BRAND, THEMES, type ThemeKey } from "../lib/site";
@@ -42,6 +43,8 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
 <html lang="en" style={vars} data-theme={theme} class={inDocs ? "is-still" : undefined}>
   <head>
     <meta charset="utf-8" />
+    <!-- Load entrance (motion.css): only pages with a hero, only when motion is allowed. Runs before first paint, so nothing flashes. -->
+    {!inDocs && <script is:inline>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("intro")</script>}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
