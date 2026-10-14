@@ -5,6 +5,8 @@ const cards = {
   cox: { t: "cox", s: "A modular terminal coding agent in Rust with a safe, event-driven core.", k: "Open source · v0.1.0", a: "#A8E06C", b: "#6FD6B4", mono: true },
   ketch: { t: "ketch", s: "Catch releases straight from GitHub.", k: "Open source · v0.6.0", a: "#3DDCB0", b: "#5CC8FF", mono: true },
   mailune: { t: "Mailune", s: "A local-first mail client with private AI, for every platform.", k: "Open source · in development", a: "#8FB4D9", b: "#B7D0E8", mono: false, brand: "listepo tools" },
+  weft: { t: "Weft", s: "An open UI format AI agents can read, write, validate and patch.", k: "Open source · prototype", a: "#A89BFF", b: "#F2C46D", mono: false, brand: "listepo tools" },
+  swarfr: { t: "swarfr", s: "Sweep the swarf out of Cargo target/ directories.", k: "Open source · in development", a: "#E9B45A", b: "#7FA8D6", mono: true, brand: "listepo tools" },
 };
 for (const [k, c] of Object.entries(cards)) {
   writeFileSync(`og-${k}.html`, `<!doctype html><html><head><style>
