@@ -12,6 +12,11 @@ source repository instead.
 | `mailune.md` | [`pyrlyn/mailune` `docs/site.md`](https://github.com/pyrlyn/mailune/blob/main/docs/site.md) (copied by hand until Mailune has a `sync-docs.yml`) |
 | `weft.md` | Written for this site from [`pyrlyn/weft`](https://github.com/pyrlyn/weft) README and `docs/` (no `docs/site.md` yet; copied by hand) |
 | `swarfr.md` | Written for this site from [`pyrlyn/swarfr`](https://github.com/pyrlyn/swarfr) README and `docs/` (no `docs/site.md` yet; copied by hand) |
+| `aulo.md` | Written for this site from [`pyrlyn/aulo`](https://github.com/pyrlyn/aulo) README and `docs/` (no `docs/site.md` yet; copied by hand) |
+| `scull.md` | Written for this site from [`pyrlyn/scull`](https://github.com/pyrlyn/scull) README and `docs/` (no `docs/site.md` yet; copied by hand) |
+| `kerf.md` | Written for this site from [`pyrlyn/kerf`](https://github.com/pyrlyn/kerf) README and `docs/` (no `docs/site.md` yet; copied by hand) |
+| `stator.md` | Written for this site from [`pyrlyn/stator`](https://github.com/pyrlyn/stator) README and `docs/` (no `docs/site.md` yet; copied by hand) |
+| `bindsmith.md` | Written for this site from [`pyrlyn/bindsmith`](https://github.com/pyrlyn/bindsmith) README and `docs/` (no `docs/site.md` yet; copied by hand) |
 
 ## How files arrive
 

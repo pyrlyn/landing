@@ -7,6 +7,11 @@ const cards = {
   mailune: { t: "Mailune", s: "A local-first mail client with private AI, for every platform.", k: "Open source · in development", a: "#8FB4D9", b: "#B7D0E8", mono: false, brand: "listepo tools" },
   weft: { t: "Weft", s: "An open UI format AI agents can read, write, validate and patch.", k: "Open source · prototype", a: "#A89BFF", b: "#F2C46D", mono: false, brand: "listepo tools" },
   swarfr: { t: "swarfr", s: "Sweep the swarf out of Cargo target/ directories.", k: "Open source · in development", a: "#E9B45A", b: "#7FA8D6", mono: true, brand: "listepo tools" },
+  aulo: { t: "aulo", s: "A local-first voice agent that controls your computer.", k: "Open source · specification", a: "#FF7AA2", b: "#7EF2D0", mono: true, brand: "listepo tools" },
+  scull: { t: "Scull", s: "A terminal emulator with a Rust core and a native UI per platform.", k: "Early scaffold", a: "#EDE6D6", b: "#45E39A", mono: true, brand: "listepo tools" },
+  kerf: { t: "Kerf", s: "An IDE with a small Rust core and sandboxed WASM plugins.", k: "Open source · research", a: "#C6F24E", b: "#FF6BD6", mono: false, brand: "listepo tools" },
+  stator: { t: "Stator", s: "An ahead-of-time TypeScript and JavaScript compiler to native binaries.", k: "Open source · research compiler", a: "#5B7CFF", b: "#9AA3B5", mono: true, brand: "listepo tools" },
+  bindsmith: { t: "bindsmith", s: "One bindsmith.yaml, six Flutter platforms.", k: "Open source · in development", a: "#E8A05C", b: "#13B9FD", mono: false, brand: "listepo tools" },
 };
 for (const [k, c] of Object.entries(cards)) {
   writeFileSync(`og-${k}.html`, `<!doctype html><html><head><style>
