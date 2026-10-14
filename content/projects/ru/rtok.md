@@ -9,7 +9,7 @@ install_alternatives:
   - 'brew install pyrlyn/tap/rtok'
   - 'npm i -g rtok-cli'
   - 'uv tool install rtok-cli'
-version: "0.10.0"
+version: "0.17.0-alpha.1"
 accent: "#5CE1FF"
 accent2: "#FF6B4A"
 accentLight: "#0B7FA0"
