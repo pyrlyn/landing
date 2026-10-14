@@ -13,8 +13,7 @@ order: 9
 
 <!-- Website copy for the pyrlyn project site, written for pyrlyn/landing from README.md at
 pyrlyn/scull@7d1a8c0 (checked 2026-10-14). No tag and no release; the README status is "an empty
-Cargo workspace", hence `status` and version 0.0.0. The repository has no LICENSE file yet, so the
-site shows "No license yet" (LICENSE_OVERRIDES). Ivory and phosphor green are this site's. -->
+Cargo workspace", hence `status` and version 0.0.0. It uses the standard triple license (same LICENSE files as cox). Ivory and phosphor green are this site's. -->
 
 ## Overview
 

@@ -49,11 +49,6 @@ export const LICENSE = {
 
 /** Products under another license than LICENSE (Weft is Apache-2.0). */
 export const LICENSE_OVERRIDES: Record<string, { short: string; lead: string; items: { name: string; text: string }[] }> = {
-  scull: {
-    short: "No license yet",
-    lead: "The Scull repository has no license file yet:",
-    items: [{ name: "No license chosen", text: "until one is added, no license is granted; ask in the repository before using the code." }],
-  },
   weft: {
     short: "Apache License 2.0",
     lead: "Weft is licensed under the Apache License 2.0:",
