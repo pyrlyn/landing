@@ -28,16 +28,16 @@ export const FREE_HIGHLIGHTS: Record<string, string[]> = {
   ketch: ["Install from any GitHub release", "SHA-256 verification", "Rollback, lock and sync"],
   runa: ["Fit check before any download", "Local GGUF and cloud APIs, same controls", "OpenAI-compatible runa serve"],
   mailune: ["Direct to IMAP, JMAP, Gmail and Graph", "On-device AI by default", "Encrypted mail stays local"],
-  swarfr: ["Lossless compress and dedupe of target/", "Seed new worktrees from a sibling", "Lossy passes only when named"],
-  weft: ["Strict XML subset for models", "Typed JSON validated against a catalog", "validate, fmt and explain CLI"],
-  aulo: ["Switchable speech engines", "MCP client and server", "Local or remote models"],
-  stator: ["TypeScript to native binaries", "Typed and untyped code in one pipeline", "Per-construct explain report"],
-  bindsmith: ["One YAML, six Flutter platforms", "Review markers for unmapped APIs", "Pinned dependencies in a lock"],
-  scull: ["Rust terminal core", "SwiftUI on macOS, WinUI on Windows", "Native text stacks"],
-  kerf: ["Small Rust core", "Sandboxed WASM plugins", "LSP and DAP as processes"],
+  weft: ["The weft command: validate, fmt, explain", "MCP server and editor plugins", "Render to HTML, React, SwiftUI and Slint"],
+  swarfr: ["Lossless compress and dedupe", "Seed new worktrees from a sibling", "Read-only status and advise"],
+  aulo: ["The full specification and plan", "gRPC API reference", "Free, open-source edition when it ships"],
+  scull: ["Rust core, native UI per platform", "Research on six terminals", "Open development from day one"],
+  kerf: ["Research on ten editors", "Sandboxed WASM plugin design", "Open development from day one"],
+  stator: ["ts and js modes", "stator explain verdicts", "vite-stator bundler for js mode"],
+  bindsmith: ["Six platforms from one YAML", "Review markers and verify", "CI-safe dump, diff and --check"],
 };
 
-/** One license wording for every project (rtok, cox, ketch, runa and Mailune share the same triple license). */
+/** One license wording for every project (rtok, cox, ketch, runa, Mailune, swarfr, aulo, Kerf, Stator and bindsmith share the same triple license; Weft and Scull override it in LICENSE_OVERRIDES). */
 export const LICENSE = {
   short: "GPLv3, royalty-free or commercial — your choice",
   items: [
@@ -47,7 +47,25 @@ export const LICENSE = {
   ],
 };
 
-export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa" | "mailune";
+/** Products under another license than LICENSE (Weft is Apache-2.0). */
+export const LICENSE_OVERRIDES: Record<string, { short: string; lead: string; items: { name: string; text: string }[] }> = {
+  scull: {
+    short: "No license yet",
+    lead: "The Scull repository has no license file yet:",
+    items: [{ name: "No license chosen", text: "until one is added, no license is granted; ask in the repository before using the code." }],
+  },
+  weft: {
+    short: "Apache License 2.0",
+    lead: "Weft is licensed under the Apache License 2.0:",
+    items: [{ name: "Apache License 2.0", text: "use, modify and distribute it, including in proprietary software, under the terms in LICENSE." }],
+  },
+};
+export const licenseFor = (slug: string) => {
+  const o = LICENSE_OVERRIDES[slug];
+  return o ?? { short: LICENSE.short, lead: "", items: LICENSE.items };
+};
+
+export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa" | "mailune" | "weft" | "swarfr" | "aulo" | "scull" | "kerf" | "stator" | "bindsmith";
 
 export interface Theme {
   accent: string;
@@ -67,6 +85,13 @@ export const THEMES: Record<ThemeKey, Theme> = {
   ketch: { accent: "#3DDCB0", accent2: "#5CC8FF", accentLight: "#0F6F5C", bg: "#06100F", images: "ketch", heroAlt: "" },
   runa: { accent: "#E85A3C", accent2: "#FFB088", accentLight: "#C94830", bg: "#120E0C", images: "runa", heroAlt: "" },
   mailune: { accent: "#8FB4D9", accent2: "#B7D0E8", accentLight: "#335C8C", bg: "#171714", images: "mailune", heroAlt: "" },
+  weft: { accent: "#A89BFF", accent2: "#F2C46D", accentLight: "#5B4BD1", bg: "#0C0B16", images: "weft", heroAlt: "" },
+  swarfr: { accent: "#E9B45A", accent2: "#7FA8D6", accentLight: "#9A6A16", bg: "#0E0D0B", images: "swarfr", heroAlt: "" },
+  aulo: { accent: "#FF7AA2", accent2: "#7EF2D0", accentLight: "#C2386A", bg: "#120B10", images: "aulo", heroAlt: "" },
+  scull: { accent: "#EDE6D6", accent2: "#45E39A", accentLight: "#2E7D5B", bg: "#0A0C0B", images: "scull", heroAlt: "" },
+  kerf: { accent: "#C6F24E", accent2: "#FF6BD6", accentLight: "#5E7A12", bg: "#0B0C08", images: "kerf", heroAlt: "" },
+  stator: { accent: "#5B7CFF", accent2: "#9AA3B5", accentLight: "#3352D6", bg: "#0C0E14", images: "stator", heroAlt: "" },
+  bindsmith: { accent: "#C87941", accent2: "#13B9FD", accentLight: "#A35F2E", bg: "#121416", images: "bindsmith", heroAlt: "" },
 };
 
 /**
@@ -81,23 +106,20 @@ export const RELEASE_STATUS: Record<string, string> = {
   cox: "In development · no stable release yet",
   runa: "In development · no release yet",
   mailune: "In development · no release yet",
-  swarfr: "In development · early release",
   weft: "Prototype · no release yet",
-  aulo: "Early development · no release yet",
+  swarfr: "In development · no stable release yet",
+  aulo: "Specification only · no code yet",
+  scull: "Early scaffold · no release yet",
+  kerf: "Research · no code yet",
   stator: "Research compiler · no release yet",
   bindsmith: "In development · no release yet",
-  scull: "Early development · no release yet",
-  kerf: "Research · no code yet",
 };
 export const RELEASE_STATUS_FALLBACK = "In development";
 
 /** README facts the synced site copy does not carry but the page must keep, worded as a plain note (no "From the README:" prefix).
  *  Source: each repo's README.md (rtok: the limitations list; runa: the status paragraph its synced Overview carries).
  *  (cox's "under active development, APIs not stable" status is already in its synced Overview and the hero status card.) */
-export const CAVEATS: Partial<Record<string, string>> = {
-  weft: "Weft is licensed under the Apache License 2.0, not under the license choice shown below.",
-  scull: "Scull has no license file yet; the license choice below is the one shared by the other pyrlyn projects.",
-  kerf: "Kerf is in the research stage and has no code yet.",
+export const CAVEATS: Partial<Record<ThemeKey, string>> = {
   runa: "runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
   rtok: "Token savings are estimates from a chars-per-token heuristic until matched against provider usage. No live A/B cost reduction has been established yet.",
 };

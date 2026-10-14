@@ -1,0 +1,150 @@
+/* Per-product signature touches for products added after the original four.
+   Same tokens, layout and components as rtok, cox, ketch and runa; each product only adds a motif
+   on top, scoped by the <html data-theme> that Base.astro sets on its product and docs pages. */
+
+/* ---------- Weft: woven threads. Indigo warp, gold weft, markup brackets. ---------- */
+[data-theme="weft"] {
+  --weave: repeating-linear-gradient(90deg, color-mix(in oklch, var(--accent) 70%, transparent) 0 6px, transparent 6px 12px),
+           repeating-linear-gradient(0deg, color-mix(in oklch, var(--accent-2) 55%, transparent) 0 2px, transparent 2px 4px);
+}
+/* The title's full stop becomes a woven square: one warp and one weft thread crossing. */
+[data-theme="weft"] .p-title span {
+  display: inline-block; width: .28em; height: .28em; margin-left: .06em; vertical-align: baseline;
+  color: transparent; overflow: hidden; border-radius: 2px;
+  background: linear-gradient(90deg, transparent 38%, var(--accent) 38% 62%, transparent 62%),
+              linear-gradient(0deg, transparent 38%, var(--accent-2) 38% 62%, transparent 62%),
+              color-mix(in oklch, var(--accent) 22%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent) 50%, transparent);
+}
+/* Eyebrows read as markup tags. */
+[data-theme="weft"] .eyebrow { font-family: var(--font-mono); letter-spacing: .06em; text-transform: none; }
+[data-theme="weft"] .eyebrow::before { content: "<"; color: var(--accent-2); }
+[data-theme="weft"] .eyebrow::after { content: "/>"; color: var(--accent-2); }
+/* A short woven band under every section heading. */
+[data-theme="weft"] .section__head::after {
+  content: ""; display: block; width: 96px; height: 6px; border-radius: 2px; background: var(--weave); opacity: .8;
+}
+[data-theme="weft"] .section__head--center::after { margin-inline: auto; }
+/* Feature icons get a stitched (dashed) frame. */
+[data-theme="weft"] .feature .icon { border-radius: 6px; outline: 1px dashed color-mix(in oklch, var(--accent-2) 55%, transparent); outline-offset: 3px; }
+[data-theme="weft"] .weft-chip__attr { color: var(--accent); }
+[data-theme="weft"] .weft-chip__val { color: var(--accent-2); }
+/* Docs: the current page is stitched to the rail; h2 headings carry a thread crossing. */
+[data-theme="weft"] .dnav__item[aria-current="page"] {
+  box-shadow: none;
+  background: linear-gradient(0deg, var(--accent-2) 50%, transparent 50%) left / 2px 6px repeat-y,
+              color-mix(in oklch, var(--accent) 12%, transparent);
+}
+[data-theme="weft"] .prose--doc h2::before {
+  content: ""; display: inline-block; width: .5em; height: .5em; margin-right: .45em; vertical-align: .08em; border-radius: 2px;
+  background: linear-gradient(90deg, transparent 35%, var(--accent) 35% 65%, transparent 65%),
+              linear-gradient(0deg, transparent 35%, var(--accent-2) 35% 65%, transparent 65%);
+}
+[data-theme="weft"] .prose--doc :not(pre) > code { color: color-mix(in oklch, var(--accent-2) 80%, white); }
+
+/* ---------- swarfr: machined metal. Temper colours (straw to blue), ruler ticks, chamfers. ---------- */
+[data-theme="swarfr"] {
+  --temper: linear-gradient(90deg, var(--accent) 0%, #C9824A 38%, #8E6FB8 68%, var(--accent-2) 100%);
+  --ticks: repeating-linear-gradient(90deg, color-mix(in oklch, var(--accent) 80%, transparent) 0 1px, transparent 1px 8px);
+}
+[data-theme="swarfr"] .p-title span { background: var(--temper); -webkit-background-clip: text; background-clip: text; color: transparent; }
+/* Eyebrows sit on a measuring scale; numbers are tabular everywhere. */
+[data-theme="swarfr"] body { font-variant-numeric: tabular-nums; }
+[data-theme="swarfr"] .eyebrow::before { content: ""; width: 33px; height: 8px; background: var(--ticks), linear-gradient(var(--accent), var(--accent)) left bottom / 100% 1px no-repeat; opacity: .85; }
+[data-theme="swarfr"] .section__head::after { content: ""; display: block; width: 100%; max-width: 220px; height: 2px; background: var(--temper); opacity: .7; }
+[data-theme="swarfr"] .section__head--center::after { margin-inline: auto; }
+/* Feature cards are machined parts: one chamfered corner. */
+[data-theme="swarfr"] .feature { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 0 100%); }
+[data-theme="swarfr"] .feature .icon { border-radius: 4px; }
+/* Hero gauge: real numbers from docs/bench.md. */
+.swarf-gauge { flex-direction: column; align-items: stretch; gap: 8px; width: 280px; font-size: .8rem; }
+.swarf-gauge__label { color: var(--muted); font-size: .72rem; letter-spacing: .04em; }
+.swarf-gauge__row { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 8px; font-family: var(--font-mono); }
+.swarf-gauge__row span { color: var(--muted); }
+.swarf-gauge__row i { display: block; height: 8px; width: var(--w); border-radius: 2px; background: color-mix(in oklch, var(--fg) 30%, transparent); }
+.swarf-gauge__row--after i { background: var(--temper, var(--accent)); }
+.swarf-gauge__row--after b { color: var(--accent); }
+.swarf-gauge small { color: var(--muted); font-size: .68rem; }
+/* Docs: temper-coloured rail on the current page; a scale tick before h2. */
+[data-theme="swarfr"] .dnav__item[aria-current="page"] { box-shadow: none; background: var(--temper) left / 2px 100% no-repeat, color-mix(in oklch, var(--accent) 10%, transparent); }
+[data-theme="swarfr"] .prose--doc h2 { padding-top: var(--s-4); background: var(--ticks) left top / 64px 6px no-repeat; }
+
+@media (max-width: 640px) {
+  .swarf-gauge { width: min(260px, 88vw); }
+}
+
+/* ---------- aulo: breath and sound. Rose voice, mint reply, soft round forms. ---------- */
+[data-theme="aulo"] { --wave: radial-gradient(circle at 50% 50%, var(--accent) 0 2px, transparent 3px) 0 0 / 10px 6px repeat-x; }
+/* The full stop is a sound source: a dot with two rings. */
+[data-theme="aulo"] .p-title span { display: inline-block; width: .2em; height: .2em; margin-left: .12em; border-radius: 50%; color: transparent; overflow: hidden; vertical-align: baseline;
+  background: var(--accent); box-shadow: 0 0 0 .05em var(--bg), 0 0 0 .08em color-mix(in oklch, var(--accent) 60%, transparent), 0 0 0 .14em var(--bg), 0 0 0 .165em color-mix(in oklch, var(--accent-2) 45%, transparent); }
+[data-theme="aulo"] .eyebrow { text-transform: lowercase; letter-spacing: .08em; }
+[data-theme="aulo"] .eyebrow::before { content: ""; width: 18px; height: 12px; background: linear-gradient(var(--accent), var(--accent)) 0 50% / 2px 40% no-repeat, linear-gradient(var(--accent), var(--accent)) 5px 50% / 2px 100% no-repeat, linear-gradient(var(--accent), var(--accent)) 10px 50% / 2px 65% no-repeat, linear-gradient(var(--accent-2), var(--accent-2)) 15px 50% / 2px 30% no-repeat; }
+[data-theme="aulo"] .section__head::after { content: ""; display: block; width: 120px; height: 6px; background: var(--wave); opacity: .7; }
+[data-theme="aulo"] .section__head--center::after { margin-inline: auto; }
+[data-theme="aulo"] .feature .icon { border-radius: 50%; }
+[data-theme="aulo"] .feature { border-radius: 28px; }
+[data-theme="aulo"] .dnav__item[aria-current="page"] { border-radius: 999px; box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent) 45%, transparent); }
+.aulo-chip { align-items: center; gap: 12px; }
+.aulo-chip__wave { display: inline-flex; align-items: center; gap: 3px; height: 28px; }
+.aulo-chip__wave i { width: 3px; border-radius: 2px; background: var(--accent); height: 30%; }
+.aulo-chip__wave i:nth-child(2), .aulo-chip__wave i:nth-child(6) { height: 60%; }
+.aulo-chip__wave i:nth-child(3), .aulo-chip__wave i:nth-child(5) { height: 85%; background: var(--accent-2); }
+.aulo-chip__wave i:nth-child(4) { height: 100%; }
+.aulo-chip strong { display: block; font-family: var(--font-mono); }
+.aulo-chip small { color: var(--muted); font-size: .72rem; }
+
+/* ---------- Scull: a CRT terminal. Ivory text, phosphor cursor, scanlines, square corners. ---------- */
+[data-theme="scull"] .p-title span { display: inline-block; width: .42em; height: .78em; margin-left: .06em; vertical-align: -.06em; background: var(--accent-2); color: transparent; overflow: hidden; box-shadow: 0 0 .3em color-mix(in oklch, var(--accent-2) 60%, transparent); }
+[data-theme="scull"] .h2, [data-theme="scull"] .prose--doc h2 { font-family: var(--font-mono); letter-spacing: -.03em; }
+[data-theme="scull"] .eyebrow { font-family: var(--font-mono); color: var(--accent-2); }
+[data-theme="scull"] .eyebrow::before { content: ">"; }
+[data-theme="scull"] .stage__art::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgb(0 0 0 / .22) 0 1px, transparent 1px 3px); border-radius: inherit; }
+[data-theme="scull"] .stage__art { position: relative; }
+[data-theme="scull"] .feature, [data-theme="scull"] .install-card, [data-theme="scull"] .feature .icon { border-radius: 4px; }
+[data-theme="scull"] .btn--primary { color: #0A0C0B; }
+
+/* ---------- Kerf: laser-cut plywood. Chartreuse cut, magenta kerf line, crop marks. ---------- */
+[data-theme="kerf"] .p-title span { display: inline-block; width: .1em; height: .7em; margin-left: .1em; vertical-align: -.02em; background: var(--accent-2); color: transparent; overflow: hidden; border-radius: 1px; }
+[data-theme="kerf"] .eyebrow::after { content: ""; width: 48px; border-top: 1px dashed var(--accent-2); }
+[data-theme="kerf"] .h2 { font-weight: 600; letter-spacing: -.035em; }
+[data-theme="kerf"] .feature { position: relative; border-radius: 6px; }
+/* Crop marks on two corners, like a cut sheet. */
+[data-theme="kerf"] .feature::after { content: ""; position: absolute; inset: 8px; pointer-events: none;
+  background: linear-gradient(var(--accent), var(--accent)) 0 0 / 12px 1px no-repeat, linear-gradient(var(--accent), var(--accent)) 0 0 / 1px 12px no-repeat,
+              linear-gradient(var(--accent), var(--accent)) 100% 100% / 12px 1px no-repeat, linear-gradient(var(--accent), var(--accent)) 100% 100% / 1px 12px no-repeat; opacity: .6; }
+[data-theme="kerf"] .section__head::after { content: ""; display: block; width: 160px; border-top: 2px dashed color-mix(in oklch, var(--accent-2) 70%, transparent); }
+[data-theme="kerf"] .btn--primary { color: #0B0C08; }
+[data-theme="kerf"] .kerf-chip .ok { color: var(--accent); }
+
+/* ---------- Stator: the housing. Indigo ring, type bracket, machine-code bit ticks, hairlines. ---------- */
+[data-theme="stator"] .p-title span { color: var(--accent); margin-left: .02em; }
+[data-theme="stator"] .p-title span::before { content: "⟩"; }
+[data-theme="stator"] .p-title span { font-size: 0; }
+[data-theme="stator"] .p-title span::before { font-size: clamp(3.25rem, 2rem + 6vw, 6rem); }
+[data-theme="stator"] .eyebrow { font-family: var(--font-mono); letter-spacing: .1em; }
+[data-theme="stator"] .eyebrow::after { content: ""; width: 30px; height: 8px; background: linear-gradient(90deg, var(--accent) 0 3px, transparent 3px 6px, var(--accent) 6px 9px, var(--accent) 9px 12px, transparent 12px 15px, var(--accent-2) 15px 18px, transparent 18px 21px, var(--accent) 21px 24px, var(--accent) 24px 27px, transparent 27px); opacity: .85; }
+[data-theme="stator"] .section__head::after { content: ""; display: block; width: 100%; max-width: 280px; height: 1px; background: linear-gradient(90deg, var(--accent), transparent); }
+[data-theme="stator"] .section__head--center::after { margin-inline: auto; }
+[data-theme="stator"] .feature { border-radius: 10px; box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--accent-2) 22%, transparent); }
+[data-theme="stator"] .feature .icon { border-radius: 4px; }
+[data-theme="stator"] .dnav__item[aria-current="page"] { box-shadow: inset 2px 0 0 var(--accent), inset 0 -1px 0 color-mix(in oklch, var(--accent) 30%, transparent); }
+[data-theme="stator"] .prose--doc h2::before { content: "§ "; font-family: var(--font-mono); color: var(--accent); font-weight: 500; }
+
+/* ---------- bindsmith: Material 3 on copper. Tonal surfaces, pill actions, filter chips, the tile mark. ---------- */
+[data-theme="bindsmith"] { --bs-container: #2A2218; --bs-secondary-container: #0D2A3A; }
+/* The full stop is the brand's ink tile in copper. */
+[data-theme="bindsmith"] .p-title span { display: inline-block; width: .3em; height: .3em; margin-left: .08em; vertical-align: baseline; border-radius: .07em; color: transparent; overflow: hidden;
+  background: radial-gradient(circle at 50% 55%, #E8A05C 0 22%, transparent 23%), #1A1C1F; box-shadow: inset 0 0 0 .025em var(--accent); }
+[data-theme="bindsmith"] .btn { border-radius: 999px; }
+[data-theme="bindsmith"] .btn--primary { color: #fff; box-shadow: none; }
+[data-theme="bindsmith"] .eyebrow { padding: 4px 12px; border-radius: 8px; background: var(--bs-container); color: #F5E6D4; letter-spacing: .06em; text-transform: none; font-weight: 500; }
+[data-theme="bindsmith"] .feature, [data-theme="bindsmith"] .install-card { border-radius: 16px; background: color-mix(in oklch, #22252A 70%, transparent); box-shadow: inset 0 0 0 1px #3A3F47; -webkit-backdrop-filter: none; backdrop-filter: none; }
+[data-theme="bindsmith"] .feature .icon { border-radius: 12px; background: var(--bs-container); box-shadow: none; }
+[data-theme="bindsmith"] .dnav__item[aria-current="page"] { border-radius: 999px; background: var(--bs-secondary-container); box-shadow: none; color: #E3F2FD; }
+[data-theme="bindsmith"] .badge--version { border-radius: 8px; }
+.bs-chips { flex-direction: column; align-items: stretch; gap: 8px; max-width: 340px; }
+.bs-chips small { color: var(--muted); font-size: .72rem; }
+.bs-chips__row { display: flex; flex-wrap: wrap; gap: 6px; }
+.bs-chips__row b { font-weight: 500; font-size: .74rem; padding: 4px 10px; border-radius: 8px; box-shadow: inset 0 0 0 1px #4A4F57; }
+.bs-chips__row b:first-child { background: var(--bs-secondary-container, #0D2A3A); color: #E3F2FD; box-shadow: none; }

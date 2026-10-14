@@ -1,63 +1,84 @@
 ---
 title: bindsmith
-tagline: Generate Dart bindings for native APIs on all six Flutter platforms from one YAML config.
+tagline: One bindsmith.yaml, six Flutter platforms — Dart bindings for native APIs on Android, iOS, macOS, Windows, Linux and Web.
 repo: https://github.com/pyrlyn/bindsmith
-install: "git clone https://github.com/pyrlyn/bindsmith && cd bindsmith && mise install && mise run setup"
+install: "dart run bindsmith doctor"
+install_alternatives:
+  - "dart run bindsmith init"
 version: "0.1.0"
 status: "In development · no release yet"
-accent: "#4FB8AD"
-order: 9
+accent: "#C87941"
+accent2: "#13B9FD"
+accentLight: "#A35F2E"
+order: 12
 ---
 
-<!-- Website copy for the pyrlyn project site, copied to pyrlyn/landing as
-content/projects/bindsmith.md; front matter follows CONTENT_CONTRACT.md in that repository.
-Sources (checked 2026-10-14): README.md, docs/getting-started.md and docs/commands.md; version from packages/bindsmith/pubspec.yaml (no release yet, hence status). accent is --accent in the bindsmith site styles. -->
+<!-- Website copy for the pyrlyn project site, written for pyrlyn/landing from README.md and
+docs/getting-started.md at pyrlyn/bindsmith@72c38f3 (checked 2026-10-14). No tag and no release;
+the README says "Work in progress", hence `status`; version from the `^0.1.0` in getting-started.
+accent, accent2 and accentLight are the copper seed, the dark secondary azure and the tertiary
+of docs/brand/tokens.css (Material 3 roles). -->
 
 ## Overview
 
 One `bindsmith.yaml`, six Flutter platforms. bindsmith generates Dart bindings for native APIs on
-Android, iOS, macOS, Windows, Linux and Web by driving the official generators (ffigen, swiftgen,
-jnigen, winmd, dart-dbus) and a TypeScript `.d.ts` driver for Web, through a unified IR with fixup
-passes and one cross-platform facade.
+Android, iOS, macOS, Windows, Linux and Web by driving the official generators through their
+library APIs (ffigen, swiftgen, jnigen, winmd, dart-dbus), with a TypeScript `.d.ts` driver for
+Web, a unified IR with fixup passes, and review markers for everything that could not be mapped.
 
-bindsmith is in development with no release yet: the drivers, IR, passes and emitters are in
-place, and the command line generates for the C and Objective-C drivers so far.
+bindsmith is a work in progress: the drivers, the IR, the passes and the emitters are in place, and
+the command line generates for the C and Objective-C drivers so far.
 
 ## Features
 
-- **One config.** `bindsmith init` writes `bindsmith.yaml` and the JSON Schema an editor checks it against.
-- **doctor.** Says which native toolchains this machine is missing and how to install them.
-- **Review markers.** Anything a driver could not map keeps a marker; `bindsmith verify` fails until each is answered.
-- **CI checks.** `generate --check`, `diff` and `resolve --check` fail when output, the native API or the lock went stale.
-- **Pinned dependencies.** `bindsmith resolve` pins Maven dependencies with sha256 in `bindsmith.lock`.
-- **explain.** Says what one symbol became on each platform and where it came from.
+- **One config, six platforms.** Android, iOS, macOS, Windows, Linux and Web from one
+  `bindsmith.yaml`, checked against a JSON Schema in your editor.
+- **Official generators underneath.** ffigen, swiftgen, jnigen, winmd and dart-dbus, driven
+  through their library APIs, plus a `.d.ts` driver for Web.
+- **A unified IR with fixups.** Every driver feeds one model; fixup passes shape the API you ship.
+- **Review markers.** `@BindsmithVerify` marks what could not be mapped, and `verify` exits 1
+  while anything is unresolved.
+- **Pinned dependencies.** `resolve` pins every native dependency in `bindsmith.lock` with sha256
+  sums; `--offline` resolves from the cache only.
+- **Safe in CI.** `dump`, `diff`, `explain` and `generate --check` write nothing into your project.
 
 ## Install
 
-Set up from the repository:
+Add the generator and the runtime to your package:
+
+```yaml
+dev_dependencies:
+  bindsmith: ^0.1.0
+dependencies:
+  bindsmith_runtime: ^0.1.0
+```
+
+Then check what this machine is missing:
 
 ```bash
-git clone https://github.com/pyrlyn/bindsmith && cd bindsmith && mise install && mise run setup
+dart run bindsmith doctor
 ```
 
 ## Usage examples
 
-Check the toolchains, then start a config:
+Write a starter config, generate, and see what still needs a human.
 
 ```bash
-dart run bindsmith doctor
 dart run bindsmith init
-```
-
-Generate bindings and see what still needs a human:
-
-```bash
 dart run bindsmith generate
 dart run bindsmith verify
+```
+
+In CI, fail when the native API moved or the checked-in output is stale.
+
+```bash
+dart run bindsmith dump > api.json
+dart run bindsmith diff api.json
+dart run bindsmith generate --check
 ```
 
 ## Links
 
 - Repository: <https://github.com/pyrlyn/bindsmith>
-- Documentation: <https://github.com/pyrlyn/bindsmith/tree/main/docs>
-- License: your choice of GNU GPLv3, a royalty-free license, or a commercial license (see <https://github.com/pyrlyn/bindsmith#license>)
+- Plan: <https://github.com/pyrlyn/bindsmith/blob/main/plan.md>
+- License: <https://github.com/pyrlyn/bindsmith/blob/main/LICENSE>

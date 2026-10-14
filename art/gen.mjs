@@ -1,5 +1,5 @@
 // Procedural abstract "glass" art. Renders SVG scenes to HTML; Chrome screenshots them.
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 
 const ISO = (x, y) => [ (x - y) * 0.866, (x + y) * 0.5 ];
 const pts = (a) => a.map(p => p.join(",")).join(" ");
@@ -234,6 +234,230 @@ scenes["mailune-prop"] = () => {
   let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#171714"/>`;
   s += `<g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="${B}" opacity=".5"/><circle cx="560" cy="560" r="140" fill="${A}" opacity=".2"/></g>`;
   s += envelope(150, 250, 500, 330, A, 34) + sphere(640, 220, 30, A);
+  return page(W, H, s + finish(W, H));
+};
+
+/* Weft: woven glass. Indigo warp threads crossed by gold weft threads (over-under), with a screen
+   tree of nodes pinned on the crossings — the format's tree of ids on a woven ground. */
+function weave(x0, y0, cols, rows, gap, A, B, skew) {
+  let warp = "", weftT = "";
+  for (let c = 0; c < cols; c++) {
+    const x = x0 + c * gap;
+    warp += `<rect x="${x - 7}" y="${y0 - 20}" width="14" height="${rows * gap + 40}" rx="7" fill="${A}" opacity="${c % 3 === 1 ? .75 : .32}"/>`;
+  }
+  for (let r = 0; r < rows; r++) {
+    const y = y0 + r * gap;
+    let d = `M${x0 - 30} ${y}`;
+    for (let c = 0; c < cols; c++) { const x = x0 + c * gap; d += ` Q${x - gap / 2} ${y + ((c + r) % 2 ? 9 : -9)} ${x} ${y}`; }
+    d += ` L${x0 + cols * gap} ${y}`;
+    weftT += `<path d="${d}" fill="none" stroke="${B}" stroke-width="10" stroke-linecap="round" opacity="${r % 4 === 2 ? .85 : .3}"/>`;
+    for (let c = (r % 2); c < cols; c += 2) weftT += `<rect x="${x0 + c * gap - 7}" y="${y - 9}" width="14" height="18" rx="5" fill="${A}" opacity=".5"/>`;
+  }
+  return `<g transform="${skew}">${warp}${weftT}</g>`;
+}
+function weftTree(A, B) {
+  const nodes = [[1500, 430, "screen"], [1300, 660, "form"], [1720, 660, "stack"], [1180, 900, "field"], [1420, 900, "button"], [1720, 900, "text"]];
+  const edges = [[0, 1], [0, 2], [1, 3], [1, 4], [2, 5]];
+  let s = edges.map(([a, b]) => `<path d="M${nodes[a][0]} ${nodes[a][1]} C${nodes[a][0]} ${(nodes[a][1] + nodes[b][1]) / 2} ${nodes[b][0]} ${(nodes[a][1] + nodes[b][1]) / 2} ${nodes[b][0]} ${nodes[b][1]}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>`).join("");
+  for (const [x, y, t] of nodes) {
+    const w = 40 + t.length * 22;
+    s += `<rect x="${x - w / 2 + 10}" y="${y - 32 + 18}" width="${w}" height="64" rx="16" fill="#000" opacity=".55" filter="url(#blur12)"/>
+    <rect x="${x - w / 2}" y="${y - 32}" width="${w}" height="64" rx="16" fill="#15132a" opacity=".85" stroke="#fff" stroke-opacity=".35" stroke-width="2"/>
+    <text x="${x}" y="${y + 11}" text-anchor="middle" font-family="DejaVu Sans Mono, Menlo, monospace" font-size="30" fill="#fff"><tspan fill="${B}">&lt;</tspan>${t}<tspan fill="${B}">/&gt;</tspan></text>`;
+  }
+  return s;
+}
+scenes["weft-hero"] = () => {
+  const W = 2400, H = 1600, A = "#A89BFF", B = "#F2C46D";
+  let s = defsCommon(W, H) + bg(W, H, "#0C0B16", [[1300, 700, 760, 480, "#5B4BD1", .5], [1800, 1100, 520, 320, B, .16], [700, 400, 420, 260, A, .18]]);
+  s += weave(760, 300, 22, 18, 64, A, B, "translate(0 0) skewX(-14) rotate(-4 1500 800)");
+  s += `<rect width="${W}" height="${H}" fill="#0C0B16" opacity=".35"/>`;
+  s += weftTree(A, B);
+  s += sphere(2060, 360, 64, A) + sphere(640, 1220, 86, B) + sphere(2080, 1240, 104, A);
+  return page(W, H, s + finish(W, H));
+};
+scenes["weft-prop"] = () => {
+  const W = 800, H = 800, A = "#A89BFF", B = "#F2C46D";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#0C0B16"/>`;
+  s += `<g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#5B4BD1" opacity=".55"/><circle cx="560" cy="560" r="140" fill="${B}" opacity=".18"/></g>`;
+  s += weave(190, 200, 8, 7, 60, A, B, "rotate(-8 400 400)") + sphere(620, 210, 32, B);
+  return page(W, H, s + finish(W, H));
+};
+
+/* swarfr: helical shavings in temper colours (straw, bronze, purple, blue) curling off a glass block. */
+function curl(cx, cy, r, turns, len, rot, stops, w) {
+  const g = id("tg");
+  let d = "";
+  const N = 160;
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, a = t * turns * Math.PI * 2;
+    const x = cx + Math.cos(a) * r * (1 - t * .25) + t * len, y = cy + Math.sin(a) * r * .42 * (1 - t * .25) + t * len * .35;
+    d += `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
+  }
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="0">${stops.map((c, i) => `<stop offset="${i / (stops.length - 1)}" stop-color="${c}"/>`).join("")}</linearGradient></defs>
+  <path d="${d}" fill="none" stroke="#000" stroke-opacity=".5" stroke-width="${w + 8}" stroke-linecap="round" filter="url(#blur12)" transform="rotate(${rot} ${cx} ${cy}) translate(10 24)"/>
+  <path d="${d}" fill="none" stroke="url(#${g})" stroke-width="${w}" stroke-linecap="round" transform="rotate(${rot} ${cx} ${cy})"/>
+  <path d="${d}" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="${Math.max(2, w * .18)}" stroke-linecap="round" transform="rotate(${rot} ${cx} ${cy}) translate(0 -${w * .25})"/>`;
+}
+const TEMPER = ["#E9B45A", "#C9824A", "#8E6FB8", "#7FA8D6"];
+scenes["swarfr-hero"] = () => {
+  const W = 2400, H = 1600, A = "#E9B45A", B = "#7FA8D6";
+  let s = defsCommon(W, H) + bg(W, H, "#0E0D0B", [[1200, 760, 720, 440, "#9A6A16", .4], [1800, 1100, 520, 320, B, .18], [700, 420, 420, 240, A, .12]]);
+  /* glass stock block with a machined step */
+  s += `<g transform="translate(860 560)">
+    <rect x="30" y="50" width="760" height="420" rx="26" fill="#000" opacity=".6" filter="url(#blur30)"/>
+    <path d="M0 40 Q0 0 40 0 H560 V140 H760 Q780 140 780 180 V420 Q780 460 740 460 H40 Q0 460 0 420 Z" fill="#1c1a16" opacity=".6" stroke="#fff" stroke-opacity=".35" stroke-width="2.5"/>
+    <path d="M560 0 V140 H780" fill="none" stroke="${A}" stroke-opacity=".9" stroke-width="4"/>
+    ${[0,1,2,3,4,5,6,7,8,9,10,11].map(i => `<rect x="${40 + i*42}" y="410" width="2" height="${i % 4 === 0 ? 30 : 16}" fill="#fff" opacity=".35"/>`).join("")}
+  </g>`;
+  s += curl(1420, 560, 120, 3.2, 520, -18, TEMPER, 26);
+  s += curl(1520, 520, 80, 2.6, 380, 12, TEMPER.slice().reverse(), 18);
+  s += curl(1700, 640, 60, 3, 300, 30, TEMPER, 14);
+  s += curl(1100, 1160, 70, 2.4, 260, -40, TEMPER, 14);
+  s += sphere(2060, 380, 58, A) + sphere(640, 1220, 84, B);
+  return page(W, H, s + finish(W, H));
+};
+scenes["swarfr-prop"] = () => {
+  const W = 800, H = 800, A = "#E9B45A", B = "#7FA8D6";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#0E0D0B"/>`;
+  s += `<g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#9A6A16" opacity=".45"/><circle cx="560" cy="560" r="140" fill="${B}" opacity=".2"/></g>`;
+  s += curl(260, 360, 110, 3, 320, -10, TEMPER, 24) + sphere(620, 200, 30, A);
+  return page(W, H, s + finish(W, H));
+};
+
+/* aulo: a glass reed pipe breathing out rose and mint sound waves. */
+function waves(cx, cy, n, A, B, w) {
+  let s = "";
+  for (let i = 0; i < n; i++) {
+    const r = 120 + i * 90, c = i % 2 ? B : A, o = .85 - i * .12;
+    s += `<path d="M${cx + r * Math.cos(-0.7)} ${cy + r * Math.sin(-0.7)} A${r} ${r} 0 0 1 ${cx + r * Math.cos(0.7)} ${cy + r * Math.sin(0.7)}" fill="none" stroke="${c}" stroke-opacity="${o}" stroke-width="${w}" stroke-linecap="round"/>`;
+  }
+  return s;
+}
+function pipe(x, y, len, A) {
+  const g = id("pp");
+  return `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".5" stop-color="${A}" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity=".06"/></linearGradient></defs>
+  <rect x="${x + 20}" y="${y + 40}" width="${len}" height="90" rx="45" fill="#000" opacity=".55" filter="url(#blur30)"/>
+  <rect x="${x}" y="${y}" width="${len}" height="90" rx="45" fill="url(#${g})" stroke="#fff" stroke-opacity=".4" stroke-width="2.5"/>
+  ${[0.25, 0.42, 0.59, 0.76].map(t => `<circle cx="${x + len * t}" cy="${y + 45}" r="13" fill="#000" opacity=".45" stroke="${A}" stroke-opacity=".6" stroke-width="2"/>`).join("")}`;
+}
+scenes["aulo-hero"] = () => {
+  const W = 2400, H = 1600, A = "#FF7AA2", B = "#7EF2D0";
+  let s = defsCommon(W, H) + bg(W, H, "#120B10", [[1200, 760, 720, 440, "#C2386A", .42], [1800, 1000, 520, 320, B, .14], [700, 400, 420, 240, A, .14]]);
+  s += pipe(700, 760, 820, A) + waves(1520, 805, 6, A, B, 14);
+  s += sphere(2080, 380, 60, B) + sphere(640, 1240, 84, A);
+  return page(W, H, s + finish(W, H));
+};
+scenes["aulo-prop"] = () => {
+  const W = 800, H = 800, A = "#FF7AA2", B = "#7EF2D0";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#120B10"/><g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#C2386A" opacity=".5"/></g>`;
+  s += pipe(110, 360, 380, A) + waves(470, 405, 3, A, B, 10);
+  return page(W, H, s + finish(W, H));
+};
+
+/* Scull: an ivory CRT terminal window, a phosphor cursor, and an oar stroke on dark water. */
+function crt(x, y, w, h, A, B) {
+  const rows = [["$ ", "scull"], ["", "rust core · native ui"], ["$ ", "just check"], ["", "ok"]];
+  return `<rect x="${x + 24}" y="${y + 40}" width="${w}" height="${h}" rx="22" fill="#000" opacity=".6" filter="url(#blur30)"/>
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22" fill="#121513" opacity=".85" stroke="#fff" stroke-opacity=".3" stroke-width="2.5"/>
+  ${[0, 1, 2].map(i => `<circle cx="${x + 40 + i * 34}" cy="${y + 38}" r="9" fill="${A}" opacity=".35"/>`).join("")}
+  ${rows.map((r, i) => `<text x="${x + 50}" y="${y + 140 + i * 70}" font-family="DejaVu Sans Mono, Menlo, monospace" font-size="40" fill="${A}" opacity="${r[0] ? .95 : .55}"><tspan fill="${B}">${r[0]}</tspan>${r[1]}</text>`).join("")}
+  <rect x="${x + 50}" y="${y + 140 + 4 * 70 - 36}" width="24" height="44" fill="${B}"/>
+  <rect x="${x + 50}" y="${y + 140 + 4 * 70 - 36}" width="24" height="44" fill="${B}" filter="url(#blur12)"/>
+  <g opacity=".22">${Array.from({ length: Math.floor(h / 6) }, (_, i) => `<rect x="${x}" y="${y + i * 6}" width="${w}" height="1.5" fill="#000"/>`).join("")}</g>`;
+}
+function ripples(cx, cy, A) {
+  return [1, 2, 3, 4].map(i => `<ellipse cx="${cx}" cy="${cy}" rx="${i * 110}" ry="${i * 26}" fill="none" stroke="${A}" stroke-opacity="${.5 - i * .1}" stroke-width="3"/>`).join("")
+    + `<path d="M${cx - 520} ${cy - 360} L${cx + 40} ${cy - 10}" stroke="${A}" stroke-opacity=".7" stroke-width="16" stroke-linecap="round"/><ellipse cx="${cx + 60}" cy="${cy}" rx="90" ry="26" fill="${A}" opacity=".55" transform="rotate(30 ${cx + 60} ${cy})"/>`;
+}
+scenes["scull-hero"] = () => {
+  const W = 2400, H = 1600, A = "#EDE6D6", B = "#45E39A";
+  let s = defsCommon(W, H) + bg(W, H, "#0A0C0B", [[1200, 700, 700, 420, "#2E7D5B", .4], [1700, 1200, 520, 260, B, .12]]);
+  s += ripples(1700, 1250, A) + crt(780, 330, 980, 620, A, B);
+  s += sphere(2080, 380, 56, B) + sphere(600, 1200, 80, A);
+  return page(W, H, s + finish(W, H));
+};
+scenes["scull-prop"] = () => {
+  const W = 800, H = 800, A = "#EDE6D6", B = "#45E39A";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#0A0C0B"/><g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#2E7D5B" opacity=".45"/></g>`;
+  s += crt(130, 200, 540, 400, A, B);
+  return page(W, H, s + finish(W, H));
+};
+
+/* Kerf: laser-cut plywood panels with chartreuse cut lines and slotted plugin tabs. */
+function ply(x, y, w, h, A, B, rot) {
+  const g = id("pl");
+  const tabs = [0.2, 0.5, 0.8].map(t => `<rect x="${x + w * t - 30}" y="${y - 22}" width="60" height="24" rx="3" fill="#2a2618" stroke="${A}" stroke-opacity=".8" stroke-width="2"/>`).join("");
+  return `<g transform="rotate(${rot} ${x + w / 2} ${y + h / 2})"><defs><linearGradient id="${g}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E9D9AE" stop-opacity=".22"/><stop offset="1" stop-color="#8F7A48" stop-opacity=".1"/></linearGradient></defs>
+  <rect x="${x + 20}" y="${y + 36}" width="${w}" height="${h}" rx="8" fill="#000" opacity=".55" filter="url(#blur30)"/>
+  <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="url(#${g})" stroke="${A}" stroke-opacity=".85" stroke-width="2.5"/>
+  ${[1, 2, 3].map(i => `<line x1="${x}" y1="${y + h * i / 4}" x2="${x + w}" y2="${y + h * i / 4}" stroke="#E9D9AE" stroke-opacity=".08" stroke-width="10"/>`).join("")}
+  ${tabs}
+  <rect x="${x + 40}" y="${y + 40}" width="${w * 0.38}" height="${h - 80}" rx="6" fill="none" stroke="${B}" stroke-opacity=".85" stroke-width="2.5" stroke-dasharray="14 8"/></g>`;
+}
+scenes["kerf-hero"] = () => {
+  const W = 2400, H = 1600, A = "#C6F24E", B = "#FF6BD6";
+  let s = defsCommon(W, H) + bg(W, H, "#0B0C08", [[1200, 760, 700, 420, "#5E7A12", .4], [1800, 1100, 480, 300, B, .14]]);
+  s += ply(820, 520, 760, 460, A, B, -8) + ply(1180, 700, 620, 380, A, B, 6);
+  s += `<line x1="600" y1="1260" x2="1900" y2="1180" stroke="${A}" stroke-width="3" stroke-opacity=".9"/><circle cx="1900" cy="1180" r="10" fill="${A}"/><circle cx="1900" cy="1180" r="30" fill="${A}" opacity=".35" filter="url(#blur12)"/>`;
+  s += sphere(2080, 380, 56, A) + sphere(600, 420, 70, B);
+  return page(W, H, s + finish(W, H));
+};
+scenes["kerf-prop"] = () => {
+  const W = 800, H = 800, A = "#C6F24E", B = "#FF6BD6";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#0B0C08"/><g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#5E7A12" opacity=".45"/></g>`;
+  s += ply(170, 260, 460, 300, A, B, -6);
+  return page(W, H, s + finish(W, H));
+};
+
+/* Stator: the mark at scale. A stator ring, a type bracket on the left, bit ticks on the right. */
+function statorMark(cx, cy, R, A, B) {
+  const ticks = Array.from({ length: 24 }, (_, i) => { const a = (i / 24) * Math.PI * 2; const on = [0, 1, 3, 4, 7, 9, 10, 13, 16, 17, 20, 22].includes(i);
+    return `<line x1="${cx + Math.cos(a) * R * 1.12}" y1="${cy + Math.sin(a) * R * 1.12}" x2="${cx + Math.cos(a) * R * (on ? 1.32 : 1.2)}" y2="${cy + Math.sin(a) * R * (on ? 1.32 : 1.2)}" stroke="${on ? A : B}" stroke-opacity="${on ? .9 : .4}" stroke-width="${R * .05}" stroke-linecap="round"/>`; }).join("");
+  return `<circle cx="${cx}" cy="${cy}" r="${R * 1.1}" fill="${A}" opacity=".18" filter="url(#blur30)"/>
+  <circle cx="${cx}" cy="${cy}" r="${R}" fill="#12151C" opacity=".75" stroke="${A}" stroke-width="${R * .09}"/>
+  <circle cx="${cx}" cy="${cy}" r="${R * .72}" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>
+  ${ticks}
+  <path d="M${cx - R * .18} ${cy - R * .42} L${cx - R * .42} ${cy} L${cx - R * .18} ${cy + R * .42}" fill="none" stroke="#E8EBF2" stroke-width="${R * .08}" stroke-linecap="round" stroke-linejoin="round"/>
+  ${[0, 1, 2].map(i => `<rect x="${cx + R * .05 + i * R * .14}" y="${cy - R * .25}" width="${R * .08}" height="${R * .5}" rx="${R * .02}" fill="${i === 1 ? B : A}"/>`).join("")}`;
+}
+scenes["stator-hero"] = () => {
+  const W = 2400, H = 1600, A = "#5B7CFF", B = "#9AA3B5";
+  let s = defsCommon(W, H) + bg(W, H, "#0C0E14", [[1300, 760, 700, 440, "#3352D6", .45], [1800, 1100, 480, 300, B, .1]]);
+  s += Array.from({ length: 9 }, (_, i) => `<line x1="0" y1="${300 + i * 130}" x2="${W}" y2="${300 + i * 130}" stroke="#1E2430" stroke-width="2"/>`).join("");
+  s += statorMark(1400, 800, 360, A, B);
+  s += sphere(2080, 360, 56, A) + sphere(620, 1220, 80, B);
+  return page(W, H, s + finish(W, H));
+};
+scenes["stator-prop"] = () => {
+  const W = 800, H = 800, A = "#5B7CFF", B = "#9AA3B5";
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#0C0E14"/><g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#3352D6" opacity=".45"/></g>`;
+  s += statorMark(400, 400, 210, A, B);
+  return page(W, H, s + finish(W, H));
+};
+
+/* bindsmith: its own multi-tool mark (docs/brand/logo.svg) on M3 tonal surfaces, six platform chips around it. */
+const BS_LOGO = `data:image/svg+xml;base64,${readFileSync(new URL("./assets/bindsmith-logo.svg", import.meta.url)).toString("base64")}`;
+function bsChip(x, y, label, sel) {
+  const w = 40 + label.length * 22;
+  return `<rect x="${x}" y="${y}" width="${w}" height="64" rx="16" fill="${sel ? "#0D2A3A" : "#22252A"}" opacity=".92" stroke="${sel ? "#13B9FD" : "#4A4F57"}" stroke-opacity="${sel ? .7 : 1}" stroke-width="2"/>
+  <text x="${x + w / 2}" y="${y + 42}" text-anchor="middle" font-family="Inter, Helvetica, sans-serif" font-size="28" font-weight="500" fill="${sel ? "#E3F2FD" : "#EDE8E1"}">${label}</text>`;
+}
+scenes["bindsmith-hero"] = () => {
+  const W = 2400, H = 1600;
+  let s = defsCommon(W, H) + bg(W, H, "#121416", [[1300, 760, 700, 440, "#C87941", .32], [1800, 1100, 480, 300, "#13B9FD", .12]]);
+  s += `<rect x="900" y="300" width="1000" height="1000" rx="56" fill="#1A1C1F" opacity=".85" stroke="#353A42" stroke-width="3"/>
+  <rect x="1010" y="410" width="780" height="780" rx="170" fill="#000" opacity=".5" filter="url(#blur30)"/>
+  <image href="${BS_LOGO}" x="1000" y="400" width="800" height="800"/>`;
+  const labels = ["Android", "iOS", "macOS", "Windows", "Linux", "Web"];
+  const pos = [[640, 420], [640, 640], [640, 860], [1980, 520], [1980, 740], [1980, 960]];
+  s += labels.map((l, i) => bsChip(pos[i][0], pos[i][1], l, i === 0)).join("");
+  return page(W, H, s + finish(W, H));
+};
+scenes["bindsmith-prop"] = () => {
+  const W = 800, H = 800;
+  let s = defsCommon(W, H) + `<rect width="800" height="800" fill="#121416"/><g filter="url(#blur80)"><circle cx="400" cy="420" r="230" fill="#C87941" opacity=".35"/></g>`;
+  s += `<image href="${BS_LOGO}" x="160" y="160" width="480" height="480"/>`;
   return page(W, H, s + finish(W, H));
 };
 

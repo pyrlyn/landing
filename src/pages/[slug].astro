@@ -9,7 +9,7 @@ import CodeGraph from "../components/CodeGraph.astro";
 import TokenParticles from "../components/TokenParticles.astro";
 import CoxScenes from "../components/CoxScenes.astro";
 import KetchRoute from "../components/KetchRoute.astro";
-import { u, BRAND, LICENSE, CAVEATS, THEMES, FREE_HIGHLIGHTS, type ThemeKey } from "../lib/site";
+import { u, BRAND, licenseFor, CAVEATS, THEMES, FREE_HIGHLIGHTS, type ThemeKey } from "../lib/site";
 import { proFor, statusFor } from "../lib/catalog";
 import { getProductDocs, productsWithDocs, docsHref } from "../lib/docs";
 import { DEMOS, FLOWS, COX_SCENES, demoFromUsage } from "../data/showcase";
@@ -32,6 +32,7 @@ const installHtml = renderMd(s["install"] ?? "");
 const usage = parseUsage(s["usage examples"] ?? s["usage"]);
 const links = parseLinks(s["links"]);
 const caveat = CAVEATS[slug];
+const lic = licenseFor(slug);
 const demo = DEMOS[slug] ?? demoFromUsage(d.title, usage.map((g) => ({ code: g.code })));
 const flow = FLOWS[slug];
 const pro = proFor(entry);
@@ -46,6 +47,13 @@ const iconSets: Record<string, string[]> = {
   ketch: ["download", "shield", "app", "tree", "history", "lock", "plug", "box"],
   runa: ["chart", "cloud", "graph", "plug", "eye", "stream", "layers", "box"],
   mailune: ["shield", "sparkle", "lock", "app", "cloud", "key", "eye", "box"],
+  weft: ["editor", "layers", "tree", "key", "undo", "plug", "eye", "box"],
+  swarfr: ["box", "layers", "tree", "history", "eye", "graph", "lock", "chart"],
+  aulo: ["stream", "sparkle", "terminal", "plug", "cloud", "layers", "eye", "box"],
+  scull: ["terminal", "app", "editor", "eye", "box", "layers", "plug", "tree"],
+  kerf: ["editor", "graph", "shield", "plug", "box", "layers", "tree", "eye"],
+  stator: ["layers", "bolt", "eye", "box", "key", "plug", "tree", "chart"],
+  bindsmith: ["app", "plug", "layers", "eye", "lock", "shield", "box", "tree"],
 };
 const icons = iconSets[slug] ?? iconSets.rtok;
 const heroAlt: Record<string, string> = {
@@ -54,6 +62,13 @@ const heroAlt: Record<string, string> = {
   ketch: "Abstract floating glass app window listing verified packages, with glass spheres around it.",
   runa: "The runa mark: a geometric rune stave with an ember glowing at its base, on warm charcoal glass.",
   mailune: "Abstract glass envelope sealed with a blue dot, floating over stacked glass message rows.",
+  weft: "Abstract woven glass: indigo warp threads crossed by gold weft threads, with a screen tree of nodes pinned on the crossings.",
+  swarfr: "Abstract helical metal shavings in straw-to-blue temper colours, curling off a glass block.",
+  aulo: "Abstract rose and mint sound waves rippling out of a glass reed pipe.",
+  scull: "Abstract ivory terminal window with a phosphor-green cursor, crossed by an oar stroke rippling on dark water.",
+  kerf: "Abstract laser-cut plywood panels with chartreuse cut lines and slotted plugin tabs.",
+  stator: "The stator mark: an indigo stator ring with a type bracket on the left and machine-code bit ticks on the right.",
+  bindsmith: "The bindsmith multi-tool mark on its ink tile, with six platform chips fanned around it in copper and azure.",
 };
 const pageTitle = productTitle(entry);
 const pageDescription = productDescription(entry, s["overview"]);
@@ -70,7 +85,7 @@ const jsonLd = [
       <nav class="breadcrumb" aria-label="Breadcrumb"><a href={u("/#catalog")}>Open source</a><span aria-hidden="true">/</span><span aria-current="page">{d.title}</span></nav>
       <div class="p-meta">
         <span class="badge badge--version">{statusFor(entry)}</span>
-        <span class="badge badge--line">{LICENSE.short}</span>
+        <span class="badge badge--line">{lic.short}</span>
       </div>
       <h1 id="p-title" class="p-title">{d.title}<span>.</span></h1>
       <p class="lead">{d.tagline}</p>
@@ -119,6 +134,68 @@ const jsonLd = [
               <span><span class="dim">$</span> runa fit --recommend --use code</span>
               <span class="ok">✓ memory + speed forecast · before any download</span>
               <span><span class="dim">$</span> <span class="caret"></span></span>
+            </div>
+          </div>
+        )}
+        {slug === "weft" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip weft-chip float">
+              <span><span class="dim">&lt;</span>button <span class="weft-chip__attr">id</span>=<span class="weft-chip__val">"go"</span> <span class="weft-chip__attr">variant</span>=<span class="weft-chip__val">"primary"</span><span class="dim">/&gt;</span></span>
+              <span class="ok">✓ valid against the catalog · patch by id</span>
+              <span><span class="dim">$</span> weft validate --strict <span class="caret"></span></span>
+            </div>
+          </div>
+        )}
+        {slug === "swarfr" && (
+          <div class="layer pos-b" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick swarf-gauge float">
+              <span class="swarf-gauge__label">Two fresh targets · 587-crate workspace</span>
+              <span class="swarf-gauge__row"><span>before</span><i style="--w:100%"></i><b>3.63 GiB</b></span>
+              <span class="swarf-gauge__row swarf-gauge__row--after"><span>after</span><i style="--w:25.6%"></i><b>0.93 GiB</b></span>
+              <small>blocks on disk · 0 units rebuilt (docs/bench.md)</small>
+            </div>
+          </div>
+        )}
+        {slug === "aulo" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick aulo-chip float">
+              <span class="aulo-chip__wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              <span><strong>aulod</strong><small>voice · shell · apps · browser · MCP</small></span>
+            </div>
+          </div>
+        )}
+        {slug === "scull" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip float">
+              <span><span class="dim">$</span> just check</span>
+              <span class="ok">✓ builds · lints · tests the workspace</span>
+              <span><span class="dim">$</span> <span class="caret"></span></span>
+            </div>
+          </div>
+        )}
+        {slug === "kerf" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip kerf-chip float">
+              <span><span class="dim">[plugin]</span> permissions = manifest</span>
+              <span class="ok">✓ sandboxed WASM · cannot spawn processes</span>
+              <span><span class="dim">core →</span> LSP · DAP</span>
+            </div>
+          </div>
+        )}
+        {slug === "stator" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip float">
+              <span><span class="dim">$</span> stator explain app.ts</span>
+              <span class="ok">static · dynamic · error · not-yet</span>
+              <span><span class="dim">$</span> <span class="caret"></span></span>
+            </div>
+          </div>
+        )}
+        {slug === "bindsmith" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick bs-chips float">
+              <small>bindsmith.yaml → six platforms</small>
+              <span class="bs-chips__row"><b>Android</b><b>iOS</b><b>macOS</b><b>Windows</b><b>Linux</b><b>Web</b></span>
             </div>
           </div>
         )}
@@ -244,8 +321,8 @@ const jsonLd = [
     </ul>
     <div class="license card glass">
       <h3 class="h3">License</h3>
-      <p class="muted small">You can use {d.title} under any of the following licenses, at your choice:</p>
-      <ol>{LICENSE.items.map((l) => <li><span><strong>{l.name}</strong> — {l.text}</span></li>)}</ol>
+      <p class="muted small">{lic.lead || `You can use ${d.title} under any of the following licenses, at your choice:`}</p>
+      <ol>{lic.items.map((l) => <li><span><strong>{l.name}</strong> — {l.text}</span></li>)}</ol>
     </div>
   </section>
 
@@ -257,7 +334,7 @@ const jsonLd = [
     </header>
     <div class="grid grid--2 pricing-pair">
       <article class="card glass tier" aria-labelledby="t-free">
-        <div class="tier__head"><h3 id="t-free" class="h3">Free · open source</h3><span class="badge badge--line">{LICENSE.short}</span></div>
+        <div class="tier__head"><h3 id="t-free" class="h3">Free · open source</h3><span class="badge badge--line">{lic.short}</span></div>
         <p class="price"><span class="price__num">$0</span><span class="muted small">forever</span></p>
         <ul class="checklist">{(FREE_HIGHLIGHTS[slug] ?? ["The full open-source tool"]).map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
         <a class="btn btn--glass btn--block" href="#install">Install free</a>

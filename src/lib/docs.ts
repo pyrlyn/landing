@@ -266,7 +266,11 @@ function renderDoc(
       },
     },
   });
-  const html = md.parse(rest, { async: false }) as string;
+  const parsed = md.parse(rest, { async: false }) as string;
+  // An in-page link whose target is not on the page (e.g. a generated API reference pointing at a
+  // well-known type it never defines) renders as plain text instead of a dead link.
+  const ids = new Set([...parsed.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
+  const html = parsed.replace(/<a href="#([^"]+)">([\s\S]*?)<\/a>/g, (m, id: string, text: string) => (ids.has(id) ? m : text));
   const slug = fileToSlug.get(file)!;
   return {
     product,

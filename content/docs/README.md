@@ -10,6 +10,11 @@ repository instead.
 | `rtok/` | [`pyrlyn/rtok` `docs/`](https://github.com/pyrlyn/rtok/tree/main/docs) |
 | `cox/` | [`pyrlyn/cox` `docs/`](https://github.com/pyrlyn/cox/tree/main/docs) |
 | `ketch/` | [`pyrlyn/ketch` `docs/`](https://github.com/pyrlyn/ketch/tree/main/docs) |
+| `weft/` | [`pyrlyn/weft` `docs/`](https://github.com/pyrlyn/weft/tree/main/docs) (copied by hand until Weft has a `sync-docs.yml`) |
+| `swarfr/` | [`pyrlyn/swarfr` `docs/`](https://github.com/pyrlyn/swarfr/tree/main/docs) (copied by hand until swarfr has a `sync-docs.yml`) |
+| `aulo/` | [`pyrlyn/aulo` `docs/`](https://github.com/pyrlyn/aulo/tree/main/docs) (copied by hand until aulo has a `sync-docs.yml`) |
+| `stator/` | [`pyrlyn/stator` `docs/`](https://github.com/pyrlyn/stator/tree/main/docs) (copied by hand until stator has a `sync-docs.yml`) |
+| `bindsmith/` | [`pyrlyn/bindsmith` `docs/`](https://github.com/pyrlyn/bindsmith/tree/main/docs) (copied by hand until bindsmith has a `sync-docs.yml`) |
 
 ## How files arrive
 
