@@ -30,9 +30,14 @@ export const FREE_HIGHLIGHTS: Record<string, string[]> = {
   mailune: ["Direct to IMAP, JMAP, Gmail and Graph", "On-device AI by default", "Encrypted mail stays local"],
   weft: ["The weft command: validate, fmt, explain", "MCP server and editor plugins", "Render to HTML, React, SwiftUI and Slint"],
   swarfr: ["Lossless compress and dedupe", "Seed new worktrees from a sibling", "Read-only status and advise"],
+  aulo: ["The full specification and plan", "gRPC API reference", "Free, open-source edition when it ships"],
+  scull: ["Rust core, native UI per platform", "Research on six terminals", "Open development from day one"],
+  kerf: ["Research on ten editors", "Sandboxed WASM plugin design", "Open development from day one"],
+  stator: ["ts and js modes", "stator explain verdicts", "vite-stator bundler for js mode"],
+  bindsmith: ["Six platforms from one YAML", "Review markers and verify", "CI-safe dump, diff and --check"],
 };
 
-/** One license wording for every project (rtok, cox, ketch, runa, Mailune and swarfr share the same triple license; Weft overrides it in LICENSE_OVERRIDES). */
+/** One license wording for every project (rtok, cox, ketch, runa, Mailune, swarfr, aulo, Kerf, Stator and bindsmith share the same triple license; Weft and Scull override it in LICENSE_OVERRIDES). */
 export const LICENSE = {
   short: "GPLv3, royalty-free or commercial — your choice",
   items: [
@@ -44,6 +49,11 @@ export const LICENSE = {
 
 /** Products under another license than LICENSE (Weft is Apache-2.0). */
 export const LICENSE_OVERRIDES: Record<string, { short: string; lead: string; items: { name: string; text: string }[] }> = {
+  scull: {
+    short: "No license yet",
+    lead: "The Scull repository has no license file yet:",
+    items: [{ name: "No license chosen", text: "until one is added, no license is granted; ask in the repository before using the code." }],
+  },
   weft: {
     short: "Apache License 2.0",
     lead: "Weft is licensed under the Apache License 2.0:",
@@ -55,7 +65,7 @@ export const licenseFor = (slug: string) => {
   return o ?? { short: LICENSE.short, lead: "", items: LICENSE.items };
 };
 
-export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa" | "mailune" | "weft" | "swarfr";
+export type ThemeKey = "home" | "rtok" | "cox" | "ketch" | "runa" | "mailune" | "weft" | "swarfr" | "aulo" | "scull" | "kerf" | "stator" | "bindsmith";
 
 export interface Theme {
   accent: string;
@@ -77,6 +87,11 @@ export const THEMES: Record<ThemeKey, Theme> = {
   mailune: { accent: "#8FB4D9", accent2: "#B7D0E8", accentLight: "#335C8C", bg: "#171714", images: "mailune", heroAlt: "" },
   weft: { accent: "#A89BFF", accent2: "#F2C46D", accentLight: "#5B4BD1", bg: "#0C0B16", images: "weft", heroAlt: "" },
   swarfr: { accent: "#E9B45A", accent2: "#7FA8D6", accentLight: "#9A6A16", bg: "#0E0D0B", images: "swarfr", heroAlt: "" },
+  aulo: { accent: "#FF7AA2", accent2: "#7EF2D0", accentLight: "#C2386A", bg: "#120B10", images: "aulo", heroAlt: "" },
+  scull: { accent: "#EDE6D6", accent2: "#45E39A", accentLight: "#2E7D5B", bg: "#0A0C0B", images: "scull", heroAlt: "" },
+  kerf: { accent: "#C6F24E", accent2: "#FF6BD6", accentLight: "#5E7A12", bg: "#0B0C08", images: "kerf", heroAlt: "" },
+  stator: { accent: "#5B7CFF", accent2: "#9AA3B5", accentLight: "#3352D6", bg: "#0C0E14", images: "stator", heroAlt: "" },
+  bindsmith: { accent: "#C87941", accent2: "#13B9FD", accentLight: "#A35F2E", bg: "#121416", images: "bindsmith", heroAlt: "" },
 };
 
 /**
@@ -93,6 +108,11 @@ export const RELEASE_STATUS: Record<string, string> = {
   mailune: "In development · no release yet",
   weft: "Prototype · no release yet",
   swarfr: "In development · no stable release yet",
+  aulo: "Specification only · no code yet",
+  scull: "Early scaffold · no release yet",
+  kerf: "Research · no code yet",
+  stator: "Research compiler · no release yet",
+  bindsmith: "In development · no release yet",
 };
 export const RELEASE_STATUS_FALLBACK = "In development";
 

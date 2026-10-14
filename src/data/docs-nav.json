@@ -177,5 +177,69 @@
       "ru/": "Translation of the Windows contributor notes",
       "uk/": "Translation of the Windows contributor notes"
     }
+  },
+  "aulo": {
+    "groups": [
+      { "label": "Reference", "items": [
+        { "file": "api/aulo.v1.md", "title": "gRPC API" }
+      ] }
+    ],
+    "exclude": {
+      "README.md": "Docs index pointing at internal task ids",
+      "spikes/": "Internal spike reports"
+    }
+  },
+  "stator": {
+    "groups": [
+      { "label": "Start", "items": [
+        { "file": "HOW-IT-WORKS.md", "title": "How it works" },
+        { "file": "MODES.md", "title": "Modes" },
+        { "file": "CONFIG.md", "title": "Configuration" },
+        { "file": "TOOLCHAIN.md", "title": "Toolchain" }
+      ] },
+      { "label": "Language", "items": [
+        { "file": "SUBSET.md", "title": "Feature support" },
+        { "file": "NUMERIC.md", "title": "Numeric semantics" },
+        { "file": "STD.md", "title": "The std library" },
+        { "file": "NODE.md", "title": "Node API coverage" },
+        { "file": "FFI.md", "title": "Calling C" },
+        { "file": "BUNDLER.md", "title": "Bundler (js mode)" },
+        { "file": "DIAGNOSTICS.md", "title": "Diagnostics" }
+      ] },
+      { "label": "Internals", "items": [
+        { "file": "ARCHITECTURE.md", "title": "Architecture" },
+        { "file": "HIR.md", "title": "HIR" },
+        { "file": "VALUE.md", "title": "Value representation" }
+      ] }
+    ],
+    "exclude": {
+      "README.md": "Docs index; its reading order is the Start group",
+      "research/": "Internal research notes",
+      "architecture/": "Diagram sources",
+      "assets/": "Images",
+      "brand/": "Visual design system of the stator site",
+      "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud"
+    }
+  },
+  "bindsmith": {
+    "groups": [
+      { "label": "Start", "items": [
+        { "file": "getting-started.md", "title": "Getting started" },
+        { "file": "config.md", "title": "Configuration" }
+      ] },
+      { "label": "Guides", "items": [
+        { "file": "platforms.md", "title": "Platforms" },
+        { "file": "fixups.md", "title": "Fixups" },
+        { "file": "upgrading.md", "title": "Upgrading" }
+      ] }
+    ],
+    "exclude": {
+      "index.md": "Pages site index, same as the README",
+      "adr/": "Architecture decision records",
+      "brand/": "Visual design system of the bindsmith site",
+      "assets/": "Images",
+      "research-raw/": "Internal research notes",
+      "research.ru.md": "Internal research notes"
+    }
   }
 }

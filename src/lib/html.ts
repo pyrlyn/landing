@@ -15,9 +15,13 @@ const SAFE_TAGS = new Set(["br", "kbd", "sub", "sup", "details", "summary", "b",
 export function safeHtml(raw: string): string {
   return raw
     .replace(/<!--[\s\S]*?(?:-->|$)/g, "")
+    // Named anchors (`<a name="x"></a>`, as protoc-gen-doc writes them) become empty id targets.
+    .replace(/<a\s+name="([A-Za-z0-9_.:-]+)"\s*\/?>(\s*<\/a>)?/g, "\u0001$1\u0002")
+    .replace(/^<\/a>$/, "")
     .replace(/<\/?([A-Za-z][\w-]*)([^<>]*)>|[<>]/g, (m, name?: string, attrs?: string) =>
       name && SAFE_TAGS.has(name.toLowerCase()) && /^(\s+open)?\s*\/?$/i.test(attrs ?? "") ? m.toLowerCase() : esc(m),
-    );
+    )
+    .replace(/\u0001([A-Za-z0-9_.:-]+)\u0002/g, '<span id="$1"></span>');
 }
 
 /** Link and image targets: drop script-capable schemes (javascript:, vbscript:, data:). */

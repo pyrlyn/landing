@@ -49,6 +49,11 @@ const iconSets: Record<string, string[]> = {
   mailune: ["shield", "sparkle", "lock", "app", "cloud", "key", "eye", "box"],
   weft: ["editor", "layers", "tree", "key", "undo", "plug", "eye", "box"],
   swarfr: ["box", "layers", "tree", "history", "eye", "graph", "lock", "chart"],
+  aulo: ["stream", "sparkle", "terminal", "plug", "cloud", "layers", "eye", "box"],
+  scull: ["terminal", "app", "editor", "eye", "box", "layers", "plug", "tree"],
+  kerf: ["editor", "graph", "shield", "plug", "box", "layers", "tree", "eye"],
+  stator: ["layers", "bolt", "eye", "box", "key", "plug", "tree", "chart"],
+  bindsmith: ["app", "plug", "layers", "eye", "lock", "shield", "box", "tree"],
 };
 const icons = iconSets[slug] ?? iconSets.rtok;
 const heroAlt: Record<string, string> = {
@@ -59,6 +64,11 @@ const heroAlt: Record<string, string> = {
   mailune: "Abstract glass envelope sealed with a blue dot, floating over stacked glass message rows.",
   weft: "Abstract woven glass: indigo warp threads crossed by gold weft threads, with a screen tree of nodes pinned on the crossings.",
   swarfr: "Abstract helical metal shavings in straw-to-blue temper colours, curling off a glass block.",
+  aulo: "Abstract rose and mint sound waves rippling out of a glass reed pipe.",
+  scull: "Abstract ivory terminal window with a phosphor-green cursor, crossed by an oar stroke rippling on dark water.",
+  kerf: "Abstract laser-cut plywood panels with chartreuse cut lines and slotted plugin tabs.",
+  stator: "The stator mark: an indigo stator ring with a type bracket on the left and machine-code bit ticks on the right.",
+  bindsmith: "The bindsmith multi-tool mark on its ink tile, with six platform chips fanned around it in copper and azure.",
 };
 const pageTitle = productTitle(entry);
 const pageDescription = productDescription(entry, s["overview"]);
@@ -143,6 +153,49 @@ const jsonLd = [
               <span class="swarf-gauge__row"><span>before</span><i style="--w:100%"></i><b>3.63 GiB</b></span>
               <span class="swarf-gauge__row swarf-gauge__row--after"><span>after</span><i style="--w:25.6%"></i><b>0.93 GiB</b></span>
               <small>blocks on disk · 0 units rebuilt (docs/bench.md)</small>
+            </div>
+          </div>
+        )}
+        {slug === "aulo" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick aulo-chip float">
+              <span class="aulo-chip__wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+              <span><strong>aulod</strong><small>voice · shell · apps · browser · MCP</small></span>
+            </div>
+          </div>
+        )}
+        {slug === "scull" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip float">
+              <span><span class="dim">$</span> just check</span>
+              <span class="ok">✓ builds · lints · tests the workspace</span>
+              <span><span class="dim">$</span> <span class="caret"></span></span>
+            </div>
+          </div>
+        )}
+        {slug === "kerf" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip kerf-chip float">
+              <span><span class="dim">[plugin]</span> permissions = manifest</span>
+              <span class="ok">✓ sandboxed WASM · cannot spawn processes</span>
+              <span><span class="dim">core →</span> LSP · DAP</span>
+            </div>
+          </div>
+        )}
+        {slug === "stator" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick term-chip float">
+              <span><span class="dim">$</span> stator explain app.ts</span>
+              <span class="ok">static · dynamic · error · not-yet</span>
+              <span><span class="dim">$</span> <span class="caret"></span></span>
+            </div>
+          </div>
+        )}
+        {slug === "bindsmith" && (
+          <div class="layer pos-c" data-depth="48" aria-hidden="true">
+            <div class="chip glass glass--thick bs-chips float">
+              <small>bindsmith.yaml → six platforms</small>
+              <span class="bs-chips__row"><b>Android</b><b>iOS</b><b>macOS</b><b>Windows</b><b>Linux</b><b>Web</b></span>
             </div>
           </div>
         )}
