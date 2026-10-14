@@ -555,6 +555,47 @@ function initRoute() {
   reduceMotion.addEventListener("change", tick);
 }
 
+/* Load: a one-off WebGL light sweep over the hero, fetched as its own chunk after first paint. */
+function initIntro() {
+  const root = document.documentElement;
+  const hero = document.querySelector<HTMLElement>(".hero");
+  if (!hero || reduceMotion.matches || !root.classList.contains("intro") || hero.getBoundingClientRect().bottom < 0) return;
+  // Drop the entrance class once it has played, so later style changes never re-trigger it.
+  setTimeout(() => root.classList.remove("intro"), 2200);
+  const cs = getComputedStyle(root);
+  const a = cs.getPropertyValue("--accent").trim(), b = cs.getPropertyValue("--accent-2").trim();
+  if (!/^#[0-9a-f]{6}$/i.test(a) || !/^#[0-9a-f]{6}$/i.test(b)) return;
+  requestAnimationFrame(() => import("./intro").then((m) => m.playIntro(hero, a, b)).catch(() => {}));
+}
+
+/* Scroll reveals: blocks below the fold rise in once as they enter. Elements already on screen at
+   load are never hidden, so nothing flashes; under reduced motion nothing is touched. */
+function initScrollReveal() {
+  if (reduceMotion.matches || !("IntersectionObserver" in window) || document.querySelector(".docs__main")) return;
+  const sel = "main .section__head, main .grid > li, main .grid > article, main .featured, main .showcase, main .prose, main .install-card, main .usage > .card, main .links > li, main .license, main .faq__item, main .steps > li, main .cta";
+  const vh = innerHeight;
+  const els = [...document.querySelectorAll<HTMLElement>(sel)].filter((el) => !el.closest(".hero") && el.getBoundingClientRect().top > vh * 0.92);
+  if (!els.length) return;
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) {
+      const el = e.target as HTMLElement;
+      el.classList.add("is-in");
+      io.unobserve(el);
+      // Hand the element back to its own hover transforms (e.g. .card--lift) once it has landed.
+      setTimeout(() => { el.classList.remove("rv", "is-in"); el.style.removeProperty("--rv-i"); }, 1100);
+    }
+  }, { rootMargin: "0px 0px -8% 0px" });
+  for (const el of els) {
+    const sib = el.parentElement ? [...el.parentElement.children].indexOf(el) : 0;
+    el.style.setProperty("--rv-i", String(Math.min(sib, 5)));
+    el.classList.add("rv");
+    io.observe(el);
+  }
+  reduceMotion.addEventListener("change", () => { if (reduceMotion.matches) els.forEach((el) => el.classList.add("is-in")); });
+}
+
+initIntro();
+initScrollReveal();
 initMenu();
 initTerminals();
 initRing();
