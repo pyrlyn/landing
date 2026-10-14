@@ -2,11 +2,11 @@
 title: swarfr
 tagline: Sweep the swarf out of Cargo target/ directories — compress and dedupe build output without deleting what you still build with.
 repo: https://github.com/pyrlyn/swarfr
-install: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/swarfr/releases/latest/download/swarfr-installer.sh | sh"
+install: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/swarfr/releases/download/v0.1.1/swarfr-installer.sh | sh"
 install_alternatives:
   - "ketch install pyrlyn/swarfr"
   - "cargo install --locked --path swarfr"
-version: "0.1.0"
+version: "0.1.1"
 status: "In development · no stable release yet"
 accent: "#E9B45A"
 accent2: "#7FA8D6"
@@ -58,7 +58,7 @@ Windows. The shell installer puts `swarfr` and its updater `swarfr-update` into 
 directory:
 
 ```sh
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/swarfr/releases/latest/download/swarfr-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/swarfr/releases/download/v0.1.1/swarfr-installer.sh | sh
 ```
 
 With ketch:
