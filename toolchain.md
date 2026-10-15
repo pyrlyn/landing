@@ -8,7 +8,7 @@
 
 | Package | Where | Source | Why here |
 | --- | --- | --- | --- |
-| astro | local | https://github.com/withastro/astro | Static site |
+| astro | local | https://github.com/withastro/astro | Static site (Astro 7; Node >=22.12) |
 | @astrojs/sitemap | local | https://github.com/withastro/astro | Sitemap integration |
 | @astrojs/check | local | https://github.com/withastro/astro | `astro check` |
 | typescript | local | https://github.com/microsoft/TypeScript | Typecheck via `astro check` |

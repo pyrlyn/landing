@@ -5,3 +5,4 @@
 - T5. Share slug/nav logic between the site and its CI checks
 - T6. Fix the hardcoded CTA label and dead theme fields
 - T7. Robustness and cleanup batch
+- T9. Distinguish translated documentation titles

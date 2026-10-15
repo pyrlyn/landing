@@ -8,6 +8,8 @@ import tailwindcss from "@tailwindcss/vite";
 const base = process.env.SITE_BASE ?? "/landing/";
 
 export default defineConfig({
+  // Keep pre-Astro-7 spacing between inline elements.
+  compressHTML: true,
   site: process.env.SITE_URL ?? "https://pyrlyn.dev",
   base,
   trailingSlash: "ignore",
