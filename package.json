@@ -20,7 +20,7 @@
     "@astrojs/sitemap": "^3.7.4",
     "@fontsource-variable/inter": "^5.2.0",
     "@pyrlyn/brand": "github:pyrlyn/brand#v0.2.0",
-    "astro": "^5.18.2",
+    "astro": "^7.3.8",
     "marked": "^16.0.0"
   },
   "devDependencies": {
