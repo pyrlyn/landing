@@ -21,3 +21,9 @@ The creator approved dependency updates after npm audit reported high and critic
 Execution plan: capture existing tests/build output; update package manifests and lockfile using npm; preserve HTML whitespace behavior; verify tests, build, package audit and site-specific PDF/docs/SEO checks. Update toolchain documentation. Rollback is a revert of this PR; no runtime data migration is involved.
 
 Validation: npm audit reports 0 vulnerabilities; all 160 routes and extracted HTML text match the Astro 5 baseline; unit tests and astro check pass. Preserved inline whitespace. Migration sources: https://docs.astro.build/en/guides/upgrade-to/v6/ and https://docs.astro.build/en/guides/upgrade-to/v7/ (checked 2026-10-15). The existing duplicate translated-title SEO failure is addressed separately by T9.
+
+### T9. Distinguish translated documentation titles
+
+Russian and Ukrainian lockfile pages have the same H1, so the SEO gate reports duplicate titles. Execution plan: add language labels to translated document metadata titles using the existing SEO module; preserve visible headings; add a title regression test and rerun the built-site SEO gate.
+
+Validation: the duplicate-title SEO failure was reproduced; the new unit test failed before the helper was added. All 10 tests, build, Astro check (0 errors/warnings), docs check and SEO check pass. SEO retains 3 existing non-fatal metadata length warnings. Reused the SEO module and existing document source paths; no new dependency.

@@ -6,7 +6,6 @@ Astro static storefront ("listepo tools") marketing rtok, cox and ketch; product
 
 | # | Status | Priority | Complexity | Readiness | Agent |
 | --- | --- | --- | --- | --- | --- |
-| T9 | in progress | P2 | 2 | 0% | OpenAI / GPT-6 |
 | T1 | todo | P1 | 2 | 0% | |
 | T2 | todo | P2 | 1 | 0% | |
 | T3 | todo | P2 | 2 | 0% | |
@@ -44,7 +43,3 @@ Audit note (2026-10-07): no XSS — every `set:html` sink passes the allowlist/`
 ### T7. Robustness and cleanup batch
 
 `src/lib/docs.ts:196` takes the first `# ` line anywhere as the title (would misparse inside fenced code; use the fence-aware scan `check-docs.mjs:26-39` already has); `CONTENT_CONTRACT.md:74-76` misdescribes `check:docs` as failing when it only warns; `_prototype-vite/` is dead weight already excluded everywhere — archive it to a branch like the previous site. Done means: all three addressed.
-
-### T9. Distinguish translated documentation titles
-
-Russian and Ukrainian lockfile pages have the same H1, so the SEO gate reports duplicate titles. Execution plan: add language labels to translated document metadata titles using the existing SEO module; preserve visible headings; add a title regression test and rerun the built-site SEO gate.

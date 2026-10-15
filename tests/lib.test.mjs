@@ -139,3 +139,12 @@ test("doc slugs, heading ids, and code blocks", async () => {
   assert.equal(docsHref("rtok"), "/landing/rtok/docs/");
   assert.equal(docsHref("rtok", "commands"), "/landing/rtok/docs/commands/");
 });
+
+
+test("translated documentation has distinct metadata titles", async () => {
+  const { documentationTitle } = await seoP;
+  assert.equal(documentationTitle("Lock file", "ketch", "LOCKFILE.md"), "Lock file — ketch docs");
+  assert.equal(documentationTitle("Lock-файл", "ketch", "ru/LOCKFILE.md"), "Lock-файл — ketch docs (ru)");
+  assert.equal(documentationTitle("Lock-файл", "ketch", "uk/LOCKFILE.md"), "Lock-файл — ketch docs (uk)");
+  assert.equal(documentationTitle("Overview", "ketch", null), "Overview — ketch docs");
+});

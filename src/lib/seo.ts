@@ -135,3 +135,10 @@ export function techArticle(t: Tool, o: { headline: string; description: string;
 
 /** Wrap nodes in one schema.org graph. */
 export const graph = (nodes: object[]) => ({ "@context": "https://schema.org", "@graph": nodes });
+
+
+// Translations may share an H1; their metadata must still identify the language.
+export function documentationTitle(title: string, product: string, file: string | null): string {
+  const language = file?.match(/^(ru|uk)\//)?.[1];
+  return `${title} — ${product} docs${language ? ` (${language})` : ""}`;
+}
