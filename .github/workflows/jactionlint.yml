@@ -1,0 +1,32 @@
+name: jactionlint
+
+# Workflow lint: jactionlint with .github/jactionlint.yaml and its baseline, the check the
+# pre-push hook (hk.pkl) runs. install_args installs only jactionlint and shellcheck; both
+# versions match mise.toml.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: jactionlint-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  jactionlint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@9149ea85001c7435d5a66bb127d6a1b6227cb0a5 # v5.0.0
+        with:
+          install_args: github:jdx/jactionlint@2.0.2 shellcheck@0.11.0
+      - run: jactionlint --color
