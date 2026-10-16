@@ -4,6 +4,9 @@
 | --- | --- | --- | --- |
 | node | nodejs.org. CI requests Node 22 | Run Astro, the doc and SEO checks, and the tests | https://nodejs.org/ |
 | npm | bundled with node | Install packages and run scripts | https://github.com/npm/cli |
+| jactionlint | mise (`mise.toml` pins `github:jdx/jactionlint` 2.0.2) | Lint the workflows (the CI `jactionlint` job, the pre-push hook and `mise x -- jactionlint`) | https://github.com/jdx/jactionlint |
+| hk | mise (`mise.toml` pins 2.5.0) | Runs jactionlint as a pre-push hook (`hk.pkl`) | https://github.com/jdx/hk |
+| shellcheck | mise (`mise.toml` pins 0.11.0) | Checks `run:` scripts inside jactionlint | https://github.com/koalaman/shellcheck |
 | Docker | any engine (Docker Engine, OrbStack, Colima). Optional | `docker build` / `docker run` of the `Dockerfile` (images `node:22-bookworm-slim`, `nginx:1.30-alpine`) | https://docs.docker.com/ |
 
 | Package | Where | Source | Why here |
