@@ -6,9 +6,10 @@ import "../styles/global.css";
 import "../styles/tailwind.css";
 import "../styles/products.css";
 import "../styles/motion.css";
+import "../styles/light.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
-import { u, BRAND, THEMES, type ThemeKey } from "../lib/site";
+import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
 import { getTools, proFor, versionLabel } from "../lib/catalog";
 import { productsWithDocs } from "../lib/docs";
 import { graph } from "../lib/seo";
@@ -31,7 +32,7 @@ interface Props {
 }
 const { title, description, theme, ogType = "website", imageAlt, jsonLd = [], noindex = false, ...over } = Astro.props;
 const t = { ...(THEMES[theme] ?? THEMES.home), ...Object.fromEntries(Object.entries(over).filter(([, v]) => v)) };
-const vars = `--accent:${t.accent};--accent-2:${t.accent2};--accent-light:${t.accentLight};--bg:${t.bg}`;
+const vars = `--accent:${t.accent};--accent-dark:${t.accent};--accent-2:${t.accent2};--accent-light:${t.accentLight};--bg:${t.bg}`;
 const og = new URL(u(`/images/${t.images}/og.jpg`), Astro.site).href;
 const canonical = new URL(Astro.url.pathname.replace(/\/?$/, "/"), Astro.site).href;
 const tools = await getTools();
@@ -49,8 +50,10 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content={t.bg} />
+    <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes. -->
+    <script is:inline define:vars={{ darkBg: t.bg }}>(function(){var d=document.documentElement,s=null;try{s=localStorage.getItem("pyrlyn-theme")}catch(e){}var m=s==="light"||s==="dark"?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");d.setAttribute("data-mode",m);d.dataset.darkBg=darkBg;d.style.colorScheme=m;window.__applyThemeMeta=function(m){var c=document.getElementById("meta-theme-color");if(c)c.setAttribute("content",m==="light"?"#f4f6f9":darkBg);var k=document.getElementById("meta-color-scheme");if(k)k.setAttribute("content",m)};document.addEventListener("DOMContentLoaded",function(){window.__applyThemeMeta(m)});window.__applyThemeMeta(m)})()</script>
+    <meta id="meta-color-scheme" name="color-scheme" content="dark light" />
+    <meta id="meta-theme-color" name="theme-color" content={t.bg} />
     <meta name="robots" content={noindex ? "noindex" : "index, follow, max-image-preview:large"} />
     {!noindex && <link rel="canonical" href={canonical} />}
     <!-- Pyrlyn favicon. public/pyrlyn/ and public/favicon.svg (the previous, unlinked listepo mark) are copied
@@ -125,7 +128,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
                       </ul>
                     </>
                   )}
-                  <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>* Pro prices are placeholders</span></p>
+                  <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>{PRO_PRICE_NOTE}</span></p>
                 </div>
               </details>
             </li>
@@ -135,6 +138,10 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
           </ul>
         </nav>
         <div class="nav__actions">
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+            <span class="theme-toggle__sun"><Icon name="sun" size={18} /></span>
+            <span class="theme-toggle__moon"><Icon name="moon" size={18} /></span>
+          </button>
           <a class="btn btn--glass nav__gh" href="https://github.com/pyrlyn"><Icon name="github" size={16} /> GitHub</a>
           <a class="btn btn--primary tw:max-[459px]:px-4! tw:max-[359px]:px-3!" href={u("/#catalog")}>Browse tools</a>
         </div>

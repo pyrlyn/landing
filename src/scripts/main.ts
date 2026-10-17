@@ -555,25 +555,17 @@ function initRoute() {
   reduceMotion.addEventListener("change", tick);
 }
 
-/* A one-off WebGL light sweep, fetched as its own chunk. Never on load: it starts only once the
-   page has fully loaded AND the visitor first interacts (pointer, key, touch, wheel). */
+/* Load: a one-off full-screen WebGL light wave (fixed canvas on <body>), fetched as its own chunk after first paint. */
 function initIntro() {
   const root = document.documentElement;
   const hero = document.querySelector<HTMLElement>(".hero");
-  if (!hero || reduceMotion.matches || !root.classList.contains("intro")) return;
+  if (!hero || reduceMotion.matches || !root.classList.contains("intro") || hero.getBoundingClientRect().bottom < 0) return;
   // Drop the entrance class once it has played, so later style changes never re-trigger it.
   setTimeout(() => root.classList.remove("intro"), 2200);
   const cs = getComputedStyle(root);
   const a = cs.getPropertyValue("--accent").trim(), b = cs.getPropertyValue("--accent-2").trim();
   if (!/^#[0-9a-f]{6}$/i.test(a) || !/^#[0-9a-f]{6}$/i.test(b)) return;
-  const start = () => {
-    for (const ev of events) removeEventListener(ev, start);
-    if (reduceMotion.matches) return;
-    requestAnimationFrame(() => import("./intro").then((m) => m.playIntro(hero, a, b)).catch(() => {}));
-  };
-  const events = ["pointerdown", "keydown", "touchstart", "wheel"];
-  const arm = () => { for (const ev of events) addEventListener(ev, start, { once: true, passive: true }); };
-  if (document.readyState === "complete") arm(); else addEventListener("load", arm, { once: true });
+  requestAnimationFrame(() => import("./intro").then((m) => m.playIntro(hero, a, b)).catch(() => {}));
 }
 
 /* Scroll reveals: blocks below the fold rise in once as they enter. Elements already on screen at
@@ -602,6 +594,33 @@ function initScrollReveal() {
   reduceMotion.addEventListener("change", () => { if (reduceMotion.matches) els.forEach((el) => el.classList.add("is-in")); });
 }
 
+/* Theme toggle: light <-> dark. The saved choice lives in localStorage; without one the page follows the system
+   setting (the head script in Base.astro applies it before first paint). */
+function initThemeToggle() {
+  const root = document.documentElement;
+  const btns = [...document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")];
+  const apply = (m: "light" | "dark") => {
+    root.setAttribute("data-mode", m);
+    root.style.colorScheme = m;
+    (window as unknown as { __applyThemeMeta?: (m: string) => void }).__applyThemeMeta?.(m);
+    for (const b of btns) b.setAttribute("aria-label", m === "light" ? "Switch to dark theme" : "Switch to light theme");
+  };
+  const cur = () => (root.getAttribute("data-mode") === "light" ? "light" : "dark");
+  apply(cur());
+  for (const b of btns) b.addEventListener("click", () => {
+    const next = cur() === "light" ? "dark" : "light";
+    try { localStorage.setItem("pyrlyn-theme", next); } catch {}
+    apply(next);
+  });
+  // No saved choice: follow the system as it changes.
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", (e) => {
+    let saved: string | null = null;
+    try { saved = localStorage.getItem("pyrlyn-theme"); } catch {}
+    if (!saved) apply(e.matches ? "light" : "dark");
+  });
+}
+
+initThemeToggle();
 initIntro();
 initScrollReveal();
 initMenu();

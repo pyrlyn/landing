@@ -19,6 +19,12 @@
 .intro-gl { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; mix-blend-mode: screen; }
 .hero { position: relative; }
 
+/* Prompt-logo cursor `_`: steady terminal-style blink in the header and footer logo. Solid under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .brand__cursor { animation: cursor-blink 1.06s steps(1, end) infinite; }
+}
+@keyframes cursor-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
 @keyframes intro-rise { from { opacity: 0; translate: 0 18px; filter: blur(6px); } to { opacity: 1; translate: 0 0; filter: blur(0); } }
 @keyframes intro-stage { from { opacity: 0; transform: perspective(1200px) rotateX(16deg) rotateY(-10deg) translateY(36px) scale(.94); } to { opacity: 1; transform: none; } }
 @keyframes intro-chip { from { opacity: 0; translate: 0 22px; } to { opacity: 1; translate: 0 0; } }
@@ -29,4 +35,5 @@
   .intro *, .intro *::before, .intro *::after { animation: none !important; }
   .rv { opacity: 1 !important; translate: none !important; scale: none !important; transition: none !important; }
   .intro-gl { display: none; }
+  .brand__cursor { animation: none !important; opacity: 1; }
 }
