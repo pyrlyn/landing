@@ -654,7 +654,10 @@
 .stage--ring .pos-a { left: -2%; top: 0; z-index: 4; }
 .stage__ring { inset: 118px 0 0 0; display: grid; }
 .ring { position: relative; display: grid; gap: var(--s-4); align-content: start; }
-.ring__stage { position: relative; height: 400px; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab; }
+.ring__stage { position: relative; height: 400px; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab;
+  /* Side cards stop at the column edge: the carousel never runs under the hero text. */
+  overflow-x: clip;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
 .ring__stage.is-dragging { cursor: grabbing; }
 .ring__track {
   --a: calc(360deg / var(--n)); --r: 360px;
