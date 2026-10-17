@@ -5,23 +5,25 @@ does is in `DESIGN.md`; the numbers behind the defaults are in `docs/bench.md`.
 
 ## Install
 
-Every release on the [releases page](https://github.com/listepo/swarfr/releases) carries
+Every release on the [releases page](https://github.com/pyrlyn/swarfr/releases) carries
 binaries for Apple Silicon macOS (signed), x86_64 Linux and x86_64 Windows. The shell installer
-puts `swarfr` and its updater `swarfr-update` into cargo's bin directory:
+puts `swarfr` and its updater `swarfr-update` into cargo's bin directory. Every release is published
+as a dev-build prerelease, which GitHub's `releases/latest` link skips, so the command names the
+version (v0.1.1 is the newest):
 
 ```
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/listepo/swarfr/releases/latest/download/swarfr-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/swarfr/releases/download/v0.1.1/swarfr-installer.sh | sh
 ```
 
 `swarfr-update` later fetches the newest release in place. With
-[ketch](https://github.com/listepo/ketch), `ketch install listepo/swarfr` does the same. How a release is cut is in
+[ketch](https://github.com/pyrlyn/ketch), `ketch install pyrlyn/swarfr` does the same. How a release is cut is in
 `docs/release.md`.
 
 The crate is not on crates.io yet. Or build it from a checkout, with the toolchain the repository
 pins (`rust-toolchain.toml`):
 
 ```
-git clone https://github.com/listepo/swarfr
+git clone https://github.com/pyrlyn/swarfr
 cargo install --locked --path swarfr
 ```
 
