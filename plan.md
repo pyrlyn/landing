@@ -13,6 +13,7 @@ Astro static storefront ("listepo tools") marketing rtok, cox and ketch; product
 | T5 | todo | P3 | 2 | 0% | |
 | T6 | todo | P3 | 1 | 0% | |
 | T7 | todo | P3 | 2 | 0% | |
+| T8 | todo | P2 | 2 | 50% | |
 
 Audit note (2026-10-07): no XSS — every `set:html` sink passes the allowlist/`safeHref` guards; JSON-LD already escapes `<`; no secrets in content (only placeholder strings in docs).
 
@@ -43,3 +44,7 @@ Audit note (2026-10-07): no XSS — every `set:html` sink passes the allowlist/`
 ### T7. Robustness and cleanup batch
 
 `src/lib/docs.ts:196` takes the first `# ` line anywhere as the title (would misparse inside fenced code; use the fence-aware scan `check-docs.mjs:26-39` already has); `CONTENT_CONTRACT.md:74-76` misdescribes `check:docs` as failing when it only warns; `_prototype-vite/` is dead weight already excluded everywhere — archive it to a branch like the previous site. Done means: all three addressed.
+
+### T8. Land the 2026-10-17 site QA fixes and close the hosting findings
+
+[pyrlyn/landing#37](https://github.com/pyrlyn/landing/pull/37) (draft) adds a real `public/favicon.ico` with a test and the report `docs/qa/2026-10-17-site-qa.md`; `build`, `check` and `npm test` pass. The QA found no functional bugs. Done means: #37 is merged, and the report's remaining findings are resolved or tracked: security headers and the `www.pyrlyn.dev` vs `pyrlyn.dev` duplicate (hosting; needs a 301 redirect rule), the `rtok-plugin-sdk` link that returns 404 (upstream repo), and the swarfr page title length.
