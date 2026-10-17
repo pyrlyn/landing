@@ -10,7 +10,7 @@ import "../styles/light.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
-import { getTools, proFor, versionLabel } from "../lib/catalog";
+import { getTools, proFor, versionLabel, groupByCategory } from "../lib/catalog";
 import { productsWithDocs } from "../lib/docs";
 import { graph } from "../lib/seo";
 
@@ -107,17 +107,22 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
                 </summary>
                 <div class="menu__panel glass glass--thick">
                   <p class="menu__label">All products · {tools.length}</p>
-                  <ul class="menu__grid">
-                    {tools.map((x) => (
-                      <li>
-                        <a class="menu__item shine" href={u(`/${x.id}/`)} style={`--card-accent:${x.data.accent}`} aria-current={x.id === theme ? "page" : undefined}>
-                          <span class="menu__mark" aria-hidden="true">{x.data.title.slice(0, 2)}</span>
-                          <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">{versionLabel(x)}</span></strong><small>{x.data.tagline}</small></span>
-                          <span class="menu__price">Free · Pro {proFor(x).price}*</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
+                  {groupByCategory(tools).map((g) => (
+                    <section class="menu__group" aria-label={g.category.label}>
+                      <p class="menu__cat">{g.category.label}<span>{g.tools.length}</span></p>
+                      <ul class="menu__grid">
+                        {g.tools.map((x) => (
+                          <li>
+                            <a class="menu__item shine" href={u(`/${x.id}/`)} style={`--card-accent:${x.data.accent}`} aria-current={x.id === theme ? "page" : undefined}>
+                              <span class="menu__mark" aria-hidden="true">{x.data.title.slice(0, 2)}</span>
+                              <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">{versionLabel(x)}</span></strong><small>{x.data.tagline}</small></span>
+                              <span class="menu__price">Free · Pro {proFor(x).price}*</span>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
                   {docTools.length > 0 && (
                     <>
                       <p class="menu__label">Documentation</p>
@@ -158,7 +163,6 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
         <nav aria-label="Footer">
           <ul class="footer__links">
             {tools.map((x) => <li><a href={u(`/${x.id}/`)}>{x.data.title}</a></li>)}
-            {docTools.map((x) => <li><a href={u(`/${x.id}/docs/`)}>{x.data.title} docs</a></li>)}
             <li><a href={u("/#pricing")}>Pricing</a></li>
             <li><a href={u("/#faq")}>FAQ</a></li>
             <li><a href="https://github.com/pyrlyn">GitHub</a></li>

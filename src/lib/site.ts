@@ -120,3 +120,34 @@ export const CAVEATS: Partial<Record<ThemeKey, string>> = {
   runa: "runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
   rtok: "Token savings are estimates from a chars-per-token heuristic until matched against provider usage. No live A/B cost reduction has been established yet.",
 };
+
+/**
+ * Product categories. Every product is in exactly one category (PRODUCT_CATEGORY below).
+ * The Products menu, the home catalog, the pricing cards and the product-page badge all read from here;
+ * tests/categories.test.mjs fails when a product has no valid category or a category is empty.
+ */
+export const CATEGORIES = [
+  { id: "ai", label: "AI & agents", description: "Coding agents, local models and token savings.", order: 1 },
+  { id: "devtools", label: "Developer tools", description: "CLI, build, terminal and editor tooling.", order: 2 },
+  { id: "languages", label: "Languages & formats", description: "Compilers and machine-readable formats.", order: 3 },
+  { id: "apps", label: "Apps", description: "End-user applications.", order: 4 },
+] as const;
+export type CategoryId = (typeof CATEGORIES)[number]["id"];
+
+/** Category per product slug. A new, renamed or removed product must be updated here (see AGENTS.md). */
+export const PRODUCT_CATEGORY: Record<string, CategoryId> = {
+  rtok: "ai",
+  cox: "ai",
+  runa: "ai",
+  aulo: "ai",
+  ketch: "devtools",
+  swarfr: "devtools",
+  scull: "devtools",
+  kerf: "devtools",
+  bindsmith: "devtools",
+  weft: "languages",
+  stator: "languages",
+  mailune: "apps",
+};
+
+export const categoryOf = (slug: string) => CATEGORIES.find((c) => c.id === PRODUCT_CATEGORY[slug]);
