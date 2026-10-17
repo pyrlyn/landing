@@ -63,8 +63,8 @@ test("internal paths pick up the pages base", async () => {
   assert.equal(u(), "/landing/");
   assert.equal(u("/rtok/"), "/landing/rtok/");
   assert.equal(u("cox"), "/landing/cox");
-  assert.equal(PRO.rtok.price, "$9 / mo");
-  assert.equal(PRO_FALLBACK.price, "$9 / mo");
+  assert.equal(PRO.rtok.price, "$0 / mo");
+  assert.equal(PRO_FALLBACK.price, "$0 / mo");
   assert.equal(THEMES.rtok.accent, "#5CE1FF");
   assert.equal(THEMES.ketch.bg, "#06100F");
 });
@@ -113,7 +113,7 @@ test("catalog rank, pro price, accents, and the card install line", async () => 
   assert.equal(featuredTool(tools).id, "rtok");
   assert.equal(featuredTool([tools[1]]).id, "ketch");
   assert.deepEqual(proFor(tools[0]), { price: "$12 / mo", features: ["Team-wide ledger sync", "Hosted savings dashboard", "Priority support"] });
-  assert.equal(proFor(tool("other", { title: "Other", accent: "#000", install: "x" })).price, "$9 / mo");
+  assert.equal(proFor(tool("other", { title: "Other", accent: "#000", install: "x" })).price, "$0 / mo");
   assert.equal(accentsFor(tools[0]).accent2, "#FF6B4A");
   assert.equal(accentsFor(tool("other", { title: "Other", accent: "#abcdef", install: "x" })).accent2, "#abcdef");
   assert.equal(cardInstall(tools[2]), "ketch install aaa");
@@ -147,4 +147,14 @@ test("translated documentation has distinct metadata titles", async () => {
   assert.equal(documentationTitle("Lock-файл", "ketch", "ru/LOCKFILE.md"), "Lock-файл — ketch docs (ru)");
   assert.equal(documentationTitle("Lock-файл", "ketch", "uk/LOCKFILE.md"), "Lock-файл — ketch docs (uk)");
   assert.equal(documentationTitle("Overview", "ketch", null), "Overview — ketch docs");
+});
+
+test("isServiceDoc skips plans, research, notes and READMEs in any case, keeps user docs", async () => {
+  const { isServiceDoc } = await docsP;
+  for (const f of ["plan.md", "PLAN.md", "Plan-2.md", "research.md", "Research-notes.md", "README.md", "comparison/readme.md", "TODO.md", "Done.md", "roadmap.md", "AGENTS.md", "notes.md", "CLAUDE.md"]) {
+    assert.equal(isServiceDoc(f), true, f);
+  }
+  for (const f of ["agents.md", "agents-and-worktrees.md", "claude-code.md", "getting-started.md", "design/loop.md", "plugin-plan-template.md", "comparison.md"]) {
+    assert.equal(isServiceDoc(f), false, f);
+  }
 });

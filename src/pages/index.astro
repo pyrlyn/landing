@@ -4,7 +4,7 @@ import Icon from "../components/Icon.astro";
 import Picture from "../components/Picture.astro";
 import Terminal from "../components/Terminal.astro";
 import RingCarousel from "../components/RingCarousel.astro";
-import { u, BRAND, LICENSE, THEMES, FREE_HIGHLIGHTS } from "../lib/site";
+import { u, BRAND, PRO_PRICE_NOTE, LICENSE, THEMES, FREE_HIGHLIGHTS } from "../lib/site";
 import { getTools, featuredTool, proFor, cardInstall, versionLabel, groupByCategory, categoryFor } from "../lib/catalog";
 import { parseFeatures, splitSections } from "../lib/sections";
 import { DEMOS, demoFromUsage } from "../data/showcase";
@@ -146,7 +146,7 @@ const hotspots = [
         <p>New tools join the catalog by adding one Markdown file — see the content contract.</p>
       </li>
     </ul>
-    <p class="footnote">* Pro prices are placeholders.</p>
+    <p class="footnote">{PRO_PRICE_NOTE}</p>
   </section>
 
   <!-- HOW IT WORKS -->
@@ -194,14 +194,14 @@ const hotspots = [
             <a class="btn btn--glass btn--block" href={u(`/${p.id}/#install`)}>Install free</a>
           </div>
           <div class="price-tier price-tier--pro">
-            <div class="tier__head"><strong>Pro <span class="badge badge--placeholder">Placeholder</span></strong><span class="price__num price__num--sm">{proFor(p).price}</span></div>
+            <div class="tier__head"><strong>Pro <span class="badge badge--placeholder">Placeholder</span></strong><span class="price__num price__num--sm">{proFor(p).price}*</span></div>
             <ul class="checklist">{proFor(p).features.map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
             <button class="btn btn--primary btn--block" type="button" aria-disabled="true" aria-describedby="pricing-note" style={`--accent:${p.data.accent}`}>Join the Pro waitlist</button>
           </div>
         </article>
       ))}
     </div>
-    <p class="footnote" id="pricing-note">Placeholder — the Pro waitlist is not open yet; checkout is not wired up in this MVP.</p>
+    <p class="footnote" id="pricing-note">{PRO_PRICE_NOTE} Placeholder — the Pro waitlist is not open yet; checkout is not wired up in this MVP.</p>
   </section>
 
   <!-- FAQ -->

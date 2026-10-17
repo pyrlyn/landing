@@ -15,11 +15,13 @@ export const BRAND = "Pyrlyn";
  * Nothing here is a real offer: prices and Pro features are invented for the MVP.
  */
 export const PRO: Record<string, { price: string; features: string[] }> = {
-  rtok: { price: "$9 / mo", features: ["Team-wide ledger sync", "Hosted savings dashboard", "Priority support"] },
-  cox: { price: "$15 / mo", features: ["Shared session history", "Org permission policies", "Priority support"] },
-  ketch: { price: "$6 / mo", features: ["Private package registry", "Fleet lockfile sync", "Priority support"] },
+  rtok: { price: "$0 / mo", features: ["Team-wide ledger sync", "Hosted savings dashboard", "Priority support"] },
+  cox: { price: "$0 / mo", features: ["Shared session history", "Org permission policies", "Priority support"] },
+  ketch: { price: "$0 / mo", features: ["Private package registry", "Fleet lockfile sync", "Priority support"] },
 };
-export const PRO_FALLBACK = { price: "$9 / mo", features: ["Team features", "Hosted dashboard", "Priority support"] };
+/** Footnote for every Pro price shown on the site. */
+export const PRO_PRICE_NOTE = "* Free during the preview (beta) version.";
+export const PRO_FALLBACK = { price: "$0 / mo", features: ["Team features", "Hosted dashboard", "Priority support"] };
 
 /** Short real "free" highlights per tool for the pricing table (from each project's site copy). */
 export const FREE_HIGHLIGHTS: Record<string, string[]> = {

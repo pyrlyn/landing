@@ -17,6 +17,18 @@ const SOURCES = import.meta.glob<{ repo: string; sha: string; ref: string }>("/c
   eager: true,
 });
 
+/**
+ * Service files (plans, research, to-do/done/roadmap notes, READMEs, agent instructions) are never
+ * docs pages, even if a sync copied them in: they are skipped here whatever their case. Keep in
+ * sync with SERVICE_DOC in scripts/check-docs.mjs and the filter in pyrlyn/ci's sync-docs.yml.
+ * AGENTS.md only in that exact spelling (rtok has a user-facing agents.md).
+ */
+const SERVICE_DOC = /^(?:(?:readme|notes|ideas|claude|agency)|(?:plan|todo|done|roadmap|research|next)[^/]*)\.md$/i;
+export function isServiceDoc(file: string): boolean {
+  const name = file.slice(file.lastIndexOf("/") + 1);
+  return name === "AGENTS.md" || SERVICE_DOC.test(name);
+}
+
 interface NavItem { file?: string; page?: string; title?: string; summary?: string }
 interface NavGroup { label: string; items: NavItem[] }
 interface ProductNav { groups: NavGroup[]; exclude?: Record<string, string> }
@@ -142,7 +154,7 @@ export function getProductDocs(product: string): ProductDocs {
   if (hit) return hit;
   const cfg = NAV[product] ?? { groups: [] };
   const prefix = `/content/docs/${product}/`;
-  const files = Object.keys(RAW).filter((k) => k.startsWith(prefix)).map((k) => k.slice(prefix.length)).sort();
+  const files = Object.keys(RAW).filter((k) => k.startsWith(prefix)).map((k) => k.slice(prefix.length)).filter((f) => !isServiceDoc(f)).sort();
   const source = SOURCES[`${prefix}_source.json`] ?? null;
   const excluded: { file: string; reason: string }[] = [];
   const listed = new Set(cfg.groups.flatMap((g) => g.items.map((i) => i.file).filter(Boolean) as string[]));
