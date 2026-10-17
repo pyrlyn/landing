@@ -21,6 +21,9 @@ const slugOf = (f) => f.replace(/\.md$/i, "").toLowerCase().replace(/[^a-z0-9]+/
 const isExcluded = (f, ex = {}) =>
   Object.entries(ex).find(([p]) => (p.endsWith("/") ? f.startsWith(p) : p.endsWith(".md") ? f === p : f.startsWith(p)))?.[1] ?? null;
 const walk = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)])) : []);
+// Service files are skipped even if a sync copied them in; keep in sync with isServiceDoc in src/lib/docs.ts.
+const SERVICE_DOC = /^(?:(?:readme|notes|ideas|claude|agency)|(?:plan|todo|done|roadmap|research|next)[^/]*)\.md$/i;
+const isServiceDoc = (f) => { const n = f.slice(f.lastIndexOf("/") + 1); return n === "AGENTS.md" || SERVICE_DOC.test(n); };
 const read = (f) => fs.readFileSync(f, "utf8");
 /** Markdown lines outside fenced code blocks (CommonMark rules: a closing fence has no info string). */
 function outsideFences(md) {
@@ -44,7 +47,7 @@ const summary = {};
 for (const [product, cfg] of Object.entries(nav)) {
   if (product.startsWith("$")) continue;
   const srcDir = path.join(root, "content/docs", product);
-  const files = walk(srcDir).filter((f) => f.endsWith(".md")).map((f) => path.relative(srcDir, f).split(path.sep).join("/")).sort();
+  const files = walk(srcDir).filter((f) => f.endsWith(".md")).map((f) => path.relative(srcDir, f).split(path.sep).join("/")).filter((f) => !isServiceDoc(f)).sort();
   const listed = new Set(cfg.groups.flatMap((g) => g.items.map((i) => i.file).filter(Boolean)));
   const s = (summary[product] = { synced: files.length, fromDocs: 0, authored: 0, excluded: 0, overview: 0, headings: 0 });
   if (!files.length) warnings.push(`${product}: content/docs/${product}/ is missing or empty`);

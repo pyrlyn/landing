@@ -148,3 +148,13 @@ test("translated documentation has distinct metadata titles", async () => {
   assert.equal(documentationTitle("Lock-файл", "ketch", "uk/LOCKFILE.md"), "Lock-файл — ketch docs (uk)");
   assert.equal(documentationTitle("Overview", "ketch", null), "Overview — ketch docs");
 });
+
+test("isServiceDoc skips plans, research, notes and READMEs in any case, keeps user docs", async () => {
+  const { isServiceDoc } = await docsP;
+  for (const f of ["plan.md", "PLAN.md", "Plan-2.md", "research.md", "Research-notes.md", "README.md", "comparison/readme.md", "TODO.md", "Done.md", "roadmap.md", "AGENTS.md", "notes.md", "CLAUDE.md"]) {
+    assert.equal(isServiceDoc(f), true, f);
+  }
+  for (const f of ["agents.md", "agents-and-worktrees.md", "claude-code.md", "getting-started.md", "design/loop.md", "plugin-plan-template.md", "comparison.md"]) {
+    assert.equal(isServiceDoc(f), false, f);
+  }
+});
