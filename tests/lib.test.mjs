@@ -59,7 +59,7 @@ test("section helpers split headings, features, usage, and links", async () => {
 
 test("internal paths pick up the pages base", async () => {
   const { BRAND, PRO, PRO_FALLBACK, THEMES, u } = await siteP;
-  assert.equal(BRAND, "listepo tools");
+  assert.equal(BRAND, "Pyrlyn");
   assert.equal(u(), "/landing/");
   assert.equal(u("/rtok/"), "/landing/rtok/");
   assert.equal(u("cox"), "/landing/cox");
@@ -80,12 +80,12 @@ test("seo text stays inside the meta limits and omits pro prices", async () => {
   assert.ok(clip("word ".repeat(40), 160).endsWith("…"));
 
   const short = tool("rtok", { title: "rtok", tagline: "Cut the context.", version: "1.0.0", repo: "https://github.com/pyrlyn/rtok" });
-  assert.equal(productTitle(short), "rtok — Cut the context · listepo tools");
+  assert.equal(productTitle(short), "rtok — Cut the context · Pyrlyn");
   const longLead = `${"Long lead ".repeat(6)}with the rest of the sentence that should not be the title.`;
   const long = tool("rtok", { ...short.data, tagline: longLead });
   const title = productTitle(long);
   assert.equal(title.includes("with the rest"), false);
-  assert.equal(title.includes("listepo tools"), false);
+  assert.equal(title.includes("Pyrlyn"), false);
   assert.equal(productDescription(short, "First sentence here. Second."), "Cut the context. First sentence here.");
   assert.equal(operatingSystems(""), "macOS, Linux");
   assert.equal(operatingSystems("Windows PowerShell and Linux"), "Linux, Windows");
@@ -95,7 +95,7 @@ test("seo text stays inside the meta limits and omits pro prices", async () => {
   assert.equal(app.offers.priceCurrency, "USD");
   assert.equal("aggregateRating" in app, false);
   assert.equal(app.operatingSystem, "macOS");
-  assert.equal(organization().name, "listepo");
+  assert.equal(organization().name, "Pyrlyn");
   assert.equal(abs("/rtok/"), "https://pyrlyn.dev/landing/rtok/");
   assert.deepEqual(breadcrumbs([{ name: "Home", url: abs("/") }]).itemListElement[0].position, 1);
   assert.equal(graph([organization()])["@context"], "https://schema.org");

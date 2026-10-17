@@ -38,7 +38,7 @@ export function productTitle(t: Tool): string {
   const lead = tag.split(" — ")[0];
   const short = lead.length > 55 && lead.includes(" with ") ? lead.split(" with ")[0] : lead;
   const title = `${t.data.title} — ${short}`;
-  return title.length + BRAND.length + 3 <= 65 ? `${title} · ${BRAND}` : title;
+  return title.length + BRAND.length + 3 <= 60 ? `${title} · ${BRAND}` : title;
 }
 
 /** Product meta description: the tagline, plus the overview's first sentence when both fit. */
@@ -53,7 +53,7 @@ export function productDescription(t: Tool, overviewMd = ""): string {
 export const organization = () => ({
   "@type": "Organization",
   "@id": ORG_ID(),
-  name: "listepo",
+  name: "Pyrlyn",
   url: HOME_URL(),
   sameAs: ["https://github.com/pyrlyn"],
 });
