@@ -594,6 +594,33 @@ function initScrollReveal() {
   reduceMotion.addEventListener("change", () => { if (reduceMotion.matches) els.forEach((el) => el.classList.add("is-in")); });
 }
 
+/* Theme toggle: light <-> dark. The saved choice lives in localStorage; without one the page follows the system
+   setting (the head script in Base.astro applies it before first paint). */
+function initThemeToggle() {
+  const root = document.documentElement;
+  const btns = [...document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")];
+  const apply = (m: "light" | "dark") => {
+    root.setAttribute("data-mode", m);
+    root.style.colorScheme = m;
+    (window as unknown as { __applyThemeMeta?: (m: string) => void }).__applyThemeMeta?.(m);
+    for (const b of btns) b.setAttribute("aria-label", m === "light" ? "Switch to dark theme" : "Switch to light theme");
+  };
+  const cur = () => (root.getAttribute("data-mode") === "light" ? "light" : "dark");
+  apply(cur());
+  for (const b of btns) b.addEventListener("click", () => {
+    const next = cur() === "light" ? "dark" : "light";
+    try { localStorage.setItem("pyrlyn-theme", next); } catch {}
+    apply(next);
+  });
+  // No saved choice: follow the system as it changes.
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", (e) => {
+    let saved: string | null = null;
+    try { saved = localStorage.getItem("pyrlyn-theme"); } catch {}
+    if (!saved) apply(e.matches ? "light" : "dark");
+  });
+}
+
+initThemeToggle();
 initIntro();
 initScrollReveal();
 initMenu();

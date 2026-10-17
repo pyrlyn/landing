@@ -1,0 +1,51 @@
+/* Light theme. Dark is the default token set (@pyrlyn/brand landing tokens); <html data-mode="light"> (set by the head
+   script in Base.astro from localStorage or prefers-color-scheme) swaps the palette. `data-theme` stays the product theme.
+   --bg and --accent are set inline per page, hence !important; the per-page accent becomes its --accent-light. */
+html[data-mode="light"] {
+  color-scheme: light;
+  --bg: #f4f6f9 !important;
+  --accent: var(--accent-light) !important;
+  --fg: #121821; --fg-strong: #05080d; --muted: #4c5868; --subtle: #5f6b7d;
+  --on-accent: #ffffff; --danger: #b42318; --ok: #15803d;
+  --bg-elev: #ffffff;
+  --surface: rgb(255 255 255 / .74);
+  --surface-lifted: rgb(255 255 255 / .92);
+  --surface-opaque: #ffffff;
+  --glass-fill: linear-gradient(180deg, rgb(255 255 255 / .72), rgb(255 255 255 / .5));
+  --glass-edge: inset 0 0 0 1px rgb(10 20 35 / .08), inset 0 1px #ffffffcc, inset 0 -1px rgb(10 20 35 / .04);
+  --hairline: rgb(10 20 35 / .1);
+  --hairline-strong: rgb(10 20 35 / .18);
+  --hover-1: rgb(10 20 35 / .05);
+  --shadow-1: 0 0 0 1px rgb(15 25 40 / .06), 0 1px 2px rgb(15 25 40 / .08);
+  --shadow-2: 0 0 0 1px rgb(15 25 40 / .06), 0 2px 4px rgb(15 25 40 / .06), 0 8px 16px -4px rgb(15 25 40 / .1);
+  --shadow-3: 0 0 0 1px rgb(15 25 40 / .06), 0 4px 8px rgb(15 25 40 / .06), 0 16px 32px -8px rgb(15 25 40 / .14);
+  --focus: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent);
+}
+html[data-mode="light"] .intro-gl { mix-blend-mode: normal; }
+html[data-mode="light"] .mesh__grid { opacity: .5; filter: invert(1); }
+
+/* Dark islands: terminals and code stay dark in the light theme, with the dark token set restored inside them. */
+html[data-mode="light"] :is(.code, .term__body, .particles__stage) {
+  --fg: #eef1f6; --fg-strong: #ffffff; --muted: #a4adbb; --subtle: #8a94a5;
+  --accent: var(--accent-dark); --hairline: rgb(255 255 255 / .1); --hairline-strong: rgb(255 255 255 / .18);
+  color: var(--fg); background: #0d1220;
+}
+html[data-mode="light"] .term__body { background: #0d1220; }
+html[data-mode="light"] .term__bar { background: #151b2b; --fg: #eef1f6; --fg-strong: #fff; --muted: #a4adbb; --hairline: rgb(255 255 255 / .1); }
+html[data-mode="light"] .term__ctl { background: rgb(255 255 255 / .1); }
+/* Light insets (were translucent black on dark). */
+html[data-mode="light"] :is(.segmented, .scenes__tabs) { background: rgb(10 20 35 / .06); }
+html[data-mode="light"] .price-tier { background: rgb(10 20 35 / .035); }
+html[data-mode="light"] .price-tier--pro { background: linear-gradient(180deg, color-mix(in oklch, var(--card-accent) 10%, transparent), rgb(10 20 35 / .03)); }
+html[data-mode="light"] .segmented button[aria-pressed="true"] { background: #fff; }
+html[data-mode="light"] :is(.nav__links a:hover, .menu__item:hover, .menu__item[aria-current="page"], .menu__trigger:hover, .menu__details[open] .menu__trigger) { background: var(--hover-1); }
+html[data-mode="light"] .nav__links a[aria-current="page"] { background: rgb(10 20 35 / .07); }
+html[data-mode="light"] .menu__panel { background: #ffffff; }
+/* Per-product accents are bright for dark pages: darken them where they colour text. */
+html[data-mode="light"] :is(.oss-card__link, .oss-card__title span, .menu__ver, .menu__mark, .hotspot__kicker, .hotspot__tip a, .featured__title span, .featured__list svg, .ring__title span, .badge--version) {
+  color: color-mix(in oklch, var(--card-accent) 50%, #0b1220);
+}
+html[data-mode="light"] .badge--placeholder { color: #8a5a00; background: rgb(255 191 90 / .18); box-shadow: inset 0 0 0 1px rgb(180 120 0 / .45); }
+html[data-mode="light"] .gradient-text { background-image: linear-gradient(100deg, var(--accent) 0%, color-mix(in oklch, var(--accent-2) 60%, #0b1220) 100%); }
+html[data-mode="light"] .ring__card { background: radial-gradient(80% 60% at 50% 0%, color-mix(in oklch, var(--card-accent) 14%, transparent), transparent 70%), #ffffff; box-shadow: var(--shadow-3), 0 0 0 1px color-mix(in oklch, var(--card-accent) 25%, transparent); }
+html[data-mode="light"] :is(.inline-code, .prose :not(pre) > code, .card :not(pre) > code) { background: rgb(10 20 35 / .06); }
