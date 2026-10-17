@@ -42,10 +42,23 @@ html[data-mode="light"] :is(.nav__links a:hover, .menu__item:hover, .menu__item[
 html[data-mode="light"] .nav__links a[aria-current="page"] { background: rgb(10 20 35 / .07); }
 html[data-mode="light"] .menu__panel { background: #ffffff; }
 /* Per-product accents are bright for dark pages: darken them where they colour text. */
-html[data-mode="light"] :is(.oss-card__link, .oss-card__title span, .menu__ver, .menu__mark, .hotspot__kicker, .hotspot__tip a, .featured__title span, .featured__list svg, .ring__title span, .badge--version) {
+html[data-mode="light"] :is(.oss-card__link, .oss-card__title span, .menu__ver, .menu__mark, .hotspot__kicker, .hotspot__tip a, .featured__title span, .featured__list svg, .ring__title span, .ring__foot, .badge--version) {
   color: color-mix(in oklch, var(--card-accent) 50%, #0b1220);
 }
 html[data-mode="light"] .badge--placeholder { color: #8a5a00; background: rgb(255 191 90 / .18); box-shadow: inset 0 0 0 1px rgb(180 120 0 / .45); }
 html[data-mode="light"] .gradient-text { background-image: linear-gradient(100deg, var(--accent) 0%, color-mix(in oklch, var(--accent-2) 60%, #0b1220) 100%); }
 html[data-mode="light"] .ring__card { background: radial-gradient(80% 60% at 50% 0%, color-mix(in oklch, var(--card-accent) 14%, transparent), transparent 70%), #ffffff; box-shadow: var(--shadow-3), 0 0 0 1px color-mix(in oklch, var(--card-accent) 25%, transparent); }
 html[data-mode="light"] :is(.inline-code, .prose :not(pre) > code, .card :not(pre) > code) { background: rgb(10 20 35 / .06); }
+
+/* Hero carousel (light): solid surface cards with a border and soft shadow. Side cards recede by scale and tone,
+   never by transparency, so nothing shows through from the card behind. */
+html[data-mode="light"] .ring__card {
+  background: radial-gradient(80% 60% at 50% 0%, color-mix(in oklch, var(--card-accent) 12%, #ffffff), #ffffff 70%), #ffffff;
+  box-shadow: 0 0 0 1px rgb(10 20 35 / .14), 0 1px 2px rgb(15 25 40 / .08), 0 14px 32px -12px rgb(15 25 40 / .28);
+}
+html[data-mode="light"] .ring__item:not(.is-active) .ring__face { opacity: 1; filter: saturate(.75) brightness(.95); scale: .94; }
+html[data-mode="light"] .ring__item.is-active .ring__card { box-shadow: 0 0 0 1px color-mix(in oklch, var(--card-accent) 45%, rgb(10 20 35 / .2)), 0 2px 4px rgb(15 25 40 / .08), 0 22px 44px -14px rgb(15 25 40 / .38); }
+html[data-mode="light"] .ring__art { mix-blend-mode: normal; }
+html[data-mode="light"] .ring__btn { background: #ffffff; box-shadow: 0 0 0 1px rgb(10 20 35 / .14), var(--shadow-1); }
+/* Disabled Pro waitlist button: neutral and readable for every product accent. */
+html[data-mode="light"] .btn[aria-disabled="true"] { opacity: 1; filter: none; background: #e7eaf0; color: #3f4b5c; box-shadow: inset 0 0 0 1px rgb(10 20 35 / .16); text-shadow: none; }
