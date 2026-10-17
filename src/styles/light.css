@@ -65,3 +65,11 @@ html[data-mode="light"] .btn[aria-disabled="true"] { opacity: 1; filter: none; b
    with room around it instead of being pulled up into the card edge. */
 html[data-mode="light"] .ring__art { mix-blend-mode: normal; width: 132px; margin: var(--s-2) auto var(--s-3); filter: invert(1) hue-rotate(180deg) saturate(.9) brightness(1.04);
   mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); -webkit-mask-image: radial-gradient(closest-side, #000 55%, transparent 100%); }
+
+/* Hero carousel backdrop (light): the dark render (blob + 3D window) is hidden; a very soft tinted glow replaces it. */
+html[data-mode="light"] .stage--ring .stage__art { display: none; }
+html[data-mode="light"] .stage--ring::before {
+  content: ""; position: absolute; inset: 4% -8% 0 -8%; z-index: 0; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in oklch, var(--accent) 12%, transparent), transparent 100%);
+}
+html[data-mode="light"] .ring__item:not(.is-active) .ring__card { box-shadow: 0 0 0 1px rgb(10 20 35 / .12), 0 6px 14px -8px rgb(15 25 40 / .22); }
