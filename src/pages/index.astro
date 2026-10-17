@@ -5,13 +5,14 @@ import Picture from "../components/Picture.astro";
 import Terminal from "../components/Terminal.astro";
 import RingCarousel from "../components/RingCarousel.astro";
 import { u, BRAND, LICENSE, THEMES, FREE_HIGHLIGHTS } from "../lib/site";
-import { getTools, featuredTool, proFor, cardInstall, versionLabel } from "../lib/catalog";
+import { getTools, featuredTool, proFor, cardInstall, versionLabel, groupByCategory, categoryFor } from "../lib/catalog";
 import { parseFeatures, splitSections } from "../lib/sections";
 import { DEMOS, demoFromUsage } from "../data/showcase";
 import { parseUsage } from "../lib/sections";
 import { organization, website, abs, appId } from "../lib/seo";
 
 const tools = await getTools();
+const groups = groupByCategory(tools);
 const featured = featuredTool(tools);
 const fSections = splitSections(featured.body ?? "");
 const firstSentence = (html: string) => { const m = html.match(/^(.*?[.!?])(\s|$)/); return m ? m[1] : html; };
@@ -110,22 +111,35 @@ const hotspots = [
       <h2 id="cat-title" class="h2">Every tool, free to start.</h2>
       <p class="lead">Each tool is a standalone binary with its own page, demo and install command.</p>
     </header>
+    <nav class="cat-chips" aria-label="Product categories">
+      {groups.map((g) => <a class="cat-chip" href={`#cat-${g.category.id}`}>{g.category.label}<span>{g.tools.length}</span></a>)}
+    </nav>
+    {groups.map((g) => (
+      <div class="cat-group" id={`cat-${g.category.id}`} aria-labelledby={`cat-h-${g.category.id}`}>
+        <header class="cat-group__head">
+          <h3 id={`cat-h-${g.category.id}`} class="cat-group__title">{g.category.label}</h3>
+          <p>{g.category.description}</p>
+        </header>
+        <ul class="grid grid--3" role="list">
+          {g.tools.map((p) => (
+          <li class="card glass shine card--lift oss-card" style={`--card-accent:${p.data.accent}`}>
+            <span class="oss-card__mesh" aria-hidden="true"></span>
+            <Picture class="oss-card__preview" dir={p.id} name="hero" widths={[800, 1200]} sizes="300px" w={2400} h={1600} />
+            <div class="oss-card__top">
+              <span class="icon" aria-hidden="true">{glyph[p.id] ?? p.data.title.slice(0, 1)}</span>
+              <span class="badge badge--version" style={`--accent:${p.data.accent}`}>{versionLabel(p)}</span>
+            </div>
+            <h3 class="oss-card__title">{p.data.title}<span>.</span></h3>
+            <p>{p.data.tagline}</p>
+            <pre class="code" role="group" aria-label={`Install ${p.data.title}`}><code><span class="tok-p" aria-hidden="true">$ </span>{cardInstall(p)}</code></pre>
+            <p class="price-chips"><span class="price-chip">Free · OSS</span><span class="price-chip price-chip--pro">Pro {proFor(p).price}*</span></p>
+            <a class="oss-card__link" href={u(`/${p.id}/`)}>Explore {p.data.title} <Icon name="arrow" size={16} /></a>
+          </li>
+          ))}
+        </ul>
+      </div>
+    ))}
     <ul class="grid grid--3" role="list">
-      {tools.map((p) => (
-        <li class="card glass shine card--lift oss-card" style={`--card-accent:${p.data.accent}`}>
-          <span class="oss-card__mesh" aria-hidden="true"></span>
-          <Picture class="oss-card__preview" dir={p.id} name="hero" widths={[800, 1200]} sizes="300px" w={2400} h={1600} />
-          <div class="oss-card__top">
-            <span class="icon" aria-hidden="true">{glyph[p.id] ?? p.data.title.slice(0, 1)}</span>
-            <span class="badge badge--version" style={`--accent:${p.data.accent}`}>{versionLabel(p)}</span>
-          </div>
-          <h3 class="oss-card__title">{p.data.title}<span>.</span></h3>
-          <p>{p.data.tagline}</p>
-          <pre class="code" role="group" aria-label={`Install ${p.data.title}`}><code><span class="tok-p" aria-hidden="true">$ </span>{cardInstall(p)}</code></pre>
-          <p class="price-chips"><span class="price-chip">Free · OSS</span><span class="price-chip price-chip--pro">Pro {proFor(p).price}*</span></p>
-          <a class="oss-card__link" href={u(`/${p.id}/`)}>Explore {p.data.title} <Icon name="arrow" size={16} /></a>
-        </li>
-      ))}
       <li class="card soon-card" aria-label="More tools coming">
         <span class="icon" aria-hidden="true"><Icon name="sparkle" /></span>
         <h3 class="h3">More tools coming</h3>
@@ -173,6 +187,7 @@ const hotspots = [
       {tools.map((p) => (
         <article class="card glass price-card" style={`--card-accent:${p.data.accent}`} aria-labelledby={`pr-${p.id}`}>
           <h3 id={`pr-${p.id}`} class="oss-card__title">{p.data.title}<span>.</span></h3>
+          <p class="cat-tag">{categoryFor(p).label}</p>
           <div class="price-tier">
             <div class="tier__head"><strong>Free · OSS</strong><span class="price__num price__num--sm">$0</span></div>
             <ul class="checklist">{(FREE_HIGHLIGHTS[p.id] ?? ["The full open-source tool"]).map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>

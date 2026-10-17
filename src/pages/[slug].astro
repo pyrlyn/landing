@@ -10,7 +10,7 @@ import TokenParticles from "../components/TokenParticles.astro";
 import CoxScenes from "../components/CoxScenes.astro";
 import KetchRoute from "../components/KetchRoute.astro";
 import { u, BRAND, licenseFor, CAVEATS, THEMES, FREE_HIGHLIGHTS, type ThemeKey } from "../lib/site";
-import { proFor, statusFor } from "../lib/catalog";
+import { proFor, statusFor, categoryFor } from "../lib/catalog";
 import { getProductDocs, productsWithDocs, docsHref } from "../lib/docs";
 import { DEMOS, FLOWS, COX_SCENES, demoFromUsage } from "../data/showcase";
 import { splitSections, parseFeatures, parseUsage, parseLinks, renderMd, codeBlock } from "../lib/sections";
@@ -84,6 +84,7 @@ const jsonLd = [
     <div class="hero__copy">
       <nav class="breadcrumb" aria-label="Breadcrumb"><a href={u("/#catalog")}>Open source</a><span aria-hidden="true">/</span><span aria-current="page">{d.title}</span></nav>
       <div class="p-meta">
+        <a class="badge badge--cat" href={u(`/#cat-${categoryFor(entry).id}`)}>{categoryFor(entry).label}</a>
         <span class="badge badge--version">{statusFor(entry)}</span>
         <span class="badge badge--line">{lic.short}</span>
       </div>

@@ -25,3 +25,5 @@ mise x -- hk install --mise            # install the pre-push hook once per clon
 ```
 
 Do not invent ratings, reviews, or Pro prices in structured data. Pro prices in `src/lib/site.ts` are placeholders.
+
+Product categories live in `src/lib/site.ts` (`CATEGORIES` and `PRODUCT_CATEGORY`). Every new, renamed or removed product must be put into the right category there. Keep the categories up to date and consistent in the Products menu, the home catalog and pricing cards, and the product-page badge. `tests/categories.test.mjs` enforces it. The site footer lists product names only, with no per-product docs links.

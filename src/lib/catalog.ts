@@ -1,6 +1,6 @@
 // Marketplace helpers over the projects collection (works for any number of tools).
 import { getCollection, type CollectionEntry } from "astro:content";
-import { PRO, PRO_FALLBACK, RELEASE_STATUS, RELEASE_STATUS_FALLBACK, THEMES, type ThemeKey } from "./site";
+import { CATEGORIES, categoryOf, PRO, PRO_FALLBACK, RELEASE_STATUS, RELEASE_STATUS_FALLBACK, THEMES, type ThemeKey } from "./site";
 
 export type Tool = CollectionEntry<"projects">;
 
@@ -40,3 +40,14 @@ export const versionLabel = (_t: Tool) => "in development";
 
 /** Short one-line install for cards: prefer a `ketch install …` alternative, else the primary command. */
 export const cardInstall = (t: Tool) => t.data.install_alternatives?.find((c) => c.startsWith("ketch ")) ?? t.data.install;
+
+/** Category of a tool (falls back to the last category so an unmapped tool is still shown). */
+export const categoryFor = (t: Tool) => categoryOf(t.id) ?? CATEGORIES[CATEGORIES.length - 1];
+
+/** Tools grouped by category in CATEGORIES order; empty categories are dropped. */
+export function groupByCategory(tools: Tool[]) {
+  return [...CATEGORIES]
+    .sort((a, b) => a.order - b.order)
+    .map((category) => ({ category, tools: tools.filter((t) => categoryFor(t).id === category.id) }))
+    .filter((g) => g.tools.length > 0);
+}
