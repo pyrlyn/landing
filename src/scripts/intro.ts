@@ -1,4 +1,7 @@
-// Page-load light sweep: one WebGL pass over the hero, about 1.6 s, then the canvas is removed.
+// Light sweep: one WebGL pass, about 1.6 s, then the canvas is removed. The canvas is mounted on
+// <body> (one level above the hero container) as a fixed full-viewport layer, so the sweep extends
+// past the hero's bounds instead of being clipped by it. It never plays on load: main.ts starts it
+// after window load, on the first user interaction. No loading UI.
 // Loaded lazily by main.ts only when motion is allowed and the hero is on screen; the page itself
 // is fully visible without it (the hero's CSS entrance in motion.css does not depend on this file).
 const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
@@ -50,16 +53,16 @@ export function playIntro(hero: HTMLElement, accent: string, accent2: string) {
 
   // Half resolution is plenty for a soft glow and keeps the fill cost low on large screens.
   const scale = Math.min(devicePixelRatio || 1, 1.5) * 0.5;
-  const box = hero.getBoundingClientRect();
+  const box = { left: 0, top: 0, width: innerWidth, height: innerHeight };
   cv.width = Math.max(1, Math.round(box.width * scale));
   cv.height = Math.max(1, Math.round(box.height * scale));
   gl.viewport(0, 0, cv.width, cv.height);
   gl.uniform2f(u("r"), cv.width, cv.height);
-  const art = hero.querySelector(".stage")?.getBoundingClientRect();
+  const art = hero.querySelector(".stage")?.getBoundingClientRect(); // viewport coords, matches the fixed canvas
   const ox = art ? (art.left + art.width / 2 - box.left) / box.width : 0.5;
   const oy = art ? 1 - (art.top + art.height / 2 - box.top) / box.height : 0.5;
   gl.uniform2f(u("o"), ox, oy);
-  hero.prepend(cv);
+  document.body.append(cv);
 
   let visible = true, raf = 0, t0 = 0, elapsed = 0;
   const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(frame); });
