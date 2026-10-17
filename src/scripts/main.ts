@@ -555,25 +555,17 @@ function initRoute() {
   reduceMotion.addEventListener("change", tick);
 }
 
-/* A one-off WebGL light sweep, fetched as its own chunk. Never on load: it starts only once the
-   page has fully loaded AND the visitor first interacts (pointer, key, touch, wheel). */
+/* Load: a one-off full-screen WebGL light wave (fixed canvas on <body>), fetched as its own chunk after first paint. */
 function initIntro() {
   const root = document.documentElement;
   const hero = document.querySelector<HTMLElement>(".hero");
-  if (!hero || reduceMotion.matches || !root.classList.contains("intro")) return;
+  if (!hero || reduceMotion.matches || !root.classList.contains("intro") || hero.getBoundingClientRect().bottom < 0) return;
   // Drop the entrance class once it has played, so later style changes never re-trigger it.
   setTimeout(() => root.classList.remove("intro"), 2200);
   const cs = getComputedStyle(root);
   const a = cs.getPropertyValue("--accent").trim(), b = cs.getPropertyValue("--accent-2").trim();
   if (!/^#[0-9a-f]{6}$/i.test(a) || !/^#[0-9a-f]{6}$/i.test(b)) return;
-  const start = () => {
-    for (const ev of events) removeEventListener(ev, start);
-    if (reduceMotion.matches) return;
-    requestAnimationFrame(() => import("./intro").then((m) => m.playIntro(hero, a, b)).catch(() => {}));
-  };
-  const events = ["pointerdown", "keydown", "touchstart", "wheel"];
-  const arm = () => { for (const ev of events) addEventListener(ev, start, { once: true, passive: true }); };
-  if (document.readyState === "complete") arm(); else addEventListener("load", arm, { once: true });
+  requestAnimationFrame(() => import("./intro").then((m) => m.playIntro(hero, a, b)).catch(() => {}));
 }
 
 /* Scroll reveals: blocks below the fold rise in once as they enter. Elements already on screen at

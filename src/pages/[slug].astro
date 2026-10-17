@@ -9,7 +9,7 @@ import CodeGraph from "../components/CodeGraph.astro";
 import TokenParticles from "../components/TokenParticles.astro";
 import CoxScenes from "../components/CoxScenes.astro";
 import KetchRoute from "../components/KetchRoute.astro";
-import { u, BRAND, licenseFor, CAVEATS, THEMES, FREE_HIGHLIGHTS, type ThemeKey } from "../lib/site";
+import { u, BRAND, PRO_PRICE_NOTE, licenseFor, CAVEATS, THEMES, FREE_HIGHLIGHTS, type ThemeKey } from "../lib/site";
 import { proFor, statusFor } from "../lib/catalog";
 import { getProductDocs, productsWithDocs, docsHref } from "../lib/docs";
 import { DEMOS, FLOWS, COX_SCENES, demoFromUsage } from "../data/showcase";
@@ -341,10 +341,10 @@ const jsonLd = [
       </article>
       <article class="card glass tier tier--featured" aria-labelledby="t-pro">
         <div class="tier__head"><h3 id="t-pro" class="h3">{d.title} Pro</h3><span class="badge badge--placeholder">Placeholder</span></div>
-        <p class="price"><span class="price__num">{pro.price}</span><span class="muted small">per seat</span></p>
+        <p class="price"><span class="price__num">{pro.price}*</span><span class="muted small">per seat</span></p>
         <ul class="checklist">{pro.features.map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
         <button class="btn btn--primary btn--block" type="button" aria-disabled="true" aria-describedby="t-pro-note">Join the Pro waitlist</button>
-        <p id="t-pro-note" class="muted small">Placeholder — the Pro waitlist is not open yet.</p>
+        <p id="t-pro-note" class="muted small">{PRO_PRICE_NOTE} Placeholder — the Pro waitlist is not open yet.</p>
       </article>
     </div>
   </section>

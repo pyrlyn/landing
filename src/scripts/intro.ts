@@ -1,7 +1,7 @@
 // Light sweep: one WebGL pass, about 1.6 s, then the canvas is removed. The canvas is mounted on
 // <body> (one level above the hero container) as a fixed full-viewport layer, so the sweep extends
-// past the hero's bounds instead of being clipped by it. It never plays on load: main.ts starts it
-// after window load, on the first user interaction. No loading UI.
+// past the hero's bounds instead of being clipped by it. It plays on page load (main.ts),
+// unless reduced motion is requested. No loading UI.
 // Loaded lazily by main.ts only when motion is allowed and the hero is on screen; the page itself
 // is fully visible without it (the hero's CSS entrance in motion.css does not depend on this file).
 const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
