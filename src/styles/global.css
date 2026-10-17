@@ -140,7 +140,7 @@
 .nav__sep { width: 1px; height: 20px; background: var(--hairline-strong); margin-inline: var(--s-2); }
 .nav__actions { display: flex; gap: var(--s-2); margin-left: auto; }
 .nav__gh { display: none; }
-@media (min-width: 900px) { .nav__links { display: flex; } .nav__actions { margin-left: 0; } }
+@media (min-width: 900px) { .nav__links { display: flex; } }
 @media (min-width: 1100px) { .nav__gh { display: inline-flex; } }
 
 /* ---------- Hero (shared) ---------- */
