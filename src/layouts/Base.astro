@@ -8,7 +8,7 @@ import "../styles/products.css";
 import "../styles/motion.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
-import { u, BRAND, THEMES, type ThemeKey } from "../lib/site";
+import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
 import { getTools, proFor, versionLabel } from "../lib/catalog";
 import { productsWithDocs } from "../lib/docs";
 import { graph } from "../lib/seo";
@@ -125,7 +125,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
                       </ul>
                     </>
                   )}
-                  <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>* Pro prices are placeholders</span></p>
+                  <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>{PRO_PRICE_NOTE}</span></p>
                 </div>
               </details>
             </li>
