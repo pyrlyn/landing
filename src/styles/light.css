@@ -25,12 +25,13 @@ html[data-mode="light"] .intro-gl { mix-blend-mode: normal; }
 html[data-mode="light"] .mesh__grid { opacity: .5; filter: invert(1); }
 
 /* Dark islands: terminals and code stay dark in the light theme, with the dark token set restored inside them. */
-html[data-mode="light"] :is(.code, .term__body, .particles__stage) {
+html[data-mode="light"] :is(.code, .term, .particles__stage) {
   --fg: #eef1f6; --fg-strong: #ffffff; --muted: #a4adbb; --subtle: #8a94a5;
   --accent: var(--accent-dark); --hairline: rgb(255 255 255 / .1); --hairline-strong: rgb(255 255 255 / .18);
   color: var(--fg); background: #0d1220;
 }
 html[data-mode="light"] .term__body { background: #0d1220; }
+html[data-mode="light"] .term { box-shadow: 0 0 0 1px rgb(10 20 35 / .35), 0 18px 40px -16px rgb(15 25 40 / .45); }
 html[data-mode="light"] .term__bar { background: #151b2b; --fg: #eef1f6; --fg-strong: #fff; --muted: #a4adbb; --hairline: rgb(255 255 255 / .1); }
 html[data-mode="light"] .term__ctl { background: rgb(255 255 255 / .1); }
 /* Light insets (were translucent black on dark). */
@@ -73,3 +74,41 @@ html[data-mode="light"] .stage--ring::before {
   background: radial-gradient(closest-side, color-mix(in oklch, var(--accent) 12%, transparent), transparent 100%);
 }
 html[data-mode="light"] .ring__item:not(.is-active) .ring__card { box-shadow: 0 0 0 1px rgb(10 20 35 / .12), 0 6px 14px -8px rgb(15 25 40 / .22); }
+
+/* ===== Whole-page light audit ===== */
+/* Raised floating surfaces (menus, tooltips, chips, doc panels) are white, not dark glass. */
+html[data-mode="light"] :is(.dnav__panel, .hotspot__tip, .term-chip, .route__chip, .scenes.is-ready .scenes__panel .term) { background: #ffffff; }
+html[data-mode="light"] .dnav__panel, html[data-mode="light"] .hotspot__tip { box-shadow: 0 0 0 1px rgb(10 20 35 / .12), var(--shadow-3); }
+html[data-mode="light"] .scenes.is-ready .scenes__panel .term { background: #0d1220; }
+html[data-mode="light"] .codeblock::after { background: #ffffff; }
+html[data-mode="light"] .table-wrap { background: #ffffff; box-shadow: 0 0 0 1px rgb(10 20 35 / .12); }
+html[data-mode="light"] .bitset__grid { background: rgb(10 20 35 / .04); }
+html[data-mode="light"] :is(.price-tier, .scenes__tabs) { box-shadow: inset 0 0 0 1px rgb(10 20 35 / .1); }
+/* Cards and panels: crisp 1px border plus a soft two-layer shadow. */
+html[data-mode="light"] :is(.card, .featured, .install-card, .faq__item, .license, .cta, .tier) {
+  box-shadow: 0 0 0 1px rgb(10 20 35 / .09), 0 1px 2px rgb(15 25 40 / .05), 0 12px 28px -14px rgb(15 25 40 / .16);
+}
+/* Eyebrows and numerals: accent darkened for AA text contrast. */
+html[data-mode="light"] .eyebrow { color: color-mix(in oklch, var(--accent) 72%, #0b1220); }
+html[data-mode="light"] :is(.step__n, .nextcard__n) { background-image: linear-gradient(180deg, var(--accent), color-mix(in oklch, var(--accent) 35%, transparent) 120%); }
+html[data-mode="light"] .rail__n { background: var(--accent); box-shadow: 0 0 0 6px color-mix(in oklch, var(--accent) 14%, transparent); }
+html[data-mode="light"] .callout:not(.callout--tip):not(.callout--important) { --c: color-mix(in oklch, var(--accent-2) 55%, #0b1220); }
+html[data-mode="light"] :is(.callout--warning, .callout--caution) { --c: #8a5a00; }
+html[data-mode="light"] .callout--tip { --c: #15803d; }
+html[data-mode="light"] .menu__current { color: color-mix(in oklch, var(--accent) 80%, #0b1220); }
+html[data-mode="light"] :is(.menu__mark, .menu__ver) { color: color-mix(in oklch, var(--card-accent) 38%, #0b1220); }
+/* Buttons: white text on the darkened accent, whatever the product theme says. */
+html[data-mode="light"] .btn--primary { color: #ffffff; text-shadow: none; }
+html[data-mode="light"] .btn--primary:hover { box-shadow: inset 0 1px 0 rgb(255 255 255 / .35), 0 8px 22px -8px color-mix(in oklch, var(--accent) 70%, transparent); }
+html[data-mode="light"] .btn--glass { background: #ffffff; box-shadow: 0 0 0 1px rgb(10 20 35 / .14), var(--shadow-1); color: var(--fg-strong); }
+html[data-mode="light"] .btn--glass:hover { background: #f1f4f8; }
+/* Product pages: the dark hero render becomes a light halo, like the carousel art. */
+html[data-mode="light"] .stage:not(.stage--ring) .stage__art { mix-blend-mode: normal; opacity: .9; }
+html[data-mode="light"] .stage:not(.stage--ring) .stage__art img { filter: invert(1) hue-rotate(180deg) saturate(.9) brightness(1.04); }
+/* bindsmith's Material-3 tonal surfaces, light variant. */
+html[data-mode="light"][data-theme="bindsmith"] { --bs-container: #f6e6d3; --bs-secondary-container: #d9edf9; }
+html[data-mode="light"][data-theme="bindsmith"] .eyebrow { color: #5a3410; }
+html[data-mode="light"][data-theme="bindsmith"] :is(.feature, .install-card) { background: #ffffff; box-shadow: 0 0 0 1px rgb(10 20 35 / .1), var(--shadow-1); }
+html[data-mode="light"][data-theme="bindsmith"] .dnav__item[aria-current="page"] { color: #0d3a57; }
+html[data-mode="light"] .bs-chips__row b { box-shadow: inset 0 0 0 1px rgb(10 20 35 / .2); }
+html[data-mode="light"] .bs-chips__row b:first-child { color: #0d3a57; }
