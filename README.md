@@ -1,4 +1,4 @@
-# listepo tools — AI developer tool storefront
+# Pyrlyn — AI developer tool storefront
 
 A marketplace landing for AI developer tools, built with [Astro](https://astro.build). The home page is the storefront (catalog, featured tool, how it works, per-tool pricing,
 FAQ); every product gets its own showcase page generated from one Markdown file, and a docs section

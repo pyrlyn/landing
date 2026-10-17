@@ -7,8 +7,8 @@ export function u(path = "/"): string {
   return `${base}${p}`;
 }
 
-/** Storefront name (neutral; the marketplace sells several tools). */
-export const BRAND = "listepo tools";
+/** Site brand: the site, nav, footer and GitHub org are all Pyrlyn. */
+export const BRAND = "Pyrlyn";
 
 /**
  * PLACEHOLDER Pro tiers per tool. Frontmatter `pro_price` overrides the price.
