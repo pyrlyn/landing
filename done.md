@@ -41,3 +41,11 @@ Comparison documents reuse the same benchmark introduction and produce duplicate
 Execution plan: add a metadata regression for distinct titles with identical summaries; use existing plain/clip helpers to include the page subject in the description; run tests, build and SEO checks.
 
 Validation: regression tests failed with the old heading counter and metadata rule. All 19 tests pass, Astro check has zero errors/warnings (20 existing hints), the site builds, docs checks pass, and SEO checks pass with 17 existing warnings. Source preparation and marked are reused; no dependency changes.
+
+### T11. Pin the CodeRabbit issue workflow required by action lint
+
+The mandatory jactionlint check rejects the reusable workflow reference at main.
+
+Execution plan: resolve the current main commit of pyrlyn/ci, pin that exact revision without changing workflow inputs or permissions, and rerun jactionlint. The existing lint gate is the regression test and fails before the pin.
+
+Validation: mise exec -- jactionlint passes after pinning the current main revision 90377c3c3ed260407a1ad27e0cb2355bec9a2045. The unpinned-uses rule failed before the change.
