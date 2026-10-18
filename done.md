@@ -27,3 +27,17 @@ Validation: npm audit reports 0 vulnerabilities; all 160 routes and extracted HT
 Russian and Ukrainian lockfile pages have the same H1, so the SEO gate reports duplicate titles. Execution plan: add language labels to translated document metadata titles using the existing SEO module; preserve visible headings; add a title regression test and rerun the built-site SEO gate.
 
 Validation: the duplicate-title SEO failure was reproduced; the new unit test failed before the helper was added. All 10 tests, build, Astro check (0 errors/warnings), docs check and SEO check pass. SEO retains 3 existing non-fatal metadata length warnings. Reused the SEO module and existing document source paths; no new dependency.
+
+### T9. Validate documentation headings with the Markdown parser
+
+The docs gate incorrectly rejects pages with a second level-one heading because the renderer promotes it to level two, while the check counts only literal ## and ### lines.
+
+Execution plan: share source preparation between renderer and checker; count heading tokens with the existing marked dependency; add regression cases for repeated titles, Setext headings and fenced code; run tests, Astro checks, build, docs and SEO gates. No shared package offers this site-specific rendering contract; reuse marked rather than extend the handwritten Markdown scanner.
+
+### T10. Distinguish documentation descriptions with shared introductions
+
+Comparison documents reuse the same benchmark introduction and produce duplicate meta descriptions, failing the SEO gate.
+
+Execution plan: add a metadata regression for distinct titles with identical summaries; use existing plain/clip helpers to include the page subject in the description; run tests, build and SEO checks.
+
+Validation: regression tests failed with the old heading counter and metadata rule. All 19 tests pass, Astro check has zero errors/warnings (20 existing hints), the site builds, docs checks pass, and SEO checks pass with 17 existing warnings. Source preparation and marked are reused; no dependency changes.

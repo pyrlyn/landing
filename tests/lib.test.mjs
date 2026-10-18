@@ -149,6 +149,16 @@ test("translated documentation has distinct metadata titles", async () => {
   assert.equal(documentationTitle("Overview", "ketch", null), "Overview — ketch docs");
 });
 
+test("documentation descriptions distinguish pages with shared introductions", async () => {
+  const { documentationDescription } = await seoP;
+  const summary = "Measured with the shared benchmark harness. ".repeat(10);
+  const first = documentationDescription("rtok vs codegraph", "rtok", summary);
+  const second = documentationDescription("rtok vs engram", "rtok", summary);
+  assert.notEqual(first, second);
+  assert.ok(first.includes("rtok vs codegraph"));
+  assert.ok(first.length <= 160);
+});
+
 test("isServiceDoc skips plans, research, notes and READMEs in any case, keeps user docs", async () => {
   const { isServiceDoc } = await docsP;
   for (const f of ["plan.md", "PLAN.md", "Plan-2.md", "research.md", "Research-notes.md", "README.md", "comparison/readme.md", "TODO.md", "Done.md", "roadmap.md", "AGENTS.md", "notes.md", "CLAUDE.md"]) {
