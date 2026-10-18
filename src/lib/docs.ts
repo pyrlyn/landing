@@ -1,3 +1,4 @@
+import { docSource } from "./doc-source";
 // Product documentation pages, built from content/docs/<product>/ — a copy of each product
 // repository's docs/ folder that the product's sync-docs workflow keeps up to date
 // (see content/docs/README.md). Navigation, titles and exclusions: src/data/docs-nav.json.
@@ -204,10 +205,9 @@ function renderDoc(
   const dir = file.includes("/") ? file.slice(0, file.lastIndexOf("/")) : "";
   const repo = source?.repo ?? `pyrlyn/${product}`;
   const ref = source?.sha ?? "main";
-  const body = raw.replace(/^---\n[\s\S]*?\n---\n/, "");
-  const h1 = body.match(/^#\s+(.+)$/m);
-  const title = h1 ? plain(h1[1]) : navTitle ?? file;
-  const rest = h1 ? body.replace(h1[0], "") : body;
+  const prepared = docSource(raw);
+  const title = prepared.title ? plain(prepared.title) : navTitle ?? file;
+  const rest = prepared.body;
   const slugger = makeSlugger();
   const toc: TocEntry[] = [];
   // Scrollable tables are named regions; name each after the section it sits in, and keep the

@@ -142,3 +142,7 @@ export function documentationTitle(title: string, product: string, file: string 
   const language = file?.match(/^(ru|uk)\//)?.[1];
   return `${title} — ${product} docs${language ? ` (${language})` : ""}`;
 }
+
+export function documentationDescription(title: string, product: string, summary: string): string {
+  return clip(`${plain(title)} — ${product} documentation. ${summary}`);
+}

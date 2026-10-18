@@ -9,6 +9,7 @@
 // Exit code 1 on any error. Usage: node scripts/check-docs.mjs [distDir]
 import fs from "node:fs";
 import path from "node:path";
+import { countDocHeadings } from "../src/lib/doc-source.ts";
 
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
 const dist = path.resolve(root, process.argv[2] ?? "dist");
@@ -25,21 +26,6 @@ const walk = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir, { withFileTypes:
 const SERVICE_DOC = /^(?:(?:readme|notes|ideas|claude|agency)|(?:plan|todo|done|roadmap|research|next)[^/]*)\.md$/i;
 const isServiceDoc = (f) => { const n = f.slice(f.lastIndexOf("/") + 1); return n === "AGENTS.md" || SERVICE_DOC.test(n); };
 const read = (f) => fs.readFileSync(f, "utf8");
-/** Markdown lines outside fenced code blocks (CommonMark rules: a closing fence has no info string). */
-function outsideFences(md) {
-  const out = [];
-  let open = null;
-  for (const line of md.split("\n")) {
-    const m = line.match(/^ {0,3}(`{3,}|~{3,})(.*)$/);
-    if (open) {
-      if (m && m[1][0] === open[0] && m[1].length >= open.length && !m[2].trim()) open = null;
-      continue;
-    }
-    if (m && !(m[1][0] === "`" && m[2].includes("`"))) { open = m[1]; continue; }
-    out.push(line);
-  }
-  return out.join("\n");
-}
 const pageFile = (p, slug) => path.join(dist, p, "docs", slug, "index.html");
 
 // ---------- 1 + 2: coverage and headings ----------
@@ -72,11 +58,10 @@ for (const [product, cfg] of Object.entries(nav)) {
     const html = read(out);
     const h1 = (html.match(/<h1[\s>]/g) ?? []).length;
     if (h1 !== 1) errors.push(`${product}: ${f} renders ${h1} <h1> elements`);
-    const md = outsideFences(read(path.join(srcDir, f)));
-    const want = (md.match(/^#{2,3}\s+\S/gm) ?? []).length;
+    const want = countDocHeadings(read(path.join(srcDir, f)));
     const got = (html.match(/<h[23] id="[^"]+" class="doc-h"/g) ?? []).length;
     s.headings += got;
-    if (want !== got) errors.push(`${product}: ${f} has ${want} ## / ### headings but the page renders ${got}`);
+    if (want !== got) errors.push(`${product}: ${f} has ${want} level-two/three headings but the page renders ${got}`);
     const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
     const dup = ids.filter((id, i) => ids.indexOf(id) !== i);
     if (dup.length) errors.push(`${product}: ${f} has duplicate ids: ${[...new Set(dup)].join(", ")}`);
