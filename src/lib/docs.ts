@@ -137,7 +137,7 @@ function summarize(body: string): string {
   return dot > 80 ? cut.slice(0, dot + 1) : `${cut.replace(/\s+\S*$/, "")}…`;
 }
 
-function isExcluded(file: string, exclude: Record<string, string> = {}): string | null {
+export function isExcluded(file: string, exclude: Record<string, string> = {}): string | null {
   for (const [pattern, reason] of Object.entries(exclude)) {
     if (pattern.endsWith("/") ? file.startsWith(pattern) : pattern.endsWith(".md") ? file === pattern : file.startsWith(pattern)) return reason;
   }
