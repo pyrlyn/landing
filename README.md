@@ -56,7 +56,7 @@ Build args: `SITE_URL`, `SITE_BASE` (e.g. `--build-arg SITE_BASE=/landing/` to s
   commit on GitHub), builds the TOC and summaries; `src/data/docs-nav.json` — tab order, titles,
   groups and exclusions; `src/layouts/DocsLayout.astro` + `src/components/DocsNav.astro` — the sticky
   horizontal docs nav, ~70ch column, on-page TOC (≥1280px) and prev/next; `src/styles/docs.css`.
-- `scripts/check-docs.mjs`, `scripts/check-seo.mjs` — post-build checks run in CI.
+- `scripts/check-docs.mjs`, `scripts/check-seo.mjs` — post-build checks; run them locally after `npm run build`.
 - `src/lib/seo.ts` — titles, meta descriptions and schema.org JSON-LD (Organization/WebSite on the home
   page, SoftwareApplication + BreadcrumbList per product, TechArticle + BreadcrumbList per docs page);
   values come from the content only — no ratings, and Pro placeholder prices never reach structured data.
