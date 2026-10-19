@@ -10,8 +10,10 @@
 // Exit code 1 on any error. Usage: node scripts/check-seo.mjs [distDir]
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+// fileURLToPath decodes %20 and drive letters; URL.pathname would break on such checkouts.
+const root = fileURLToPath(new URL("..", import.meta.url));
 const dist = path.resolve(root, process.argv[2] ?? "dist");
 const site = (process.env.SITE_URL ?? "https://pyrlyn.dev").replace(/\/$/, "");
 const base = (process.env.SITE_BASE ?? "/landing/").replace(/\/?$/, "/");
