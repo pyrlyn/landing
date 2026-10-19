@@ -49,3 +49,12 @@ The mandatory jactionlint check rejects the reusable workflow reference at main.
 Execution plan: resolve the current main commit of pyrlyn/ci, pin that exact revision without changing workflow inputs or permissions, and rerun jactionlint. The existing lint gate is the regression test and fails before the pin.
 
 Validation: mise exec -- jactionlint passes after pinning the current main revision 90377c3c3ed260407a1ad27e0cb2355bec9a2045. The unpinned-uses rule failed before the change.
+
+### T2. rtok's newest doc falls into the uncurated "More" tab
+
+`content/docs/rtok/agents-and-worktrees.md` and 13 other English docs were in neither `groups` nor
+`exclude` in `src/data/docs-nav.json`. Done means: each sits in a proper group with a short title.
+
+The 2026-10-19 audit placed them (rtok, cox, ketch, runa, swarfr, stator) and excluded two
+contributor pages. `tests/docs-nav.test.mjs` fails when an English doc is neither placed nor
+excluded; comparison pages and translations are left to T14.
