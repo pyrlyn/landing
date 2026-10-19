@@ -14,7 +14,7 @@ violation. `content/projects/README.md` is excluded from the collection.
 | `title` | yes | string | Project name as the repository spells it |
 | `tagline` | yes | string, ≤ 160 chars | One-sentence pitch |
 | `repo` | yes | URL | Starts with `https://github.com/` |
-| `homepage` | no | URL | The project's own documentation site (renders a “Documentation” button) |
+| `homepage` | no | http(s) URL | The project's own documentation site (renders a “Documentation” button); other schemes fail the build |
 | `install` | yes | string | Primary install command, one line (hero install block with copy button) |
 | `install_alternatives` | no | list of strings | Other install commands, README order (the home card prefers a `ketch install …` one) |
 | `version` | yes | semver, no `v` | Latest published release |
