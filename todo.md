@@ -1,7 +1,12 @@
 - T1. Home share card advertises the wrong brand ("Tiller")
-- T2. rtok's newest doc falls into the uncurated "More" tab
 - T3. Contract violation: product art is mandatory, not optional
 - T4. Deduplicate the copy-button markup and esc()
 - T5. Share slug/nav logic between the site and its CI checks
 - T6. Fix the hardcoded CTA label and dead theme fields
 - T7. Robustness and cleanup batch
+- T8. Land the 2026-10-17 site QA fixes and close the hosting findings
+- T12. Restore a CI job for build, tests and post-build checks
+- T13. Add a script CSP once the inline scripts are hashed
+- T14. Decide placement for comparison pages and translations
+- T15. Shorten product page titles over 70 characters
+- T16. Reset the copy-button timer on repeated clicks

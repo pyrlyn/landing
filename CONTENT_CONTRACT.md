@@ -14,7 +14,7 @@ violation. `content/projects/README.md` is excluded from the collection.
 | `title` | yes | string | Project name as the repository spells it |
 | `tagline` | yes | string, ≤ 160 chars | One-sentence pitch |
 | `repo` | yes | URL | Starts with `https://github.com/` |
-| `homepage` | no | URL | The project's own documentation site (renders a “Documentation” button) |
+| `homepage` | no | http(s) URL | The project's own documentation site (renders a “Documentation” button); other schemes fail the build |
 | `install` | yes | string | Primary install command, one line (hero install block with copy button) |
 | `install_alternatives` | no | list of strings | Other install commands, README order (the home card prefers a `ketch install …` one) |
 | `version` | yes | semver, no `v` | Latest published release |
@@ -72,7 +72,7 @@ Rules for a doc file (the upstream docs already follow them):
 
 `src/data/docs-nav.json` sets tab order, short titles, groups and the files that get no page
 (`exclude`, with a reason — e.g. maintainer runbooks, scope proposals). A synced file that is in
-neither list still gets a page under "More". `npm run check:docs` (run in CI after the build)
+neither list still gets a page under "More". `npm run check:docs` (run locally after the build; there is no CI build job)
 fails when a synced file has neither a page nor an exclusion, when a page's heading count differs
 from its source, or when any internal link or `#fragment` does not resolve under the base.
 

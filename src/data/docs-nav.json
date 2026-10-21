@@ -5,7 +5,9 @@
       { "label": "Start", "items": [
         { "file": "getting-started.md", "title": "Getting started" },
         { "file": "install.md", "title": "Install" },
-        { "file": "config.md", "title": "Configuration" }
+        { "file": "config.md", "title": "Configuration" },
+        { "file": "overview.md", "title": "Overview" },
+        { "file": "commands.md", "title": "Commands" }
       ] },
       { "label": "Guides", "items": [
         { "file": "claude-code.md", "title": "Claude Code setup" },
@@ -14,11 +16,15 @@
         { "file": "cmd-rules.md", "title": "Command rules" },
         { "file": "prompt-cache.md", "title": "Prompt cache" },
         { "file": "lsp.md", "title": "LSP backend" },
-        { "file": "otel.md", "title": "OpenTelemetry" }
+        { "file": "otel.md", "title": "OpenTelemetry" },
+        { "file": "agents-and-worktrees.md", "title": "Agents and worktrees" },
+        { "file": "tasks.md", "title": "Tasks" },
+        { "file": "web-auth.md", "title": "Web access token" }
       ] },
       { "label": "Extend", "items": [
         { "file": "plugin-authoring.md", "title": "Writing a plugin" },
-        { "file": "plugin-versions.md", "title": "Plugin versions" }
+        { "file": "plugin-versions.md", "title": "Plugin versions" },
+        { "file": "plugins.md", "title": "Plugins" }
       ] },
       { "label": "Background", "items": [
         { "file": "comparison.md", "title": "Comparison" },
@@ -27,6 +33,7 @@
     ],
     "exclude": {
       "development.md": "Contributor gate, test selection and packaging notes",
+      "agents/": "Instructions for coding agents (benchmark bookkeeping)",
       "release.md": "Maintainer release runbook (signing, notarisation, registry publishing)",
       "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud",
       "plugin-plan-template.md": "Internal template for plugin proposals",
@@ -45,7 +52,8 @@
     "groups": [
       { "label": "Start", "items": [
         { "file": "getting-started.md", "title": "Getting started" },
-        { "file": "how-it-works.md", "title": "How it works" }
+        { "file": "how-it-works.md", "title": "How it works" },
+        { "file": "examples.md", "title": "Examples" }
       ] },
       { "label": "Reference", "items": [
         { "file": "config.md", "title": "Configuration", "summary": "Every cox configuration key with its default value, generated from config/default.toml." },
@@ -53,7 +61,10 @@
         { "file": "ide.md", "title": "Editors" },
         { "file": "observability.md", "title": "Observability" },
         { "file": "app-server.md", "title": "Remote sessions" },
-        { "file": "voice.md", "title": "Voice input" }
+        { "file": "voice.md", "title": "Voice input" },
+        { "file": "targets.md", "title": "Run targets" },
+        { "file": "screens.md", "title": "Screens" },
+        { "file": "architecture.md", "title": "Architecture" }
       ] },
       { "label": "Extend", "items": [
         { "file": "plugins.md", "title": "Writing a plugin" },
@@ -83,7 +94,8 @@
         { "file": "MANIFESTS.md", "title": "Manifests" },
         { "file": "LOCKFILE.md", "title": "Lockfile" },
         { "file": "REGISTRY.md", "title": "Registry" },
-        { "file": "PLUGINS.md", "title": "Source plugins" }
+        { "file": "PLUGINS.md", "title": "Source plugins" },
+        { "file": "COOKBOOK.md", "title": "Cookbook" }
       ] },
       { "label": "Help", "items": [
         { "file": "TROUBLESHOOTING.md", "title": "Troubleshooting" }
@@ -110,6 +122,10 @@
         { "file": "thinking.md", "title": "Thinking" },
         { "file": "structured.md", "title": "Structured output & tools" },
         { "file": "media.md", "title": "Audio, video and vision" }
+      ] },
+      { "label": "Guides", "items": [
+        { "file": "dashboard.md", "title": "Serve dashboard" },
+        { "file": "stats.md", "title": "Usage stats" }
       ] }
     ],
     "exclude": {
@@ -174,7 +190,14 @@
   "swarfr": {
     "groups": [
       { "label": "Start", "items": [
-        { "file": "usage.md", "title": "User guide" }
+        { "file": "usage.md", "title": "User guide" },
+        { "file": "passes.md", "title": "Commands and passes" },
+        { "file": "configuration.md", "title": "Configuration" },
+        { "file": "examples.md", "title": "Examples" }
+      ] },
+      { "label": "Guides", "items": [
+        { "file": "automation.md", "title": "Running automatically" },
+        { "file": "platforms.md", "title": "Platforms" }
       ] },
       { "label": "Background", "items": [
         { "file": "bench.md", "title": "Benchmarks" },
@@ -208,7 +231,8 @@
         { "file": "HOW-IT-WORKS.md", "title": "How it works" },
         { "file": "MODES.md", "title": "Modes" },
         { "file": "CONFIG.md", "title": "Configuration" },
-        { "file": "TOOLCHAIN.md", "title": "Toolchain" }
+        { "file": "TOOLCHAIN.md", "title": "Toolchain" },
+        { "file": "EXAMPLES.md", "title": "Examples" }
       ] },
       { "label": "Language", "items": [
         { "file": "SUBSET.md", "title": "Feature support" },
@@ -227,6 +251,7 @@
     ],
     "exclude": {
       "README.md": "Docs index; its reading order is the Start group",
+      "DEVELOPMENT.md": "Contributor setup and checks",
       "research/": "Internal research notes",
       "architecture/": "Diagram sources",
       "assets/": "Images",

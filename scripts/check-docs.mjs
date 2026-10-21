@@ -9,9 +9,11 @@
 // Exit code 1 on any error. Usage: node scripts/check-docs.mjs [distDir]
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { countDocHeadings } from "../src/lib/doc-source.ts";
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+// fileURLToPath decodes %20 and drive letters; URL.pathname would break on such checkouts.
+const root = fileURLToPath(new URL("..", import.meta.url));
 const dist = path.resolve(root, process.argv[2] ?? "dist");
 const base = (process.env.SITE_BASE ?? "/landing/").replace(/\/?$/, "/");
 const nav = JSON.parse(fs.readFileSync(path.join(root, "src/data/docs-nav.json"), "utf8"));
