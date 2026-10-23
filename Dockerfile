@@ -20,6 +20,9 @@ COPY . .
 ARG SITE_URL=https://pyrlyn.dev
 ARG SITE_BASE=/
 ENV SITE_URL=${SITE_URL} SITE_BASE=${SITE_BASE}
+# Public build-time config (see .env.example): Algolia search-only key, GA4 ID. Empty = feature off.
+ARG ALGOLIA_APP_ID= ALGOLIA_SEARCH_KEY= ALGOLIA_INDEX=pyrlyn GA_MEASUREMENT_ID=
+ENV ALGOLIA_APP_ID=${ALGOLIA_APP_ID} ALGOLIA_SEARCH_KEY=${ALGOLIA_SEARCH_KEY} ALGOLIA_INDEX=${ALGOLIA_INDEX} GA_MEASUREMENT_ID=${GA_MEASUREMENT_ID}
 RUN npm run build && test -f dist/index.html && test -f dist/404.html
 
 FROM nginx:${NGINX_VERSION}

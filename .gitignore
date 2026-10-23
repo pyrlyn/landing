@@ -11,3 +11,8 @@ _prototype-vite/dist/
 # Copied from @pyrlyn/brand by `npm run brand` (predev/prebuild)
 public/pyrlyn/
 public/favicon.svg
+
+# Local config (see .env.example)
+.env
+.env.local
+.env.*.local

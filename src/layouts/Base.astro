@@ -6,9 +6,12 @@ import "../styles/global.css";
 import "../styles/tailwind.css";
 import "../styles/products.css";
 import "../styles/motion.css";
+import "../styles/search.css";
 import "../styles/light.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
+import Search from "../components/Search.astro";
+import { GA_MEASUREMENT_ID } from "../lib/config";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
 import { getTools, proFor, versionLabel, groupByCategory } from "../lib/catalog";
 import { productsWithDocs } from "../lib/docs";
@@ -81,6 +84,12 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
     <meta name="twitter:image" content={og} />
     {imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
     {jsonLd.length > 0 && <script is:inline type="application/ld+json" set:html={JSON.stringify(graph(jsonLd)).replace(/</g, "\\u003c")} />}
+    {GA_MEASUREMENT_ID && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+        <script is:inline define:vars={{ gaId: GA_MEASUREMENT_ID }}>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config",gaId);</script>
+      </>
+    )}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -143,6 +152,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
           </ul>
         </nav>
         <div class="nav__actions">
+          <Search />
           <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
             <span class="theme-toggle__sun"><Icon name="sun" size={18} /></span>
             <span class="theme-toggle__moon"><Icon name="moon" size={18} /></span>
