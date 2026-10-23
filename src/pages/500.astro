@@ -1,0 +1,13 @@
+---
+// Server-error page. nginx serves dist/500.html for 500/502/503/504 (error_page, internal).
+// The home link is a literal "/" on purpose.
+import Base from "../layouts/Base.astro";
+---
+<Base title="Server error · Pyrlyn" description="Something went wrong on our side." theme="home" noindex>
+  <section class="err err--500" aria-labelledby="err-title">
+    <p class="err__code" aria-hidden="true">500</p>
+    <h1 id="err-title">Something went wrong.</h1>
+    <p class="err__text">It's on our side. Please try again in a moment.</p>
+    <a class="btn btn--primary btn--lg" href="/">Back to home</a>
+  </section>
+</Base>

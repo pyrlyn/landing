@@ -897,3 +897,10 @@
 .theme-toggle__sun, .theme-toggle__moon { display: none; }
 html[data-mode="light"] .theme-toggle__moon, html:not([data-mode="light"]) .theme-toggle__sun { display: inline-grid; }
 .nav__actions { align-items: center; }
+
+/* Error pages (404 / 500) */
+.err { display: grid; place-content: center; justify-items: center; gap: var(--s-3); min-height: 80dvh; padding: var(--s-8) var(--s-4); text-align: center; }
+.err__code { margin: 0; font-family: var(--font-mono); font-weight: 700; font-size: clamp(72px, 14vw, 144px); line-height: 1; letter-spacing: -.05em; color: var(--accent); }
+.err--500 .err__code { color: var(--danger); }
+.err h1 { margin: 0; font-size: var(--fs-2xl); color: var(--fg-strong); }
+.err__text { margin: 0 0 var(--s-4); color: var(--muted); }
