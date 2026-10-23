@@ -8,7 +8,8 @@ name: release
 # Deploy needs: repo variable SEMAPHORE_URL (reachable from GitHub runners), secret
 # SEMAPHORE_API_TOKEN, optional variables SEMAPHORE_PROJECT_ID (default 2) and
 # SEMAPHORE_TEMPLATE_ID (default 12). Build reads repo variables ALGOLIA_APP_ID and
-# ALGOLIA_SEARCH_KEY (search-only key, public); empty = search off.
+# ALGOLIA_SEARCH_KEY (search-only key, public); empty = search off. POSTHOG_KEY and
+# POSTHOG_HOST (repo variables, public) enable PostHog; empty key = off.
 on:
   workflow_dispatch:
     inputs:
@@ -68,6 +69,8 @@ jobs:
           ALGOLIA_SEARCH_KEY: ${{ vars.ALGOLIA_SEARCH_KEY }}
           ALGOLIA_INDEX: pyrlyn
           GA_MEASUREMENT_ID: G-61CRNDXXYK
+          POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
+          POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
         run: |
           git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
           npm ci --no-audit --no-fund
