@@ -14,7 +14,7 @@ export const ALGOLIA_ENABLED = Boolean(ALGOLIA.appId && ALGOLIA.searchKey);
 const ga = val("GA_MEASUREMENT_ID") || "G-61CRNDXXYK";
 export const GA_MEASUREMENT_ID = /^G-[A-Z0-9]+$/.test(ga) ? ga : "";
 
-// Public PostHog project key (phc_...); empty = PostHog off. Host defaults to the EU cloud.
-const ph = val("POSTHOG_KEY");
+// Public PostHog project key (phc_...); set to "off" to disable. Host defaults to the EU cloud.
+const ph = val("POSTHOG_KEY") || "phc_oirHFL4DjcX7uyo2fmEaiXB3KA25Qyv8HoAbVEv32xkH";
 export const POSTHOG_KEY = /^phc_[A-Za-z0-9]+$/.test(ph) ? ph : "";
 export const POSTHOG_HOST = val("POSTHOG_HOST") || "https://eu.i.posthog.com";
