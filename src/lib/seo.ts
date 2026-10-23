@@ -51,7 +51,10 @@ export const PRODUCT_SEO: Record<string, { title: string; description: string }>
 
 /** Product <title>: approved copy, else `{Title}: {tagline} | Pyrlyn`. */
 export function productTitle(t: Tool): string {
-  return PRODUCT_SEO[t.id]?.title ?? `${t.data.title}: ${t.data.tagline.replace(/\.$/, "")} | ${BRAND}`;
+  const own = PRODUCT_SEO[t.id]?.title;
+  if (own) return own;
+  const lead = `${t.data.title}: ${t.data.tagline.replace(/\.$/, "").split(" — ")[0]}`;
+  return lead.length + BRAND.length + 3 <= 60 ? `${lead} | ${BRAND}` : wordClip(lead, 60);
 }
 
 /** Product meta description: approved copy, else the tagline plus the overview's first sentence when it fits. */
