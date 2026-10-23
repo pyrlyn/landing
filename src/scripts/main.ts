@@ -1,3 +1,4 @@
+import { initSearch } from "./search";
 // Progressive enhancement only — every page is complete without JavaScript.
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
@@ -621,6 +622,7 @@ function initThemeToggle() {
 }
 
 initThemeToggle();
+initSearch();
 initIntro();
 initScrollReveal();
 initMenu();
