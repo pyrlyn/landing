@@ -1,4 +1,5 @@
 ---
+import { docsIndexTitle, docsIndexDescription } from "../../../lib/seo";
 // Docs overview per product: how the product works and where to go next. Composition:
 // hero + command strip → numbered step rail → concept/code split → bento of doc paths →
 // table + notice → FAQ disclosures → next steps. Copy: src/data/docs-overview.ts.
@@ -28,7 +29,7 @@ const first = docs.pages[0];
 const lead = o?.lead ?? d.tagline;
 const shortSha = docs.source?.sha.slice(0, 7);
 /* Meta description: distinct from the Getting started page (which opens with the same lead). */
-const overviewDescription = clip(`${d.title} documentation: ${(o?.headline ?? d.tagline).replace(/\.$/, "")}. ${docs.pages.length} pages — ${docs.groups.map((g) => g.label).join(", ")}.`, 160);
+const overviewDescription = docsIndexDescription(d.title, d.tagline, docs.pages.length, docs.groups.map((g) => g.label));
 
 /* Bento packing: dense first-fit on a 3-column (≥1100px) and a 2-column grid; the lead group is
    two columns wide, a group with 4+ pages is two rows tall (3-col only), and tiles grow right
@@ -63,7 +64,7 @@ const want2 = docs.groups.map((_, i) => ({ w: i === 0 ? 2 : 1, h: 1 }));
 const lay3 = pack(want3, 3);
 const lay2 = pack(want2, 2);
 ---
-<DocsLayout tool={tool} current={null} title={`${d.title} docs — how it works and where to start`} description={overviewDescription} headline={o?.headline ?? `${d.title} documentation`} wide>
+<DocsLayout tool={tool} current={null} title={docsIndexTitle(d.title)} description={overviewDescription} headline={o?.headline ?? `${d.title} documentation`} wide>
   <section class="dhero" aria-labelledby="dhero-title">
     <div class="dhero__copy">
       <p class="eyebrow">{o?.eyebrow ?? `${d.title} documentation`}</p>

@@ -79,12 +79,13 @@ test("seo text stays inside the meta limits and omits pro prices", async () => {
   assert.equal(cut, `${"A".repeat(90)}.`);
   assert.ok(clip("word ".repeat(40), 160).endsWith("…"));
 
-  const short = tool("rtok", { title: "rtok", tagline: "Cut the context.", version: "1.0.0", repo: "https://github.com/pyrlyn/rtok" });
-  assert.equal(productTitle(short), "rtok — Cut the context · Pyrlyn");
+  const short = tool("demo", { title: "demo", tagline: "Cut the context.", version: "1.0.0", repo: "https://github.com/pyrlyn/rtok" });
+  assert.equal(productTitle(short), "demo: Cut the context | Pyrlyn");
+  assert.equal(productTitle(tool("rtok", short.data)), "rtok: token-reduction CLI for AI coding agents | Pyrlyn");
   const longLead = `${"Long lead ".repeat(6)}with the rest of the sentence that should not be the title.`;
-  const long = tool("rtok", { ...short.data, tagline: longLead });
+  const long = tool("demo", { ...short.data, tagline: longLead });
   const title = productTitle(long);
-  assert.equal(title.includes("with the rest"), false);
+  assert.ok(title.length <= 60);
   assert.equal(title.includes("Pyrlyn"), false);
   assert.equal(productDescription(short, "First sentence here. Second."), "Cut the context. First sentence here.");
   assert.equal(operatingSystems(""), "macOS, Linux");
@@ -143,17 +144,17 @@ test("doc slugs, heading ids, and code blocks", async () => {
 
 test("translated documentation has distinct metadata titles", async () => {
   const { documentationTitle } = await seoP;
-  assert.equal(documentationTitle("Lock file", "ketch", "LOCKFILE.md"), "Lock file — ketch docs");
-  assert.equal(documentationTitle("Lock-файл", "ketch", "ru/LOCKFILE.md"), "Lock-файл — ketch docs (ru)");
-  assert.equal(documentationTitle("Lock-файл", "ketch", "uk/LOCKFILE.md"), "Lock-файл — ketch docs (uk)");
-  assert.equal(documentationTitle("Overview", "ketch", null), "Overview — ketch docs");
+  assert.equal(documentationTitle("Lock file", "ketch", "LOCKFILE.md"), "Lock file · ketch docs | Pyrlyn");
+  assert.equal(documentationTitle("Lock-файл", "ketch", "ru/LOCKFILE.md"), "Lock-файл · ketch docs (ru) | Pyrlyn");
+  assert.equal(documentationTitle("Lock-файл", "ketch", "uk/LOCKFILE.md"), "Lock-файл · ketch docs (uk) | Pyrlyn");
+  assert.equal(documentationTitle("Overview", "ketch", null), "Overview · ketch docs | Pyrlyn");
 });
 
 test("documentation descriptions distinguish pages with shared introductions", async () => {
   const { documentationDescription } = await seoP;
   const summary = "Measured with the shared benchmark harness. ".repeat(10);
-  const first = documentationDescription("rtok vs codegraph", "rtok", summary);
-  const second = documentationDescription("rtok vs engram", "rtok", summary);
+  const first = documentationDescription("rtok vs codegraph", "rtok", summary, "", true);
+  const second = documentationDescription("rtok vs engram", "rtok", summary, "", true);
   assert.notEqual(first, second);
   assert.ok(first.includes("rtok vs codegraph"));
   assert.ok(first.length <= 160);
