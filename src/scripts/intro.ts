@@ -64,17 +64,21 @@ export function playIntro(hero: HTMLElement, accent: string, accent2: string) {
   gl.uniform2f(u("o"), ox, oy);
   document.body.append(cv);
 
-  let visible = true, raf = 0, t0 = 0, elapsed = 0;
-  const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible && !raf) raf = requestAnimationFrame(frame); });
+  // One-shot: if the hero leaves the viewport (anchor nav, back/forward, scroll) the sweep is dropped,
+  // not paused. Pausing left the fixed canvas on screen with a frozen, half-grown ring over other sections.
+  let raf = 0, t0 = 0, stopped = false;
+  const io = new IntersectionObserver(([en]) => { if (!en.isIntersecting) stop(); });
   io.observe(hero);
-  const stop = () => { cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("visibilitychange", onVis); cv.remove(); gl.getExtension("WEBGL_lose_context")?.loseContext(); };
+  const stop = () => { if (stopped) return; stopped = true; cancelAnimationFrame(raf); io.disconnect(); document.removeEventListener("visibilitychange", onVis); cv.remove(); gl.getExtension("WEBGL_lose_context")?.loseContext(); };
   const onVis = () => { if (document.hidden) stop(); };
   document.addEventListener("visibilitychange", onVis);
+  addEventListener("hashchange", stop, { once: true });
+  addEventListener("popstate", stop, { once: true });
   function frame(now: number) {
-    if (!t0) t0 = now - elapsed * 1000;
-    elapsed = (now - t0) / 1000;
+    if (stopped) return;
+    if (!t0) t0 = now;
+    const elapsed = (now - t0) / 1000;
     if (elapsed > 1.65) return stop();
-    if (!visible) { raf = 0; t0 = 0; return; } // paused off screen; resumes where it left off
     gl!.uniform1f(u("t"), elapsed);
     gl!.drawArrays(gl!.TRIANGLES, 0, 3);
     raf = requestAnimationFrame(frame);
