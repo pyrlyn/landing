@@ -10,4 +10,6 @@ export const ALGOLIA = {
 };
 export const ALGOLIA_ENABLED = Boolean(ALGOLIA.appId && ALGOLIA.searchKey);
 
-export const GA_MEASUREMENT_ID = /^G-[A-Z0-9]+$/.test(val("GA_MEASUREMENT_ID")) ? val("GA_MEASUREMENT_ID") : "";
+// Public GA4 ID; override with GA_MEASUREMENT_ID, or set it to "off" to disable.
+const ga = val("GA_MEASUREMENT_ID") || "G-61CRNDXXYK";
+export const GA_MEASUREMENT_ID = /^G-[A-Z0-9]+$/.test(ga) ? ga : "";
