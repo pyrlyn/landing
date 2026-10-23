@@ -1,0 +1,135 @@
+name: release
+
+# Manual release of the storefront: build the static site (no tests: they run locally),
+# upload dist/ as an artifact, tag vX.Y.Z on the built commit and publish a GitHub Release
+# with the tarball attached. Optional production deploy through Semaphore (pyrlyn/infra,
+# template "PRODUCTION: deploy sites", web-compose-production.yml): a --check --diff run
+# first, the real run only if the check run succeeded.
+# Deploy needs: repo variable SEMAPHORE_URL (reachable from GitHub runners), secret
+# SEMAPHORE_API_TOKEN, optional variables SEMAPHORE_PROJECT_ID (default 2) and
+# SEMAPHORE_TEMPLATE_ID (default 12). Build reads repo variables ALGOLIA_APP_ID and
+# ALGOLIA_SEARCH_KEY (search-only key, public); empty = search off.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version X.Y.Z (empty = bump the patch of the latest vX.Y.Z tag)"
+        required: false
+        default: ""
+      deploy:
+        description: "Deploy to production through Semaphore (check run, then real run)"
+        type: boolean
+        default: false
+
+permissions: {}
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Resolve the version
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          v="${INPUT_VERSION#v}"
+          if [ -z "$v" ]; then
+            last="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n1)"
+            if [ -z "$last" ]; then v="$(jq -r .version package.json)"; else
+              IFS=. read -r ma mi pa <<<"${last#v}"; v="$ma.$mi.$((pa + 1))"; fi
+          fi
+          [[ "$v" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::bad version: $v"; exit 1; }
+          if git rev-parse -q --verify "refs/tags/v$v" >/dev/null; then echo "::error::tag v$v exists"; exit 1; fi
+          echo "tag=v$v" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Build
+        env:
+          SITE_URL: https://pyrlyn.dev
+          ALGOLIA_APP_ID: ${{ vars.ALGOLIA_APP_ID }}
+          ALGOLIA_SEARCH_KEY: ${{ vars.ALGOLIA_SEARCH_KEY }}
+          ALGOLIA_INDEX: pyrlyn
+          GA_MEASUREMENT_ID: G-61CRNDXXYK
+        run: |
+          git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+          npm ci --no-audit --no-fund
+          npm run build
+          test -f dist/index.html && test -f dist/404.html
+          tar -czf "landing-${{ steps.version.outputs.tag }}.tar.gz" -C dist .
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: landing-${{ steps.version.outputs.tag }}
+          path: landing-${{ steps.version.outputs.tag }}.tar.gz
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: landing-${{ needs.build.outputs.tag }}
+      - name: Tag and publish the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.build.outputs.tag }}
+        run: |
+          gh release create "$TAG" "landing-$TAG.tar.gz" --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" --title "$TAG" --generate-notes
+
+  deploy:
+    needs: [build, publish]
+    if: inputs.deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    permissions: {}
+    steps:
+      - name: Semaphore check run, then real run
+        env:
+          URL: ${{ vars.SEMAPHORE_URL }}
+          TOKEN: ${{ secrets.SEMAPHORE_API_TOKEN }}
+          PROJECT: ${{ vars.SEMAPHORE_PROJECT_ID || '2' }}
+          TEMPLATE: ${{ vars.SEMAPHORE_TEMPLATE_ID || '12' }}
+        run: |
+          [ -n "$URL" ] && [ -n "$TOKEN" ] || { echo "::error::SEMAPHORE_URL / SEMAPHORE_API_TOKEN not set"; exit 1; }
+          api() { curl -sS --fail-with-body -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' "$@"; }
+          run() { # $1 = ansible arguments as a JSON array string
+            local body id s
+            body="$(jq -nc --argjson t "$TEMPLATE" --arg a "$1" '{template_id:$t,arguments:$a,environment:"{\"confirm_production\":\"production\"}"}')"
+            id="$(api -X POST "$URL/api/project/$PROJECT/tasks" -d "$body" | jq -r .id)"
+            echo "Semaphore task $id ($1)"
+            for _ in $(seq 120); do
+              s="$(api "$URL/api/project/$PROJECT/tasks/$id" | jq -r .status)"
+              case "$s" in success) return 0 ;; error|stopped) echo "::error::task $id: $s"; return 1 ;; esac
+              sleep 10
+            done
+            echo "::error::task $id timed out"; return 1
+          }
+          run '["--check","--diff"]'
+          run '[]'
+      - name: Verify https://pyrlyn.dev
+        run: |
+          curl -fsS https://pyrlyn.dev/ -o index.html
+          grep -q G-61CRNDXXYK index.html
