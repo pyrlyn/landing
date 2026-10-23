@@ -23,9 +23,10 @@ const { tool, page } = Astro.props as { tool: Tool; page: DocPage };
 const d = tool.data;
 const docs = getProductDocs(tool.id);
 const Authored = page.file ? null : AUTHORED[`${tool.id}/${page.slug}`];
+const sharedSummary = !!page.summary && docs.pages.some((p) => p !== page && p.summary === page.summary);
 const shortSha = docs.source?.sha.slice(0, 7);
 ---
-<DocsLayout tool={tool} current={page.slug} title={documentationTitle(page.title, d.title, page.file)} description={documentationDescription(page.title, d.title, page.summary)} toc={page.toc} wide={!!Authored} headline={page.title} section={page.group} sourceUrl={page.sourceUrl}>
+<DocsLayout tool={tool} current={page.slug} title={documentationTitle(page.title, d.title, page.file)} description={documentationDescription(page.title, d.title, page.summary, d.tagline, sharedSummary)} toc={page.toc} wide={!!Authored} headline={page.title} section={page.group} sourceUrl={page.sourceUrl}>
   {Authored ? <Authored tool={tool} page={page} /> : (
     <article class="doc" aria-labelledby="doc-title">
       <header class="doc__head">
