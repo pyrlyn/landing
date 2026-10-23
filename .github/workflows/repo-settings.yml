@@ -7,11 +7,15 @@ on:
     - cron: "17 4 * * *"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
 jobs:
   repo-settings:
-    uses: pyrlyn/ci/.github/workflows/repo-settings.yml@main
+    uses: pyrlyn/ci/.github/workflows/repo-settings.yml@8626a53acafb7bd77db1962536208e549e97bd40 # main
     secrets:
       REPO_ADMIN_TOKEN: ${{ secrets.REPO_ADMIN_TOKEN }}
