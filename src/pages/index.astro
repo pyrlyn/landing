@@ -19,8 +19,8 @@ const firstSentence = (html: string) => { const m = html.match(/^(.*?[.!?])(\s|$
 const fFeatures = parseFeatures(fSections["features"]).slice(0, 3).map((f) => ({ ...f, html: firstSentence(f.html) }));
 const fDemo = DEMOS[featured.id] ?? demoFromUsage(featured.data.title, parseUsage(fSections["usage examples"] ?? fSections["usage"]).map((g) => ({ code: g.code })));
 const minPro = tools.map((t) => proFor(t).price).sort((a, b) => parseFloat(a.replace(/[^\d.]/g, "")) - parseFloat(b.replace(/[^\d.]/g, "")))[0];
-const homeTitle = `${BRAND} — AI developer tools: rtok, ketch, cox, runa and more`;
-const homeDescription = "Pyrlyn builds fast, local AI developer tools: rtok, ketch, cox, runa and more. Every tool has a free open-source edition.";
+const homeTitle = `${BRAND}: local AI developer tools for agentic coding`;
+const homeDescription = "Pyrlyn builds local-first developer tools for agentic coding: rtok, ketch, cox, runa, swarfr, Stator and more.";
 const jsonLd = [
   organization(),
   website(homeDescription),

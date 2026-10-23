@@ -12,7 +12,7 @@ import Icon from "../components/Icon.astro";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
 import { getTools, proFor, versionLabel, groupByCategory } from "../lib/catalog";
 import { productsWithDocs } from "../lib/docs";
-import { graph } from "../lib/seo";
+import SEO from "../components/SEO.astro";
 
 interface Props {
   title: string;
@@ -34,7 +34,6 @@ const { title, description, theme, ogType = "website", imageAlt, jsonLd = [], no
 const t = { ...(THEMES[theme] ?? THEMES.home), ...Object.fromEntries(Object.entries(over).filter(([, v]) => v)) };
 const vars = `--accent:${t.accent};--accent-dark:${t.accent};--accent-2:${t.accent2};--accent-light:${t.accentLight};--bg:${t.bg}`;
 const og = new URL(u(`/images/${t.images}/og.jpg`), Astro.site).href;
-const canonical = new URL(Astro.url.pathname.replace(/\/?$/, "/"), Astro.site).href;
 const tools = await getTools();
 const current = tools.find((x) => x.id === theme);
 const withDocs = new Set(productsWithDocs());
@@ -48,14 +47,11 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
     <!-- Load entrance (motion.css): only pages with a hero, only when motion is allowed. Runs before first paint, so nothing flashes. -->
     {!inDocs && <script is:inline>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("intro")</script>}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <SEO {title} {description} {ogType} {imageAlt} {jsonLd} {noindex} image={og} />
     <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes. -->
     <script is:inline define:vars={{ darkBg: t.bg }}>(function(){var d=document.documentElement,s=null;try{s=localStorage.getItem("pyrlyn-theme")}catch(e){}var m=s==="light"||s==="dark"?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");d.setAttribute("data-mode",m);d.dataset.darkBg=darkBg;d.style.colorScheme=m;window.__applyThemeMeta=function(m){var c=document.getElementById("meta-theme-color");if(c)c.setAttribute("content",m==="light"?"#f4f6f9":darkBg);var k=document.getElementById("meta-color-scheme");if(k)k.setAttribute("content",m)};document.addEventListener("DOMContentLoaded",function(){window.__applyThemeMeta(m)});window.__applyThemeMeta(m)})()</script>
     <meta id="meta-color-scheme" name="color-scheme" content="dark light" />
     <meta id="meta-theme-color" name="theme-color" content={t.bg} />
-    <meta name="robots" content={noindex ? "noindex" : "index, follow, max-image-preview:large"} />
-    {!noindex && <link rel="canonical" href={canonical} />}
     <!-- Pyrlyn favicon. public/pyrlyn/ and public/favicon.svg (the previous, unlinked listepo mark) are copied
          from @pyrlyn/brand by `npm run brand` (predev/prebuild), so these URLs stay the same. -->
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon.svg")} type="image/svg+xml" />
@@ -64,23 +60,6 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
     <link rel="apple-touch-icon" href={u("/pyrlyn/pyrlyn-apple-touch-icon.png")} />
     <link rel="sitemap" type="application/xml" href={u("/sitemap-index.xml")} />
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
-    <meta property="og:type" content={ogType} />
-    <meta property="og:site_name" content={BRAND} />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    {!noindex && <meta property="og:url" content={canonical} />}
-    <meta property="og:image" content={og} />
-    <meta property="og:image:type" content="image/jpeg" />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={og} />
-    {imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
-    {jsonLd.length > 0 && <script is:inline type="application/ld+json" set:html={JSON.stringify(graph(jsonLd)).replace(/</g, "\\u003c")} />}
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
