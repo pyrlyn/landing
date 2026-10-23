@@ -1,0 +1,43 @@
+---
+// Shared SEO head: title, description, robots, canonical, Open Graph, Twitter card and JSON-LD.
+// Values come from page data (front matter / synced content) via Base.astro props; nothing is hand-written per page.
+// The Organization node is added to every indexable page so search engines always see the publisher.
+import { BRAND } from "../lib/site";
+import { graph, organization, ORG_ID } from "../lib/seo";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute share-card URL (1200x630 JPEG). */
+  image: string;
+  ogType?: "website" | "article";
+  imageAlt?: string;
+  jsonLd?: object[];
+  noindex?: boolean;
+}
+const { title, description, image, ogType = "website", imageAlt, jsonLd = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname.replace(/\/?$/, "/"), Astro.site).href;
+const hasOrg = jsonLd.some((n) => (n as { "@id"?: string })["@id"] === ORG_ID());
+const nodes = noindex ? jsonLd : hasOrg ? jsonLd : [organization(), ...jsonLd];
+---
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="robots" content={noindex ? "noindex" : "index, follow, max-image-preview:large"} />
+{!noindex && <link rel="canonical" href={canonical} />}
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={BRAND} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+{!noindex && <meta property="og:url" content={canonical} />}
+<meta property="og:image" content={image} />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+{imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
+{nodes.length > 0 && <script is:inline type="application/ld+json" set:html={JSON.stringify(graph(nodes)).replace(/</g, "\\u003c")} />}

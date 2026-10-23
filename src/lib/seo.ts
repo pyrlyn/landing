@@ -55,6 +55,7 @@ export const organization = () => ({
   "@id": ORG_ID(),
   name: "Pyrlyn",
   url: HOME_URL(),
+  logo: abs("/pyrlyn/pyrlyn-mark-on-dark-1000.png"),
   sameAs: ["https://github.com/pyrlyn"],
 });
 
