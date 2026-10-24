@@ -3,4 +3,4 @@
 hk = "2.5.0" # runs jactionlint as a pre-push hook (hk.pkl); `mise x -- hk install --mise`
 shellcheck = "0.11.0" # used by jactionlint for run: scripts
 node = "24.22.0" # Active LTS; runtime for the npm: tools below
-"npm:agent-device" = "0.21.31" # lets agents open and check the landing site as a real client
+"npm:agent-browser" = "0.39.2" # browser automation CLI for agents: open and check the storefront in a real browser
