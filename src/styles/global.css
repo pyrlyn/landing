@@ -952,6 +952,14 @@ html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .
 .theme-toggle__sun, .theme-toggle__moon { display: none; }
 html[data-mode="light"] .theme-toggle__moon, html:not([data-mode="light"]) .theme-toggle__sun { display: inline-grid; }
 .nav__actions { align-items: center; }
+/* "Browse tools": below 400px only the icon shows (the text stays the accessible name), so the Products
+   chevron fits and nothing touches the edge next to the search and theme buttons. */
+.nav__cta-icon { display: none; }
+@media (max-width: 399px) {
+  .nav__cta { width: 44px; height: 44px; padding: 0 !important; justify-content: center; flex: none; }
+  .nav__cta-icon { display: inline-grid; place-items: center; }
+  .nav__cta-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+}
 
 /* Error pages (404 / 500) */
 .err { display: grid; place-content: center; justify-items: center; gap: var(--s-3); min-height: 80dvh; padding: var(--s-8) var(--s-4); text-align: center; }
