@@ -1,0 +1,59 @@
+---
+// Standalone glassmorphism prototype (noindex, not in sitemap).
+---
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>tern — Light glass</title>
+<style is:inline>
+:root{--blur:8px;--glass:rgba(210,240,236,.15);--line:rgba(190,240,230,.18);--hi:rgba(255,255,255,.14);--fg:#eaf6f4;--muted:#a8c4c0;--accent:#7fe0c8;--r:12px;
+--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--shadow:0 1px 1px rgba(0,10,12,.25),0 6px 18px rgba(0,10,12,.25),0 24px 48px rgba(0,10,12,.3)}
+*{box-sizing:border-box}
+body{margin:0;color:var(--fg);font:15px/1.6 ui-sans-serif,-apple-system,system-ui,sans-serif;min-height:100vh;
+background:radial-gradient(50vw 50vh at 20% 15%,#1f5a5a 0,transparent 60%),radial-gradient(45vw 55vh at 85% 60%,#173f52 0,transparent 60%),radial-gradient(35vw 35vh at 50% 95%,#2a5b4a 0,transparent 60%),#0a1c22;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:32px 32px}
+.glass{background:var(--glass);-webkit-backdrop-filter:blur(var(--blur)) saturate(130%);backdrop-filter:blur(var(--blur)) saturate(130%);border:1px solid var(--line);border-radius:var(--r);box-shadow:inset 0 1px 0 var(--hi),var(--shadow)}
+.glass{background:linear-gradient(rgba(8,28,34,.35),rgba(8,28,34,.35)),var(--glass)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass{background:#123038}}
+@media (prefers-reduced-transparency:reduce){.glass{background:#123038;-webkit-backdrop-filter:none;backdrop-filter:none}}
+.mono{font-family:var(--mono)}a{color:inherit;text-decoration:none}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header{display:flex;justify-content:space-between;align-items:center;padding:20px 0}header nav{display:flex;gap:20px;font-size:13px;color:var(--muted)}
+.logo{font-family:var(--mono);font-weight:600}.logo span{color:var(--accent)}
+.btn{display:inline-block;font-family:var(--mono);font-size:13px;padding:9px 14px;border-radius:8px;background:var(--accent);color:#06221d;font-weight:600}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:minmax(120px,auto);gap:12px;margin:20px 0 64px}
+.b{padding:22px}.b h3{margin:0 0 6px;font-size:15px}.b p{margin:0;color:var(--muted);font-size:14px}
+.tag{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:10px}
+.hero{grid-column:span 4;grid-row:span 2;padding:36px;display:flex;flex-direction:column;justify-content:center}
+.hero h1{font-size:clamp(34px,5vw,58px);line-height:1.04;letter-spacing:-.035em;margin:0 0 14px;font-weight:600}.hero p{font-size:17px;max-width:520px;margin-bottom:24px}
+.term{grid-column:span 2;grid-row:span 2;font-family:var(--mono);font-size:12.5px;line-height:1.8}.term .p{color:var(--accent)}.term .c{color:var(--muted)}
+.s2{grid-column:span 2}.s3{grid-column:span 3}
+.stat{font-family:var(--mono);font-size:34px;letter-spacing:-.03em;color:var(--fg)}
+h2{font-size:28px;letter-spacing:-.03em;margin:0 0 18px}
+.log{list-style:none;padding:0;margin:0 0 64px}.log li{display:grid;grid-template-columns:110px 90px 1fr;gap:16px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.log li:last-child{border-bottom:0}.log time,.log .v{font-family:var(--mono);color:var(--muted);font-size:12.5px}.log .v{color:var(--accent)}
+.cta{padding:44px;text-align:center;margin-bottom:40px}.cta h2{font-size:clamp(28px,4vw,40px);margin-bottom:10px}.cta code{display:inline-block;margin:14px 0 22px;padding:10px 16px;border:1px solid var(--line);border-radius:8px;font-family:var(--mono);background:rgba(0,0,0,.25)}
+footer{display:flex;justify-content:space-between;color:var(--muted);font-size:12.5px;font-family:var(--mono);padding:0 0 32px}
+@media(max-width:900px){.bento{grid-template-columns:1fr}.bento>*{grid-column:auto!important;grid-row:auto!important}.log li{grid-template-columns:1fr}header nav{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head><body><div class="wrap">
+<header><span class="logo">tern<span>_</span></span><nav class="mono"><a href="#features">features</a><a href="#changelog">changelog</a><a href="#">docs</a><a href="#">github</a></nav><a class="btn" href="#start">install</a></header>
+<section id="features" class="bento">
+<div class="b hero glass"><span class="tag">v2.4 · now stable</span><h1>Preview environments, in one command.</h1><p style="color:var(--muted)">tern spins up a full copy of your stack for every pull request — database, queues, secrets — and tears it down when you merge.</p><div><a class="btn" href="#start">Get started</a> <a class="btn ghost" href="#changelog">What's new</a></div></div>
+<div class="b term glass"><div class="c"># deploy a branch</div><div><span class="p">$</span> tern up feat/search</div><div class="c">→ building 3 services…</div><div class="c">→ seeding postgres (snapshot 14:02)</div><div>✓ ready in 41s</div><div class="p">https://feat-search.tern.dev</div><br><div><span class="p">$</span> tern down</div><div class="c">✓ cleaned up</div></div>
+<div class="b s2 glass"><span class="tag">speed</span><div class="stat">41s</div><p>median cold start</p></div>
+<div class="b s2 glass"><span class="tag">cost</span><div class="stat">−62%</div><p>vs. always-on staging</p></div>
+<div class="b s2 glass"><span class="tag">scale</span><div class="stat">∞</div><p>parallel environments</p></div>
+<div class="b s3 glass"><span class="tag">data</span><h3>Masked snapshots</h3><p>Production-shaped data with PII scrubbed at the column level.</p></div>
+<div class="b s3 glass"><span class="tag">config</span><h3>One tern.toml</h3><p>Reads your existing Compose file. No new DSL to learn.</p></div>
+</section>
+<section id="changelog"><h2>Changelog</h2><ul class="log glass">
+<li><time>2026-10-21</time><span class="v">v2.4.0</span><span>Masked snapshots are generally available.</span></li>
+<li><time>2026-10-08</time><span class="v">v2.3.2</span><span>Faster image layer reuse across branches.</span></li>
+<li><time>2026-09-26</time><span class="v">v2.3.0</span><span>GitLab merge request support.</span></li>
+<li><time>2026-09-11</time><span class="v">v2.2.1</span><span>Fixed secret rotation on long-lived previews.</span></li>
+</ul></section>
+<section id="start" class="cta glass"><h2>Ship the next PR with a preview.</h2><p style="color:var(--muted);margin:0">Free for open source and teams under five.</p><code>brew install tern</code><br><a class="btn" href="#">Read the quickstart</a></section>
+<footer><span>© 2026 tern</span><span>status: all systems normal</span></footer>
+</div></body></html>

@@ -1,0 +1,13 @@
+---
+// Index of standalone glassmorphism prototypes (noindex, not in sitemap).
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const variants = [
+  { href: `${base}/glass/v1/`, name: "v1 — Heavy glass", note: "blur 40px · alpha 0.55 · graphite · tight sans · centered" },
+  { href: `${base}/glass/v2/`, name: "v2 — Medium glass", note: "blur 20px · alpha 0.35 · warm light · editorial serif · split" },
+  { href: `${base}/glass/v3/`, name: "v3 — Light glass", note: "blur 8px · alpha 0.15 · deep teal · monospace · bento" },
+];
+---
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Glass variants</title>
+<style is:inline>body{margin:0;min-height:100vh;display:grid;place-items:center;font:16px/1.6 ui-sans-serif,system-ui,sans-serif;color:#eef0f2;background:#14161a}ul{list-style:none;padding:0}li{margin:12px 0}a{color:#fff;font-weight:600}a:focus-visible{outline:2px solid #fff;outline-offset:3px}span{display:block;color:#a9adb5;font-size:14px}</style></head>
+<body><main><h1>Glass variants</h1><ul>{variants.map((v) => <li><a href={v.href}>{v.name}</a><span>{v.note}</span></li>)}</ul></main></body></html>
