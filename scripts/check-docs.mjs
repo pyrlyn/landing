@@ -10,22 +10,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveDistDir } from "./lib/dist-dir.mjs";
 import { countDocHeadings } from "../src/lib/doc-source.ts";
 
 // fileURLToPath decodes %20 and drive letters; URL.pathname would break on such checkouts.
 const root = fileURLToPath(new URL("..", import.meta.url));
-// The dist dir comes from the CLI; only accept a directory name inside the repo (no "..", no absolute path).
-const distArg = process.argv[2] ?? "dist";
-if (!/^[\w.-]+(?:\/[\w.-]+)*$/.test(distArg) || distArg.split("/").includes("..")) {
-  console.error(`invalid dist dir: ${distArg} (must be a relative path inside the repo)`);
-  process.exit(1);
-}
-const resolvedDist = path.resolve(root, distArg);
-if (!resolvedDist.startsWith(path.resolve(root) + path.sep)) {
-  console.error(`invalid dist dir: ${distArg} (outside the repo)`);
-  process.exit(1);
-}
-const dist = resolvedDist;
+const dist = resolveDistDir(root, process.argv[2]);
 const base = (process.env.SITE_BASE ?? "/landing/").replace(/\/?$/, "/");
 const nav = JSON.parse(fs.readFileSync(path.join(root, "src/data/docs-nav.json"), "utf8"));
 const errors = [];
