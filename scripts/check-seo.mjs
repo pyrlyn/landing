@@ -34,6 +34,8 @@ const strip = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
 const seen = { title: new Map(), description: new Map() };
 const expectTypes = (rel) => {
   if (rel === "") return ["Organization", "WebSite"];
+  // Static info pages (src/pages/team.astro, support.astro): no product schema.
+  if (rel === "team/" || rel === "support/") return [];
   if (/^[^/]+\/$/.test(rel)) return ["SoftwareApplication", "BreadcrumbList"];
   if (/^[^/]+\/docs\//.test(rel)) return ["TechArticle", "BreadcrumbList"];
   return [];

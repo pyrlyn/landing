@@ -6,7 +6,7 @@ import Terminal from "../components/Terminal.astro";
 import RingCarousel from "../components/RingCarousel.astro";
 import ProWishlist from "../components/ProWishlist.astro";
 import { u, BRAND, PRO_PRICE_NOTE, LICENSE, THEMES, FREE_HIGHLIGHTS } from "../lib/site";
-import { getTools, featuredTool, proFor, hasWishlist, cardInstall, versionLabel, groupByCategory, categoryFor } from "../lib/catalog";
+import { getTools, featuredTool, proFor, hasPro, hasWishlist, cardInstall, versionLabel, groupByCategory, categoryFor } from "../lib/catalog";
 import { parseFeatures, splitSections } from "../lib/sections";
 import { DEMOS, demoFromUsage } from "../data/showcase";
 import { parseUsage } from "../lib/sections";
@@ -19,7 +19,7 @@ const fSections = splitSections(featured.body ?? "");
 const firstSentence = (html: string) => { const m = html.match(/^(.*?[.!?])(\s|$)/); return m ? m[1] : html; };
 const fFeatures = parseFeatures(fSections["features"]).slice(0, 3).map((f) => ({ ...f, html: firstSentence(f.html) }));
 const fDemo = DEMOS[featured.id] ?? demoFromUsage(featured.data.rawTitle, parseUsage(fSections["usage examples"] ?? fSections["usage"]).map((g) => ({ code: g.code })), featured.data.title);
-const minPro = tools.map((t) => proFor(t).price).sort((a, b) => parseFloat(a.replace(/[^\d.]/g, "")) - parseFloat(b.replace(/[^\d.]/g, "")))[0];
+const minPro = tools.filter(hasPro).map((t) => proFor(t).price).sort((a, b) => parseFloat(a.replace(/[^\d.]/g, "")) - parseFloat(b.replace(/[^\d.]/g, "")))[0];
 const homeTitle = `${BRAND}: local AI developer tools for agentic coding`;
 const homeDescription = "Pyrlyn builds local-first developer tools for agentic coding: Rtok, Ketch, Cox, Runa, Swarfr, Stator and more.";
 const jsonLd = [
@@ -131,7 +131,7 @@ import AudienceToggle from "../components/islands/Audience/Audience";
             <h3 class="oss-card__title">{p.data.title}<span>.</span></h3>
             <p>{p.data.tagline}</p>
             <pre class="code" role="group" aria-label={`Install ${p.data.title}`}><code><span class="tok-p" aria-hidden="true">$ </span>{cardInstall(p)}</code></pre>
-            <p class="price-chips"><span class="price-chip">Free · OSS</span><span class="price-chip price-chip--pro">Pro <span data-pro-price={p.id}>{proFor(p).price}</span>*</span></p>
+            <p class="price-chips">{hasPro(p) ? <><span class="price-chip">Free · OSS</span><span class="price-chip price-chip--pro">Pro <span data-pro-price={p.id}>{proFor(p).price}</span>*</span></> : <span class="price-chip">Free</span>}</p>
             <a class="oss-card__link" href={u(`/${p.id}/`)}>Explore {p.data.title} <Icon name="arrow" size={16} /></a>
           </li>
           ))}
@@ -188,15 +188,15 @@ import AudienceToggle from "../components/islands/Audience/Audience";
           <h3 id={`pr-${p.id}`} class="oss-card__title">{p.data.title}<span>.</span></h3>
           <p class="cat-tag">{categoryFor(p).label}</p>
           <div class="price-tier">
-            <div class="tier__head"><strong>Free · OSS</strong><span class="price__num price__num--sm">$0</span></div>
+            <div class="tier__head"><strong>Free · OSS</strong><span class="price__num price__num--sm">{hasPro(p) ? "$0" : "Free"}</span></div>
             <ul class="checklist">{(FREE_HIGHLIGHTS[p.id] ?? ["The full open-source tool"]).map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
             <a class="btn btn--glass btn--block" href={u(`/${p.id}/#install`)}>Install free</a>
           </div>
-          <div class="price-tier price-tier--pro">
+          {hasPro(p) && <div class="price-tier price-tier--pro">
             <div class="tier__head"><strong>Pro <span class="badge badge--placeholder">Placeholder</span></strong><span class="price__num price__num--sm"><span data-pro-price={p.id}>{proFor(p).price}</span>*</span></div>
             <ul class="checklist">{proFor(p).features.map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
             <ProWishlist tool={p} describedby="pricing-note" />
-          </div>
+          </div>}
         </article>
       ))}
     </div>

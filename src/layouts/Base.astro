@@ -14,8 +14,7 @@ import HeroStage from "../components/islands/HeroStage/HeroStage";
 import Search from "../components/Search.astro";
 import { API_URL, GA_MEASUREMENT_ID, POSTHOG_HOST, POSTHOG_KEY } from "../lib/config";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
-import { getTools, proFor, versionLabel, groupByCategory } from "../lib/catalog";
-import { productsWithDocs } from "../lib/docs";
+import { getTools, proFor, hasPro, versionLabel, groupByCategory } from "../lib/catalog";
 import SEO from "../components/SEO.astro";
 
 interface Props {
@@ -42,8 +41,6 @@ const vars = `--accent:${t.accent};--accent-dark:${t.accent};--accent-2:${t.acce
 const og = new URL(u(`/images/${t.images}/og.jpg`), Astro.site).href;
 const tools = await getTools();
 const current = tools.find((x) => x.id === theme);
-const withDocs = new Set(productsWithDocs());
-const docTools = tools.filter((x) => withDocs.has(x.id));
 const ghHref = current?.data.repo ?? "https://github.com/pyrlyn";
 const ghLabel = `${current?.data.title ?? "Pyrlyn"} on GitHub`;
 const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
@@ -68,6 +65,7 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
     <!-- Pyrlyn favicon. public/pyrlyn/ and public/favicon.svg (the previous, unlinked listepo mark) are copied
          from @pyrlyn/brand by `npm run brand` (predev/prebuild), so these URLs stay the same. -->
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon.svg")} type="image/svg+xml" />
+    {/* TODO(brand pin bump): add <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-16.png")} type="image/png" sizes="16x16" /> once @pyrlyn/brand ships it (not in v0.2.0; a link to a missing file would 404). */}
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-32.png")} type="image/png" sizes="32x32" />
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-64.png")} type="image/png" sizes="64x64" />
     <link rel="apple-touch-icon" href={u("/pyrlyn/pyrlyn-apple-touch-icon.png")} />
@@ -122,23 +120,13 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
                             <a class="menu__item shine" href={u(`/${x.id}/`)} style={`--card-accent:${x.data.accent}`} aria-current={x.id === theme ? "page" : undefined}>
                               <span class="menu__mark" aria-hidden="true">{x.data.rawTitle.slice(0, 2)}</span>
                               <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">{versionLabel(x)}</span></strong><small>{x.data.tagline}</small></span>
-                              <span class="menu__price">Free · Pro <span data-pro-price={x.id}>{proFor(x).price}</span>*</span>
+                              <span class="menu__price">{hasPro(x) ? <>Free · Pro <span data-pro-price={x.id}>{proFor(x).price}</span>*</> : "Free"}</span>
                             </a>
                           </li>
                         ))}
                       </ul>
                     </section>
                   ))}
-                  {docTools.length > 0 && (
-                    <>
-                      <p class="menu__label">Documentation</p>
-                      <ul class="menu__docs" role="list">
-                        {docTools.map((x) => (
-                          <li><a class="menu__doc" href={u(`/${x.id}/docs/`)} style={`--card-accent:${x.data.accent}`} aria-current={inDocs && x.id === theme ? "page" : undefined}><i aria-hidden="true"></i>{x.data.title} docs</a></li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
                   <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>{PRO_PRICE_NOTE}</span></p>
                 </Menu>
             </li>
@@ -177,6 +165,8 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
             <li><a href={u("/#pricing")}>Pricing</a></li>
             <li><a href={u("/#faq")}>FAQ</a></li>
             <li><a href="https://github.com/pyrlyn">GitHub</a></li>
+            <li><a href={u("/team")}>Our team</a></li>
+            <li><a href={u("/support")}>Support</a></li>
           </ul>
         </nav>
       </div>

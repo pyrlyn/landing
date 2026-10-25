@@ -11,7 +11,7 @@ import CoxScenes from "../components/CoxScenes.astro";
 import KetchRoute from "../components/KetchRoute.astro";
 import ProWishlist from "../components/ProWishlist.astro";
 import { u, BRAND, PRO_PRICE_NOTE, licenseFor, CAVEATS, THEMES, FREE_HIGHLIGHTS, type ThemeKey } from "../lib/site";
-import { proFor, hasWishlist, statusFor, categoryFor } from "../lib/catalog";
+import { proFor, hasPro, hasWishlist, statusFor, categoryFor } from "../lib/catalog";
 import { getProductDocs, productsWithDocs, docsHref } from "../lib/docs";
 import { DEMOS, FLOWS, COX_SCENES, demoFromUsage } from "../data/showcase";
 import { splitSections, parseFeatures, parseUsage, parseLinks, renderMd, codeBlock } from "../lib/sections";
@@ -37,6 +37,7 @@ const lic = licenseFor(slug);
 const demo = DEMOS[slug] ?? demoFromUsage(d.rawTitle, usage.map((g) => ({ code: g.code })), d.title);
 const flow = FLOWS[slug];
 const pro = proFor(entry);
+const withPro = hasPro(entry);
 const docs = productsWithDocs().includes(slug) ? getProductDocs(slug) : null;
 /* ketch leads with its Getting started page; the others with the docs overview. */
 const gs = docs?.pages.find((p) => p.slug === "getting-started" && !p.file);
@@ -331,23 +332,25 @@ const jsonLd = [
   <!-- PRICING: Free/OSS (real) + Pro (PLACEHOLDER) -->
   <section class="section section--tight container" id="pricing" aria-labelledby="pr-title">
     <header class="section__head">
-      <div class="section-flag"><p class="eyebrow">Pricing</p><span class="badge badge--placeholder">Pro is a placeholder</span></div>
-      <h2 id="pr-title" class="h2">Free forever. Pro when you need it.</h2>
+      <div class="section-flag"><p class="eyebrow">Pricing</p>{withPro && <span class="badge badge--placeholder">Pro is a placeholder</span>}</div>
+      <h2 id="pr-title" class="h2">{withPro ? "Free forever. Pro when you need it." : `${d.title} is free.`}</h2>
     </header>
-    <div class="grid grid--2 pricing-pair">
+    <div class:list={["grid pricing-pair", withPro ? "grid--2" : "pricing-pair--free"]}>
       <article class="card glass tier" aria-labelledby="t-free">
         <div class="tier__head"><h3 id="t-free" class="h3">Free · open source</h3><span class="badge badge--line">{lic.short}</span></div>
-        <p class="price"><span class="price__num">$0</span><span class="muted small">forever</span></p>
+        {withPro
+          ? <p class="price"><span class="price__num">$0</span><span class="muted small">forever</span></p>
+          : <p class="price"><span class="price__num">Free</span><span class="muted small">no paid plans</span></p>}
         <ul class="checklist">{(FREE_HIGHLIGHTS[slug] ?? ["The full open-source tool"]).map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
         <a class="btn btn--glass btn--block" href="#install">Install free</a>
       </article>
-      <article class="card glass tier tier--featured" aria-labelledby="t-pro">
+      {withPro && <article class="card glass tier tier--featured" aria-labelledby="t-pro">
         <div class="tier__head"><h3 id="t-pro" class="h3">{d.title} Pro</h3><span class="badge badge--placeholder">Placeholder</span></div>
         <p class="price"><span class="price__num"><span data-pro-price={slug}>{pro.price}</span>*</span><span class="muted small">per seat</span></p>
         <ul class="checklist">{pro.features.map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
         <ProWishlist tool={entry} describedby="t-pro-note" />
         <p id="t-pro-note" class="muted small">{PRO_PRICE_NOTE} {hasWishlist(entry) ? "The wishlist mails you once, when paid plans open." : "Placeholder — the Pro waitlist is not open yet."}</p>
-      </article>
+      </article>}
     </div>
   </section>
 
