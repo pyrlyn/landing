@@ -117,7 +117,7 @@ export const RELEASE_STATUS_FALLBACK = "In development";
  *  Source: each repo's README.md (rtok: the limitations list; runa: the status paragraph its synced Overview carries).
  *  (cox's "under active development, APIs not stable" status is already in its synced Overview and the hero status card.) */
 export const CAVEATS: Partial<Record<ThemeKey, string>> = {
-  runa: "runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
+  runa: "Runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
   rtok: "Token savings are estimates from a chars-per-token heuristic until matched against provider usage. No live A/B cost reduction has been established yet.",
 };
 

@@ -6,6 +6,7 @@ import { Marked, type Tokens } from "marked";
 import nav from "../data/docs-nav.json";
 import { u } from "./site";
 import { safeHref, safeHtml } from "./html";
+import { harvestFromMarkdown, normalizeMdInline, normalizeToken } from "./names";
 
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -17,6 +18,7 @@ const SOURCES = import.meta.glob<{ repo: string; sha: string; ref: string }>("/c
   import: "default",
   eager: true,
 });
+harvestFromMarkdown(Object.values(RAW));
 
 /**
  * Service files (plans, research, to-do/done/roadmap notes, READMEs, agent instructions) are never
@@ -130,7 +132,7 @@ function summarize(body: string): string {
   const blocks = body.replace(/<!--[\s\S]*?-->/g, "").replace(/```[\s\S]*?```/g, "\n\n").split(/\n\s*\n/);
   const para = blocks.map((b) => b.trim()).find((b) => b && !/^(#|\||-|\*|\d+\.|>|<)/.test(b));
   if (!para) return "";
-  const text = plain(para).replace(/:$/, ".");
+  const text = plain(normalizeMdInline(para)).replace(/:$/, ".");
   if (text.length <= 220) return text;
   const cut = text.slice(0, 220);
   const dot = cut.search(/[.!?](?=\s)[^.!?]*$/);
@@ -206,7 +208,7 @@ function renderDoc(
   const repo = source?.repo ?? `pyrlyn/${product}`;
   const ref = source?.sha ?? "main";
   const prepared = docSource(raw);
-  const title = prepared.title ? plain(prepared.title) : navTitle ?? file;
+  const title = prepared.title ? plain(normalizeMdInline(prepared.title)) : navTitle ?? file;
   const rest = prepared.body;
   const slugger = makeSlugger();
   const toc: TocEntry[] = [];
@@ -237,12 +239,13 @@ function renderDoc(
 
   const md = new Marked({ gfm: true });
   md.use({
+    walkTokens: normalizeToken,
     renderer: {
       heading({ tokens, depth, text }: Tokens.Heading) {
         const inner = this.parser.parseInline(tokens);
         const id = slugger(text);
         const d = Math.min(Math.max(depth, 2), 6);
-        if (d === 2 || d === 3) toc.push({ id, text: plain(text), depth: d as 2 | 3 });
+        if (d === 2 || d === 3) toc.push({ id, text: plain(normalizeMdInline(text)), depth: d as 2 | 3 });
         section = plain(text);
         return `<h${d} id="${esc(id)}" class="doc-h"><a class="doc-anchor" href="#${esc(id)}" aria-label="Link to this section"></a>${inner}</h${d}>\n`;
       },

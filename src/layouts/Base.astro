@@ -107,7 +107,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
                         {g.tools.map((x) => (
                           <li>
                             <a class="menu__item shine" href={u(`/${x.id}/`)} style={`--card-accent:${x.data.accent}`} aria-current={x.id === theme ? "page" : undefined}>
-                              <span class="menu__mark" aria-hidden="true">{x.data.title.slice(0, 2)}</span>
+                              <span class="menu__mark" aria-hidden="true">{x.data.rawTitle.slice(0, 2)}</span>
                               <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">{versionLabel(x)}</span></strong><small>{x.data.tagline}</small></span>
                               <span class="menu__price">Free · Pro <span data-pro-price={x.id}>{proFor(x).price}</span>*</span>
                             </a>
