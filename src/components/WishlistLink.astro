@@ -1,8 +1,9 @@
 ---
 // Target of the backend's wishlist mails: the link carries a one-time token in `?token=`, and
-// src/scripts/pro.ts sends it only on a click, so a mail scanner that opens the link changes nothing.
+// the WishlistLink island sends it only on a click, so a mail scanner that opens the link changes nothing.
 import { API_URL } from "../lib/config";
 import { u } from "../lib/site";
+import WishlistLinkIsland from "./islands/WishlistLink/WishlistLink";
 interface Props { action: "confirm" | "unsubscribe" }
 const { action } = Astro.props;
 const copy = {
@@ -13,7 +14,6 @@ const copy = {
 <section class="err" aria-labelledby="wl-title" data-wishlist-link={action}>
   <h1 id="wl-title">{copy.title}</h1>
   <p class="err__text">{copy.text}</p>
-  <button class="btn btn--primary btn--lg" type="button" disabled>{copy.button}</button>
-  <p class="err__text" role="status" aria-live="polite">{API_URL ? "" : "The wishlist is not available on this site yet."}</p>
+  <WishlistLinkIsland client:load api={API_URL || undefined} action={action} label={copy.button} />
   <a href={u("/")}>Back to home</a>
 </section>

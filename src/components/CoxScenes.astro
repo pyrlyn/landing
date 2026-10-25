@@ -3,11 +3,13 @@
 // The active panel moves forward (translateZ); tabs or ←/→ switch; each panel types real README usage.
 // No JS: the three panels simply stack.
 import Terminal from "./Terminal.astro";
+import ScenesIsland from "./islands/CoxScenes/CoxScenes";
 import type { Demo } from "../data/showcase";
 interface Scene { id: string; label: string; sub: string; demo: Demo }
 interface Props { scenes: Scene[] }
 const { scenes } = Astro.props;
 ---
+<ScenesIsland client:idle>
 <div class="scenes" data-scenes>
   <div class="scenes__tabs" role="tablist" aria-label="Ways to run cox">
     {scenes.map((s, i) => (
@@ -24,3 +26,4 @@ const { scenes } = Astro.props;
     ))}
   </div>
 </div>
+</ScenesIsland>

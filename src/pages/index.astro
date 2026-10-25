@@ -40,6 +40,7 @@ const hotspots = [
   { x: 80, y: 58, tool: "rtok", label: "rtok · code graph", accent: THEMES.rtok.accent, href: "/rtok/", text: "Code graph over MCP: agents query symbol, callers, impact, outline and explore instead of grep-and-read." },
   { x: 35, y: 64, tool: "ketch", label: "ketch · verified installs", accent: THEMES.ketch.accent, href: "/ketch/", text: "Installs from any repo that ships releases and checks the published SHA-256 sums against what landed on disk." },
 ];
+import AudienceToggle from "../components/islands/Audience/Audience";
 ---
 <Base title={homeTitle} description={homeDescription} theme="home" imageAlt={homeTitle} jsonLd={jsonLd}>
   <!-- HERO -->
@@ -69,10 +70,7 @@ const hotspots = [
         <div class="layer pos-a" data-depth="34">
           <div class="chip glass glass--thick toggle-chip float">
             <span class="toggle-chip__label" id="aud-label">Pricing model</span>
-            <div class="segmented" role="group" aria-labelledby="aud-label">
-              <button type="button" data-set-audience="oss" aria-pressed="true">Free</button>
-              <button type="button" data-set-audience="pro" aria-pressed="false">Pro</button>
-            </div>
+            <AudienceToggle client:load labelledBy="aud-label" />
             <div class="toggle-chip__body" aria-live="polite">
               <span class="for-oss"><strong>$0 · every tool</strong>open-source editions</span>
               <span class="for-pro"><strong>from {minPro}*</strong>per tool · placeholder pricing</span>
