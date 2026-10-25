@@ -1,7 +1,4 @@
 ---
-import "@fontsource-variable/inter";
-// Preload the Latin subset so text does not reflow when Inter replaces the fallback (CLS).
-import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import "../styles/tailwind.css";
 import "../styles/products.css";
@@ -64,7 +61,12 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-64.png")} type="image/png" sizes="64x64" />
     <link rel="apple-touch-icon" href={u("/pyrlyn/pyrlyn-apple-touch-icon.png")} />
     <link rel="sitemap" type="application/xml" href={u("/sitemap-index.xml")} />
-    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <!-- Satoshi (Indian Type Foundry, ITF Free Font License) is loaded from the Fontshare CDN as one
+         variable face (wght 300–900). The FFL forbids redistributing the font files, and this repo is
+         public, so they are not committed here. -->
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap" />
     {analytics && GA_MEASUREMENT_ID && (
       <>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
