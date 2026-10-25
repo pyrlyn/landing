@@ -7,7 +7,7 @@
 //  - every <img> has an alt attribute; every <canvas> is aria-hidden or labelled;
 //  - every JSON-LD block parses, and each page type carries its expected schema.org types;
 //  - robots.txt and the sitemap exist and list every page.
-// Exit code 1 on any error. Usage: node scripts/check-seo.mjs [distDir]
+// Exit code 1 on any error. Usage: node scripts/check-seo.mjs (always checks dist/)
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";

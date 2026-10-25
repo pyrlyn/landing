@@ -6,7 +6,7 @@
 //     is rendered with a unique id;
 //  3. links — every internal href/src in every built page stays under the site base and resolves
 //     to a built file, and every #fragment exists on its target page.
-// Exit code 1 on any error. Usage: node scripts/check-docs.mjs [distDir]
+// Exit code 1 on any error. Usage: node scripts/check-docs.mjs (always checks dist/)
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
