@@ -32,7 +32,7 @@ paths, gzip, long-lived cache headers for `/_astro/`). The container listens on 
 
 ```sh
 docker build -t pyrlyn-landing .
-docker run -d --name pyrlyn-landing -p 127.0.0.1:8080:80 pyrlyn-landing   # http://localhost:8080/
+docker run -d --name pyrlyn-landing -p 127.0.0.1:8080:8080 pyrlyn-landing   # http://localhost:8080/
 ```
 
 Build args: `SITE_URL`, `SITE_BASE` (e.g. `--build-arg SITE_BASE=/landing/` to serve under a subpath),
