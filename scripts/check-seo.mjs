@@ -14,7 +14,18 @@ import { fileURLToPath } from "node:url";
 
 // fileURLToPath decodes %20 and drive letters; URL.pathname would break on such checkouts.
 const root = fileURLToPath(new URL("..", import.meta.url));
-const dist = path.resolve(root, process.argv[2] ?? "dist");
+// The dist dir comes from the CLI; only accept a directory name inside the repo (no "..", no absolute path).
+const distArg = process.argv[2] ?? "dist";
+if (!/^[\w.-]+(?:\/[\w.-]+)*$/.test(distArg) || distArg.split("/").includes("..")) {
+  console.error(`invalid dist dir: ${distArg} (must be a relative path inside the repo)`);
+  process.exit(1);
+}
+const resolvedDist = path.resolve(root, distArg);
+if (!resolvedDist.startsWith(path.resolve(root) + path.sep)) {
+  console.error(`invalid dist dir: ${distArg} (outside the repo)`);
+  process.exit(1);
+}
+const dist = resolvedDist;
 const site = (process.env.SITE_URL ?? "https://pyrlyn.dev").replace(/\/$/, "");
 const base = (process.env.SITE_BASE ?? "/landing/").replace(/\/?$/, "/");
 const errors = [];

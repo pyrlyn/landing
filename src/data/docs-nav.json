@@ -19,7 +19,8 @@
         { "file": "otel.md", "title": "OpenTelemetry" },
         { "file": "agents-and-worktrees.md", "title": "Agents and worktrees" },
         { "file": "tasks.md", "title": "Tasks" },
-        { "file": "web-auth.md", "title": "Web access token" }
+        { "file": "web-auth.md", "title": "Web access token" },
+        { "file": "ci-platforms.md", "title": "CI platforms" }
       ] },
       { "label": "Extend", "items": [
         { "file": "plugin-authoring.md", "title": "Writing a plugin" },
@@ -68,7 +69,8 @@
       ] },
       { "label": "Extend", "items": [
         { "file": "plugins.md", "title": "Writing a plugin" },
-        { "file": "plugins/cursor.md", "title": "Cursor plugin" }
+        { "file": "plugins/cursor.md", "title": "Cursor plugin" },
+        { "file": "plugins/jev.md", "title": "Jev plugin" }
       ] }
     ],
     "exclude": {
@@ -241,7 +243,8 @@
         { "file": "NODE.md", "title": "Node API coverage" },
         { "file": "FFI.md", "title": "Calling C" },
         { "file": "BUNDLER.md", "title": "Bundler (js mode)" },
-        { "file": "DIAGNOSTICS.md", "title": "Diagnostics" }
+        { "file": "DIAGNOSTICS.md", "title": "Diagnostics" },
+        { "file": "THREADS.md", "title": "Threads and synchronization" }
       ] },
       { "label": "Internals", "items": [
         { "file": "ARCHITECTURE.md", "title": "Architecture" },
