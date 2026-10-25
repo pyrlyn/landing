@@ -75,7 +75,7 @@ jobs:
           POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
         run: |
           git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
-          npm ci --no-audit --no-fund
+          npm ci --no-audit --no-fund --ignore-scripts
           npm run build
           test -f dist/index.html && test -f dist/404.html
           tar -czf "landing-${{ steps.version.outputs.tag }}.tar.gz" -C dist .
