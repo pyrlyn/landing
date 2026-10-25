@@ -1,5 +1,5 @@
 // Pro prices and the wishlist from the backend through @pyrlyn/sdk. The build (src/lib/api.ts) and
-// the browser (src/scripts/pro.ts) share this module, so it must not read build-time config.
+// the browser (ProPrices / WishlistForm islands) share this module, so it must not read build-time config.
 import { createClient, SdkError, type ProjectsQuery } from "@pyrlyn/sdk";
 
 export type ApiPrice = NonNullable<ProjectsQuery["projects"][number]["price"]>;
