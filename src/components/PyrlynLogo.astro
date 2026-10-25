@@ -1,13 +1,13 @@
 ---
 // Pyrlyn Prompt logo from @pyrlyn/brand (see README "Brand tokens"), inlined so it takes the page's brand
-// tokens: the paper chevron and wordmark become currentColor (--fg-strong via .brand), the amber cursor --accent (class brand__cursor, blinks via motion.css).
+// tokens: the paper chevron and wordmark become currentColor (--fg-strong via .brand), the cursor (amber #F2B33D up to brand v0.3, blue #4C8DFF from the favicon fix on) --accent (class brand__cursor, blinks via motion.css).
 // Full lockup from 460px up, mark only below. A home link; used by the header and the footer.
 import pyrlynLockup from "@pyrlyn/brand/logo/pyrlyn/pyrlyn-lockup-on-dark.svg?raw";
 import pyrlynMark from "@pyrlyn/brand/logo/pyrlyn/pyrlyn-mark-on-dark.svg?raw";
 import { u } from "../lib/site";
 
 const svgInner = (svg: string) =>
-  svg.trim().replace(/^<svg[^>]*>|<\/svg>$/g, "").replace(/#F4F2ED/gi, "currentColor").replace(/<path fill="#F2B33D"/gi, '<path class="brand__cursor" fill="#F2B33D"').replace(/#F2B33D/gi, "var(--accent)");
+  svg.trim().replace(/^<svg[^>]*>|<\/svg>$/g, "").replace(/#F4F2ED/gi, "currentColor").replace(/<path fill="(#(?:F2B33D|4C8DFF))"/gi, '<path class="brand__cursor" fill="$1"').replace(/#(?:F2B33D|4C8DFF)/gi, "var(--accent)");
 ---
 <a class="brand tw:max-[459px]:pr-0!" href={u("/")} aria-label="Pyrlyn">
   <svg class="tw:block tw:max-[459px]:hidden!" viewBox="-2 4 109 26" width="101" height="24" aria-hidden="true" focusable="false" set:html={svgInner(pyrlynLockup)}></svg>
