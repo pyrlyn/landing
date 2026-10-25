@@ -6,14 +6,12 @@
 
    Brand tokens and shared brand components come from the @pyrlyn/brand package (pinned in
    package.json, see README "Brand tokens"); the imports below keep the original cascade order:
-     1. @pyrlyn/brand/tokens.css             rtok brand variables (--rtok-*), unused by the page CSS
-     2. @pyrlyn/brand/landing/tokens.css     this site's tokens (--accent, --bg, --fg, --s-*, --r-* …)
-     3. ./base.css                           @property, base reset, background mesh (local)
-     4. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by (the page no longer uses .pyrlyn-by / .brand__mark)
-     5. the rest of this file                page layout, sections, project pages, fallbacks
+     1. @pyrlyn/brand/landing/tokens.css     this site's tokens (--accent, --bg, --fg, --s-*, --r-* …)
+     2. ./base.css                           @property, base reset, background mesh (local)
+     3. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by (the page no longer uses .pyrlyn-by / .brand__mark)
+     4. the rest of this file                page layout, sections, project pages, fallbacks
    ========================================================================== */
 
-@import "@pyrlyn/brand/tokens.css";
 @import "@pyrlyn/brand/landing/tokens.css";
 @import "./base.css";
 @import "@pyrlyn/brand/landing/components.css";

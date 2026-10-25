@@ -99,7 +99,7 @@ The visual identity comes from the [`pyrlyn/brand`](https://github.com/pyrlyn/br
 installed from git and pinned to a tag in `package.json`:
 
 ```json
-"@pyrlyn/brand": "github:pyrlyn/brand#v0.2.0"
+"@pyrlyn/brand": "github:pyrlyn/brand#v0.5.0"
 ```
 
 What the site takes from it:
