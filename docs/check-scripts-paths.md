@@ -31,3 +31,8 @@ Limitation: other links on the 500 page are not link-checked.
 Content sync added `rtok/ci-platforms.md`, `cox/plugins/jev.md` and `stator/THREADS.md` without
 nav entries, which failed `tests/docs-nav.test.mjs`. They are now listed in `src/data/docs-nav.json`.
 Test: `npm test` (26/26). Limitation: every future synced doc still needs a nav entry or an exclude.
+
+## undici bumped to 8.12.3 (lockfile only)
+`npm audit` reported one high-severity issue in `undici` 8.11.2 (transitive via `astro` → `unifont`):
+GHSA-4qv8-2p9j-2685, GHSA-f72v-6w45-q472, GHSA-xjj6-f33q-929c. `npm audit fix` moved it to 8.12.3.
+Test: `npm audit` reports 0 vulnerabilities. Limitation: build-time dependency only; not shipped to the browser.
