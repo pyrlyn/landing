@@ -1,0 +1,18 @@
+---
+// Support: how to reach us. Only public GitHub channels; no email or contact form.
+import Base from "../layouts/Base.astro";
+import { u } from "../lib/site";
+---
+<Base title="Support | Pyrlyn" description="How to get help with Pyrlyn tools: report bugs and ask questions through GitHub Issues in the pyrlyn organization." theme="home">
+  <section class="section container" aria-labelledby="support-title">
+    <div class="prose">
+      <h1 id="support-title">Support</h1>
+      <p>We handle support in public on GitHub.</p>
+      <h2>Bugs and feature requests</h2>
+      <p>Open an issue in the repository of the tool you use, for example <a href="https://github.com/pyrlyn/rtok/issues">pyrlyn/rtok</a>. Each tool page links to its repository. All repositories: <a href="https://github.com/pyrlyn">github.com/pyrlyn</a>.</p>
+      <h2>General questions</h2>
+      <p>For anything not tied to one tool, open an issue in <a href="https://github.com/pyrlyn/.github/issues">pyrlyn/.github</a>.</p>
+      <p>Answers to common questions are in the <a href={u("/#faq")}>FAQ</a>.</p>
+    </div>
+  </section>
+</Base>
