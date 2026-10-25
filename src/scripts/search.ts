@@ -1,6 +1,7 @@
-/* Header search: opens an animated field, queries Algolia over REST (search-only key from build config),
+/* Header search: opens an animated field, asks the SearchProvider (search-provider.ts) for hits,
    renders an ARIA combobox listbox. Styles: src/styles/search.css. */
-type Hit = { objectID: string; title?: string; section?: string; product?: string; url?: string; accent?: string };
+import { provider, type SearchHit } from "./search-provider";
+import { highlightParts, moveActive } from "./search-state";
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -15,11 +16,10 @@ export function initSearch() {
   const input = root.querySelector<HTMLInputElement>(".search__input")!;
   const panel = root.querySelector<HTMLElement>(".search__panel")!;
   const cancel = root.querySelector<HTMLButtonElement>(".search__cancel");
-  const { appId, searchKey, index } = root.dataset as Record<string, string>;
-  const endpoint = `https://${appId}-dsn.algolia.net/1/indexes/${encodeURIComponent(index)}/query`;
-  let hits: Hit[] = [];
+  let hits: SearchHit[] = [];
+  let ctrl: AbortController | null = null;
+  let lastQ = "";
   let active = -1;
-  let seq = 0;
   let timer = 0;
   const isOpen = () => root.dataset.open === "true";
 
@@ -64,11 +64,14 @@ export function initSearch() {
     if (focusBtn) btn.focus();
   }
 
-  function render() {
+  const mark = (t: string) => highlightParts(t, lastQ).map((p) => (p.match ? `<mark>${esc(p.text)}</mark>` : esc(p.text))).join("");
+  function render(error = false) {
     active = hits.length ? 0 : -1;
-    panel.innerHTML = hits.length
-      ? hits.map((h, i) => `<a id="search-opt-${i}" class="search__row" role="option" aria-selected="${i === active}" href="${esc(h.url ?? "#")}" style="--row-accent:${esc(h.accent ?? "")}"><span class="search__icon" aria-hidden="true"></span><span class="search__title">${esc(h.title ?? h.objectID)}</span><span class="search__section">${esc(h.section ?? h.product ?? "")}</span></a>`).join("")
-      : `<p class="search__empty" role="option" aria-disabled="true">No results</p>`;
+    panel.innerHTML = error
+      ? `<p class="search__empty search__empty--error" role="option" aria-disabled="true">Search is unavailable right now. Try again later.</p>`
+      : hits.length
+      ? hits.map((h, i) => `<a id="search-opt-${i}" class="search__row" role="option" aria-selected="${i === active}" href="${esc(h.url)}"${h.accent ? ` style="--row-accent:${esc(h.accent)}"` : ""}><span class="search__icon" aria-hidden="true"></span><span class="search__title">${mark(h.title)}</span><span class="search__section">${esc(h.section ?? "")}</span></a>`).join("")
+      : `<p class="search__empty" role="option" aria-disabled="true">No results for “${esc(lastQ)}”</p>`;
     syncActive();
     showPanel();
   }
@@ -81,45 +84,43 @@ export function initSearch() {
   }
 
   async function query(q: string) {
-    const id = ++seq;
+    ctrl?.abort();
+    const c = (ctrl = new AbortController());
     try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "X-Algolia-Application-Id": appId, "X-Algolia-API-Key": searchKey },
-        body: JSON.stringify({ query: q, hitsPerPage: 8 }),
-      });
-      if (!res.ok) throw new Error(`Algolia ${res.status}`);
-      const data = (await res.json()) as { hits: Hit[] };
-      if (id !== seq || !isOpen()) return;
-      hits = data.hits;
+      const res = await provider(q, c.signal);
+      if (c.signal.aborted || !isOpen()) return;
+      lastQ = q;
+      hits = res;
       render();
     } catch (e) {
-      if (id !== seq) return;
+      if (c.signal.aborted) return;
+      lastQ = q;
       hits = [];
-      render();
+      render(true);
       console.warn("[search]", e);
     }
   }
+  const reset = () => { clearTimeout(timer); ctrl?.abort(); hits = []; hidePanel(); };
 
   btn.addEventListener("click", open);
-  cancel?.addEventListener("click", () => { input.value = ""; close(); });
+  cancel?.addEventListener("click", () => { input.value = ""; reset(); close(); });
   input.addEventListener("input", () => {
     clearTimeout(timer);
     const q = input.value.trim();
-    if (!q) { seq++; hits = []; hidePanel(); return; }
-    timer = window.setTimeout(() => query(q), 120);
+    if (!q) return reset();
+    timer = window.setTimeout(() => query(q), 150);
   });
   input.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
       e.preventDefault();
-      if (input.value) { input.value = ""; seq++; hits = []; hidePanel(); } else close();
+      if (input.value) { input.value = ""; reset(); } else close();
     } else if ((e.key === "ArrowDown" || e.key === "ArrowUp") && hits.length) {
       e.preventDefault();
-      active = (active + (e.key === "ArrowDown" ? 1 : -1) + hits.length) % hits.length;
+      active = moveActive(active, e.key === "ArrowDown" ? 1 : -1, hits.length);
       syncActive();
     } else if (e.key === "Enter" && active >= 0 && hits[active]?.url) {
       e.preventDefault();
-      location.href = hits[active].url!;
+      location.href = hits[active].url;
     }
   });
   root.addEventListener("focusout", (e) => {

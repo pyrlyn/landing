@@ -7,8 +7,7 @@ name: release
 # first, the real run only if the check run succeeded.
 # Deploy needs: repo variable SEMAPHORE_URL (reachable from GitHub runners), secret
 # SEMAPHORE_API_TOKEN, optional variables SEMAPHORE_PROJECT_ID (default 2) and
-# SEMAPHORE_TEMPLATE_ID (default 12). Build reads repo variables ALGOLIA_APP_ID and
-# ALGOLIA_SEARCH_KEY (search-only key, public); empty = search off. POSTHOG_KEY and
+# SEMAPHORE_TEMPLATE_ID (default 12). POSTHOG_KEY and
 # POSTHOG_HOST (repo variables, public) enable PostHog; empty key = off. API_URL (repo variable,
 # the backend GraphQL endpoint) supplies Pro prices and the wishlist; empty = placeholders.
 on:
@@ -67,9 +66,6 @@ jobs:
         env:
           SITE_URL: https://pyrlyn.dev
           API_URL: ${{ vars.API_URL }}
-          ALGOLIA_APP_ID: ${{ vars.ALGOLIA_APP_ID }}
-          ALGOLIA_SEARCH_KEY: ${{ vars.ALGOLIA_SEARCH_KEY }}
-          ALGOLIA_INDEX: pyrlyn
           GA_MEASUREMENT_ID: G-61CRNDXXYK
           POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
           POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
