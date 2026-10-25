@@ -9,7 +9,8 @@ name: release
 # SEMAPHORE_API_TOKEN, optional variables SEMAPHORE_PROJECT_ID (default 2) and
 # SEMAPHORE_TEMPLATE_ID (default 12). Build reads repo variables ALGOLIA_APP_ID and
 # ALGOLIA_SEARCH_KEY (search-only key, public); empty = search off. POSTHOG_KEY and
-# POSTHOG_HOST (repo variables, public) enable PostHog; empty key = off.
+# POSTHOG_HOST (repo variables, public) enable PostHog; empty key = off. API_URL (repo variable,
+# the backend GraphQL endpoint) supplies Pro prices and the wishlist; empty = placeholders.
 on:
   workflow_dispatch:
     inputs:
@@ -65,6 +66,7 @@ jobs:
       - name: Build
         env:
           SITE_URL: https://pyrlyn.dev
+          API_URL: ${{ vars.API_URL }}
           ALGOLIA_APP_ID: ${{ vars.ALGOLIA_APP_ID }}
           ALGOLIA_SEARCH_KEY: ${{ vars.ALGOLIA_SEARCH_KEY }}
           ALGOLIA_INDEX: pyrlyn

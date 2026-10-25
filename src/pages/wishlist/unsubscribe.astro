@@ -1,0 +1,8 @@
+---
+// The backend's wishlist mails link here (apps/api Wishlist: `wishlist/unsubscribe?token=`).
+import Base from "../../layouts/Base.astro";
+import WishlistLink from "../../components/WishlistLink.astro";
+---
+<Base title="Leave the Pro wishlist | Pyrlyn" description="Remove your address from a Pyrlyn Pro wishlist; you get no more mail about that tool's paid plans." theme="home" noindex analytics={false}>
+  <WishlistLink action="unsubscribe" />
+</Base>

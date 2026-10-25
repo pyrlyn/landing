@@ -1,0 +1,18 @@
+---
+// The Pro wishlist action. Products the backend knows get an email form (src/scripts/pro.ts sends it
+// through @pyrlyn/sdk); the rest, and every product on a build without the API, keep the disabled button.
+// The live button takes the page accent, not the product's: only the page accent has a light-mode
+// variant, and a bright accent under white text is unreadable.
+import { hasWishlist, type Tool } from "../lib/catalog";
+interface Props { tool: Tool; describedby: string }
+const { tool, describedby } = Astro.props;
+---
+{hasWishlist(tool) ? (
+  <form class="wishlist" data-wishlist={tool.id}>
+    <input class="wishlist__email" type="email" name="email" required maxlength="254" autocomplete="email" placeholder="you@example.com" aria-label={`Email for the ${tool.data.title} Pro wishlist`} />
+    <button class="btn btn--primary btn--block" type="submit" disabled aria-describedby={describedby}>Join the Pro wishlist</button>
+    <p class="wishlist__status muted small" role="status" aria-live="polite"></p>
+  </form>
+) : (
+  <button class="btn btn--primary btn--block" type="button" aria-disabled="true" aria-describedby={describedby} style={`--accent:${tool.data.accent}`}>Join the Pro waitlist</button>
+)}
