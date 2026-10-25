@@ -748,6 +748,7 @@
 .graph__edge--agent { stroke: color-mix(in oklch, var(--accent-2) 70%, transparent); stroke-dasharray: 1; }
 .graph__node rect { fill: rgb(10 22 34); stroke: color-mix(in oklch, var(--accent) 45%, transparent); }
 .graph__base { fill: rgb(10 22 34); }
+html[data-mode="light"] .graph__node rect, html[data-mode="light"] .graph__base { fill: var(--surface-opaque); }
 .graph__node--agent rect { stroke: color-mix(in oklch, var(--accent-2) 60%, transparent); }
 .graph__node text { fill: var(--fg-strong); font-family: var(--font-mono); font-size: 13px; text-anchor: middle; }
 .graph__node--hub text { fill: #04121c; font-weight: 700; font-size: 11px; }
