@@ -34,6 +34,40 @@ export const stubProvider: SearchProvider = (q, signal) =>
     signal.addEventListener("abort", () => { clearTimeout(t); reject(new DOMException("aborted", "AbortError")); }, { once: true });
   });
 
-// TODO(Toha): wire Algolia here — implement a SearchProvider that queries the index (honour `signal`)
-// and maps each record to SearchHit { id, title, section?, url, accent? }, then export it as `provider`.
-export const provider: SearchProvider = stubProvider;
+export type AlgoliaConfig = { appId?: string; searchKey?: string; index?: string };
+type AlgoliaRecord = { objectID: string; title?: string; section?: string; product?: string; url?: string; accent?: string };
+
+/** Algolia over REST (search-only key from build config, see src/lib/config.ts). Toha's request code from #49. */
+export function algoliaProvider({ appId, searchKey, index = "pyrlyn" }: Required<Pick<AlgoliaConfig, "appId" | "searchKey">> & AlgoliaConfig): SearchProvider {
+  const endpoint = `https://${appId}-dsn.algolia.net/1/indexes/${encodeURIComponent(index)}/query`;
+  return async (q, signal) => {
+    const res = await fetch(endpoint, {
+      method: "POST",
+      signal,
+      headers: { "X-Algolia-Application-Id": appId, "X-Algolia-API-Key": searchKey },
+      body: JSON.stringify({ query: q, hitsPerPage: 8 }),
+    });
+    if (!res.ok) throw new Error(`Algolia ${res.status}`);
+    const data = (await res.json()) as { hits: AlgoliaRecord[] };
+    return data.hits.map((h) => ({
+      id: h.objectID,
+      title: h.title ?? h.objectID,
+      section: h.section ?? h.product,
+      url: h.url ?? "#",
+      accent: h.accent,
+    }));
+  };
+}
+
+/**
+ * Picks the data source:
+ * - Algolia keys configured -> Algolia (dev and prod);
+ * - no keys, dev server     -> local stub, so the UI can be reviewed;
+ * - no keys, production     -> null: the UI shows "Search isn't available yet" and makes no requests.
+ * TODO(Toha): the Algolia index (default "pyrlyn") still has to be created and filled with records
+ * { objectID, title, url, section?, accent? } (admin key script or Algolia Crawler); until then queries return nothing.
+ */
+export function pickProvider(cfg: AlgoliaConfig, dev: boolean): SearchProvider | null {
+  if (cfg.appId && cfg.searchKey) return algoliaProvider({ ...cfg, appId: cfg.appId, searchKey: cfg.searchKey });
+  return dev ? stubProvider : null;
+}

@@ -1,6 +1,6 @@
 /* Header search: opens an animated field, asks the SearchProvider (search-provider.ts) for hits,
    renders an ARIA combobox listbox. Styles: src/styles/search.css. */
-import { provider, type SearchHit } from "./search-provider";
+import { pickProvider, type SearchHit } from "./search-provider";
 import { highlightParts, moveActive } from "./search-state";
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -16,6 +16,8 @@ export function initSearch() {
   const input = root.querySelector<HTMLInputElement>(".search__input")!;
   const panel = root.querySelector<HTMLElement>(".search__panel")!;
   const cancel = root.querySelector<HTMLButtonElement>(".search__cancel");
+  const { appId, searchKey, index } = root.dataset;
+  const provider = pickProvider({ appId, searchKey, index }, import.meta.env.DEV);
   let hits: SearchHit[] = [];
   let ctrl: AbortController | null = null;
   let lastQ = "";
@@ -67,7 +69,9 @@ export function initSearch() {
   const mark = (t: string) => highlightParts(t, lastQ).map((p) => (p.match ? `<mark>${esc(p.text)}</mark>` : esc(p.text))).join("");
   function render(error = false) {
     active = hits.length ? 0 : -1;
-    panel.innerHTML = error
+    panel.innerHTML = !provider
+      ? `<p class="search__empty" role="option" aria-disabled="true">Search isn’t available yet.</p>`
+      : error
       ? `<p class="search__empty search__empty--error" role="option" aria-disabled="true">Search is unavailable right now. Try again later.</p>`
       : hits.length
       ? hits.map((h, i) => `<a id="search-opt-${i}" class="search__row" role="option" aria-selected="${i === active}" href="${esc(h.url)}"${h.accent ? ` style="--row-accent:${esc(h.accent)}"` : ""}><span class="search__icon" aria-hidden="true"></span><span class="search__title">${mark(h.title)}</span><span class="search__section">${esc(h.section ?? "")}</span></a>`).join("")
@@ -85,6 +89,7 @@ export function initSearch() {
 
   async function query(q: string) {
     ctrl?.abort();
+    if (!provider) { lastQ = q; hits = []; return render(); }
     const c = (ctrl = new AbortController());
     try {
       const res = await provider(q, c.signal);

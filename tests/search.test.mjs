@@ -33,3 +33,10 @@ test("stub provider filters locally and aborts", async () => {
   await assert.rejects(pr, { name: "AbortError" });
   await assert.rejects(p.stubProvider("error", new AbortController().signal));
 });
+
+test("pickProvider: algolia with keys, stub in dev, null in prod", () => {
+  assert.equal(p.pickProvider({}, true), p.stubProvider);
+  assert.equal(p.pickProvider({ appId: "A" }, false), null);
+  assert.equal(typeof p.pickProvider({ appId: "A", searchKey: "k" }, false), "function");
+  assert.notEqual(p.pickProvider({ appId: "A", searchKey: "k" }, true), p.stubProvider);
+});
