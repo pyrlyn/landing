@@ -5,7 +5,7 @@
 import Icon from "./Icon.astro";
 import Picture from "./Picture.astro";
 import { u } from "../lib/site";
-import { proFor, versionLabel } from "../lib/catalog";
+import { proFor, hasPro, versionLabel } from "../lib/catalog";
 import type { CollectionEntry } from "astro:content";
 interface Hotspot { tool: string; label: string; text: string }
 interface Props { tools: CollectionEntry<"projects">[]; hotspots: Hotspot[] }
@@ -25,7 +25,7 @@ const n = tools.length;
                 <span class="ring__meta"><span class="badge badge--version" style={`--accent:${t.data.accent}`}>{versionLabel(t)}</span></span>
                 <strong class="ring__title">{t.data.title}<span>.</span></strong>
                 <span class="ring__tag">{t.data.tagline}</span>
-                <span class="ring__foot"><span>Free · Pro <span data-pro-price={t.id}>{proFor(t).price}</span>*</span><Icon name="arrow" size={16} /></span>
+                <span class="ring__foot"><span>{hasPro(t) ? <>Free · Pro <span data-pro-price={t.id}>{proFor(t).price}</span>*</> : "Free"}</span><Icon name="arrow" size={16} /></span>
               </a>
               {hs && (
                 <div class="hotspot ring__hs">
