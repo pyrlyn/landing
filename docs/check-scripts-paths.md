@@ -1,23 +1,22 @@
 # Post-build check scripts: dist path validation
 
 ## How it works
-`scripts/check-seo.mjs` and `scripts/check-docs.mjs` take an optional `distDir` CLI argument.
-Validation lives in `scripts/lib/dist-dir.mjs` (`resolveDistDir`). It must be a relative path made of `[A-Za-z0-9_.-]` segments, with no `..`, and must resolve
-inside the repository root. Anything else exits with code 1 before any file is read.
-This fixes SonarCloud `jssecurity:S8707` (path traversal from CLI arguments).
+`scripts/check-seo.mjs` and `scripts/check-docs.mjs` always check `<repo>/dist`
+(`scripts/lib/dist-dir.mjs`). They take no path argument; any argument exits with code 1.
+The path never comes from user input, which fixes SonarCloud `jssecurity:S8707`.
 
 ## Enable
 Always on; no configuration.
 
 ## Disable
-Not configurable. To check a build outside the repo, copy or symlink it under the repo first.
+Not configurable. To check another build, copy it to `dist/` first.
 
 ## Test
 - `npm run build && npm run check:seo && npm run check:docs` passes.
-- `node scripts/check-seo.mjs ../x` and `node scripts/check-seo.mjs /etc` exit 1 with "invalid dist dir".
+- `node scripts/check-seo.mjs x` exits 1 with "unexpected argument".
 
 ## Limitations
-A symlink inside the repo that points outside is still followed.
+Only `dist/` can be checked.
 
 # Related fixes in the same change
 
