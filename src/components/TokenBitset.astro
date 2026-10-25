@@ -3,7 +3,9 @@
 // counts the removed ones. Illustration of the idea only — not a measurement.
 const target = "KKTCKCKTTKKCKTKK".split("");
 const removed = target.filter((c) => c !== "K").length;
+import TokenBitsetIsland from "./islands/TokenBitset/TokenBitset";
 ---
+<TokenBitsetIsland client:idle>
 <div class="bitset glass" data-bitset aria-labelledby="bitset-title">
   <div class="bitset__head">
     <h3 id="bitset-title" class="h3">Context, block by block</h3>
@@ -17,3 +19,4 @@ const removed = target.filter((c) => c !== "K").length;
   </ul>
   <p class="muted small">Illustration, not a measurement: {16 - removed} blocks kept, {removed} thinned or cut. In rtok a saving only counts when a Measurement row records it.</p>
 </div>
+</TokenBitsetIsland>
