@@ -43,6 +43,8 @@ const tools = await getTools();
 const current = tools.find((x) => x.id === theme);
 const withDocs = new Set(productsWithDocs());
 const docTools = tools.filter((x) => withDocs.has(x.id));
+const ghHref = current?.data.repo ?? "https://github.com/pyrlyn";
+const ghLabel = `${current?.data.title ?? "Pyrlyn"} on GitHub`;
 const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
 ---
 <!doctype html>
@@ -141,7 +143,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
             <span class="theme-toggle__sun"><Icon name="sun" size={18} /></span>
             <span class="theme-toggle__moon"><Icon name="moon" size={18} /></span>
           </button>
-          <a class="btn btn--glass nav__gh" href="https://github.com/pyrlyn"><Icon name="github" size={16} /> GitHub</a>
+          <a class="nav__gh" href={ghHref} aria-label={ghLabel} title={ghLabel}><Icon name="github" size={18} /></a>
           <a class="btn btn--primary tw:max-[459px]:px-4! tw:max-[359px]:px-3!" href={u("/#catalog")}>Browse tools</a>
         </div>
       </div>
