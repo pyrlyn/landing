@@ -185,54 +185,6 @@ function initHotspots() {
   });
 }
 
-/* Terminal demo: type once in view; Pause / Replay; static final state under reduced motion. */
-function initTerminals() {
-  for (const term of document.querySelectorAll<HTMLElement>("[data-term]")) {
-    const lines = [...term.querySelectorAll<HTMLElement>(".term__line")];
-    const ctl = term.querySelector<HTMLButtonElement>("[data-term-ctl]");
-    const typed = lines.map((l) => l.querySelector<HTMLElement>(".term__typed"));
-    const full = typed.map((t) => t?.textContent ?? "");
-    let timer = 0, i = 0, c = 0, playing = false, done = false;
-    const showAll = () => { lines.forEach((l, k) => { l.removeAttribute("data-hide"); if (typed[k]) typed[k]!.textContent = full[k]; }); };
-    const setCtl = () => { if (ctl) ctl.textContent = playing ? "Pause" : done ? "Replay" : "Play"; };
-    const step = () => {
-      if (!playing) return;
-      if (i >= lines.length) { playing = false; done = true; setCtl(); return; }
-      const line = lines[i], t = typed[i];
-      line.removeAttribute("data-hide");
-      if (t && c <= full[i].length) {
-        t.textContent = full[i].slice(0, c++);
-        timer = window.setTimeout(step, c === 1 ? 380 : 24 + Math.random() * 38);
-        return;
-      }
-      i++; c = 0;
-      timer = window.setTimeout(step, t ? 260 : 110);
-    };
-    const start = () => {
-      clearTimeout(timer); i = 0; c = 0; done = false; playing = true;
-      lines.forEach((l, k) => { if (k < lines.length) l.setAttribute("data-hide", ""); if (typed[k]) typed[k]!.textContent = ""; });
-      setCtl(); step();
-    };
-    if (ctl) {
-      ctl.hidden = false; setCtl();
-      ctl.addEventListener("click", () => {
-        if (playing) { playing = false; clearTimeout(timer); setCtl(); }
-        else if (done || i === 0) start();
-        else { playing = true; setCtl(); step(); }
-      });
-    }
-    if (term.hasAttribute("data-term-manual")) {
-      term.addEventListener("term:play", () => { if (reduceMotion.matches) { showAll(); done = true; setCtl(); } else if (!playing) start(); });
-      term.addEventListener("term:stop", () => { if (playing) { playing = false; clearTimeout(timer); showAll(); done = true; setCtl(); } });
-      continue;
-    }
-    if (reduceMotion.matches) { done = true; setCtl(); continue; }
-    const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); start(); } }, { threshold: 0.35 });
-    io.observe(term);
-    reduceMotion.addEventListener("change", () => { if (reduceMotion.matches) { playing = false; clearTimeout(timer); showAll(); done = true; setCtl(); } });
-  }
-}
-
 /* rtok bitset: blocks settle into their target state; Δtok counts removed blocks. */
 function initBitset() {
   const root = document.querySelector<HTMLElement>("[data-bitset]");
@@ -345,47 +297,6 @@ function initParticles() {
   reduceMotion.addEventListener("change", () => { last = -1; tick(); });
 }
 
-/* cox: perspective scenes; tabs + ←/→; active panel comes forward and types its README usage. */
-function initScenes() {
-  const root = document.querySelector<HTMLElement>("[data-scenes]");
-  if (!root) return;
-  const tabs = [...root.querySelectorAll<HTMLButtonElement>("[role=tab]")];
-  const panels = [...root.querySelectorAll<HTMLElement>("[data-scene]")];
-  const stage = root.querySelector<HTMLElement>(".scenes__stage")!;
-  let active = 0, seen = false;
-  root.classList.add("is-ready");
-  const set = (k: number, focus = false) => {
-    const prev = active;
-    active = (k + panels.length) % panels.length;
-    stage.style.setProperty("--active", String(active));
-    tabs.forEach((t, i) => { const on = i === active; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; });
-    panels.forEach((p, i) => {
-      const on = i === active;
-      p.classList.toggle("is-active", on);
-      p.toggleAttribute("inert", !on);
-      p.style.setProperty("--off", String(Math.abs(i - active)));
-    });
-    if (focus) tabs[active].focus();
-    if (seen) {
-      if (prev !== active) panels[prev].querySelector("[data-term]")?.dispatchEvent(new Event("term:stop"));
-      panels[active].querySelector("[data-term]")?.dispatchEvent(new Event("term:play"));
-    }
-  };
-  tabs.forEach((t, i) => t.addEventListener("click", () => set(i)));
-  panels.forEach((p, i) => p.addEventListener("click", () => { if (i !== active) set(i); }));
-  root.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") { e.preventDefault(); set(active + 1, root.contains(document.activeElement) && (document.activeElement as HTMLElement).getAttribute("role") === "tab"); }
-    if (e.key === "ArrowLeft") { e.preventDefault(); set(active - 1, root.contains(document.activeElement) && (document.activeElement as HTMLElement).getAttribute("role") === "tab"); }
-    // Tabs pattern: Home / End jump to the first / last tab.
-    if ((e.key === "Home" || e.key === "End") && (e.target as Element).getAttribute("role") === "tab") {
-      e.preventDefault(); set(e.key === "Home" ? 0 : panels.length - 1, true);
-    }
-  });
-  set(0);
-  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); seen = true; set(active); } }, { threshold: 0.35 });
-  io.observe(root);
-}
-
 /* ketch: package chip travels the route on offset-path, stroke draws with scroll; rollback runs back. */
 function initRoute() {
   const route = document.querySelector<HTMLElement>("[data-route]");
@@ -451,10 +362,8 @@ function initScrollReveal() {
 
 initSearch();
 initScrollReveal();
-initTerminals();
 initGraph();
 initParticles();
-initScenes();
 initRoute();
 initBitset();
 initHotspots();
