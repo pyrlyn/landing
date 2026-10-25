@@ -143,6 +143,52 @@
 @media (min-width: 900px) { .nav__links { display: flex; } }
 @media (min-width: 1100px) { .nav__gh { display: inline-flex; } }
 
+/* ---------- Auto-hiding header (product and docs pages) ----------
+   CSS-driven: the header shows on load, slides up after --header-autohide (transition-delay, started by
+   @starting-style), and comes back at once on hover, on keyboard focus inside it, or when pinned from the
+   chevron (data-pinned, main.ts initNavPin). A slim glass strip with the logo and the chevron stays at the
+   top. Transform/opacity only, so nothing below moves. Hidden items are not inert: tabbing into them
+   reveals the header first, so focus is never on something invisible. */
+:root { --header-autohide: 4s; --nav-strip: 52px; } /* shared by the header and the docs nav */
+.nav--auto { pointer-events: none; }
+.nav--auto .nav__inner, .nav__peek-pill { pointer-events: auto; }
+.nav--auto .nav__inner { transition: transform .45s var(--ease), opacity .3s var(--ease); }
+.nav--auto:not(:hover, :has(:focus-visible), [data-pinned]) .nav__inner {
+  transform: translateY(calc(-100% - var(--s-4))); opacity: 0;
+  transition-delay: var(--header-autohide);
+}
+@starting-style { .nav--auto .nav__inner { transform: none; opacity: 1; } }
+.nav__peek { position: absolute; inset: var(--s-2) var(--s-4) auto; max-width: calc(var(--container) - 2 * var(--s-5)); margin-inline: auto; pointer-events: none; }
+.nav__peek-pill {
+  display: flex; align-items: center; gap: var(--s-1); width: fit-content; height: 44px; padding: 0 0 0 var(--s-3);
+  border-radius: var(--r-full); opacity: 0; transition: opacity .3s var(--ease);
+}
+.nav__peek-pill .brand svg { height: 20px; width: auto; }
+.nav--auto:not(:hover, :has(:focus-visible), [data-pinned]) .nav__peek-pill { opacity: 1; transition-delay: var(--header-autohide); }
+.nav--auto .nav__peek-pill:has(:focus-visible) { opacity: 1; }
+.nav__peek-btn {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--r-full);
+  cursor: pointer; color: var(--muted); background: transparent; transition: color .2s, background-color .2s;
+}
+.nav__peek .nav__peek-btn svg { transform: rotate(180deg); } /* points down: "pull the menu down" */
+/* "Hide menu" (chevron up) inside the header, only while pinned. */
+.nav__unpin { display: none; flex: none; box-shadow: inset 0 0 0 1px var(--hairline); }
+.nav--auto[data-pinned] .nav__unpin { display: inline-grid; }
+@media (max-width: 599px) { .nav--auto[data-pinned] .nav__unpin { display: none; } }
+.nav__peek-btn:hover { color: var(--fg-strong); background: var(--hover-1, rgb(255 255 255 / .05)); }
+.nav__peek-btn:focus-visible { box-shadow: var(--focus); }
+/* Docs nav follows the strip: --dnav-top (docs.css) under the full header, var(--nav-strip) under the strip.
+   :has() cannot nest, so the collapsed state is the default here and the shown state overrides it. */
+html:has(.nav--auto) .dnav {
+  transform: translateY(calc(var(--nav-strip) - var(--dnav-top)));
+  transition: transform .45s var(--ease) var(--header-autohide);
+}
+html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .dnav { transform: none; transition-delay: 0s; }
+@starting-style { html:has(.nav--auto) .dnav { transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .nav--auto .nav__inner, .nav__peek-pill, html:has(.nav--auto) .dnav { transition: none !important; transition-delay: 0s !important; }
+}
+
 /* ---------- Hero (shared) ---------- */
 .hero { display: grid; gap: var(--s-8); align-items: center; padding-block: var(--s-8) var(--s-8); }
 @media (min-width: 1024px) { .hero { grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); gap: var(--s-6); padding-block: var(--s-9); min-height: min(860px, calc(100vh - 72px)); } }

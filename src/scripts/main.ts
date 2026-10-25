@@ -226,6 +226,27 @@ function initHotspots() {
 }
 
 /* Products menu: close on Esc / outside click, keep focus sensible. */
+/* Product-page header: collapse, hover and keyboard reveal are CSS (global.css, "Auto-hiding header").
+   This only pins it open from the chevron and keeps aria-expanded/label in sync. */
+function initNavPin() {
+  const nav = document.querySelector<HTMLElement>("[data-nav-auto]");
+  const peek = nav?.querySelector<HTMLButtonElement>(".nav__peek [data-nav-pin]");
+  if (!nav || !peek) return;
+  const unpin = nav.querySelector<HTMLButtonElement>(".nav__unpin");
+  const set = (pinned: boolean) => {
+    const hadFocus = nav.contains(document.activeElement);
+    nav.toggleAttribute("data-pinned", pinned);
+    peek.setAttribute("aria-expanded", String(pinned));
+    if (pinned) unpin?.focus({ preventScroll: true });
+    else if (hadFocus) peek.focus({ preventScroll: true });
+  };
+  peek.addEventListener("click", () => set(true));
+  unpin?.addEventListener("click", () => set(false));
+  // Below 600px there is no room for the "Hide menu" button: a tap outside or Escape unpins.
+  document.addEventListener("pointerdown", (e) => { if (nav.hasAttribute("data-pinned") && !nav.contains(e.target as Node)) set(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && nav.hasAttribute("data-pinned")) set(false); });
+}
+
 function initMenu() {
   const menus = [...document.querySelectorAll<HTMLDetailsElement>("[data-menu]")];
   if (!menus.length) return;
@@ -626,6 +647,7 @@ initSearch();
 initIntro();
 initScrollReveal();
 initMenu();
+initNavPin();
 initTerminals();
 initRing();
 initGraph();
