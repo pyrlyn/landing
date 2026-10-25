@@ -1,18 +1,84 @@
 ---
-// About us / Our team. Placeholder content: fill in roles and bios before relying on it.
+// About us / Our team. Ivan's photo in the center, AI tools he works with around it.
+// TODO(photo): drop public/team/ivan.jpg; the build picks it up, otherwise the placeholder SVG is used.
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import Base from "../layouts/Base.astro";
 import { u } from "../lib/site";
+import { TEAM_TOOLS } from "../data/team-tools";
+
+const hasPhoto = existsSync(join(process.cwd(), "public/team/ivan.jpg"));
+const photo = u(hasPhoto ? "/team/ivan.jpg" : "/team/ivan-placeholder.svg");
+const n = TEAM_TOOLS.length;
 ---
-<Base title="Our team | Pyrlyn" description="About Pyrlyn and the people behind its open-source AI developer tools: rtok, ketch, cox, runa, swarfr, Stator and more." theme="home">
-  <section class="section container" aria-labelledby="team-title">
-    <div class="prose">
-      <h1 id="team-title">Our team</h1>
-      <p>Pyrlyn builds open-source AI developer tools. This page is a placeholder and will be filled in.</p>
-      <h2>People</h2>
-      <ul>
-        <li>Ivan Tugay — <a href="https://github.com/listepo">github.com/listepo</a></li>
+<Base title="Our team | Pyrlyn" description="About Pyrlyn: open-source developer tools in Rust, Swift and TypeScript, such as rtok, cox, ketch, runa and Stator, and the engineer who builds them." theme="home">
+  <section class="section container team" aria-labelledby="team-title">
+    <h1 id="team-title" class="team__title">Our team</h1>
+
+    <div class="team__orbit" style={`--n:${n}`}>
+      <figure class="team__me">
+        <img src={photo} alt="Ivan Tugay" width="240" height="240" loading="eager" />
+        <figcaption>Ivan Tugay</figcaption>
+      </figure>
+      <ul class="team__tools" aria-label="AI tools Ivan works with">
+        {TEAM_TOOLS.map((t, i) => (
+          <li class="team__tool" style={`--i:${i}`}>
+            <span class="team__head" aria-hidden="true">
+              {t.path
+                ? <svg aria-hidden="true" viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d={t.path} /></svg>
+                : <span class="team__mono">{t.monogram}</span>}
+            </span>
+            <span class="team__body" aria-hidden="true"></span>
+            <span class="team__name">{t.name}</span>
+          </li>
+        ))}
       </ul>
-      <p>Want to reach us? See <a href={u("/support")}>Support</a>.</p>
+    </div>
+    <p class="team__note">The figures around the photo are AI tools used day to day. Names and logos belong to their owners; no affiliation or endorsement is implied.</p>
+
+    <div class="prose team__text">
+      <h2>About Pyrlyn</h2>
+      <p>Pyrlyn is a GitHub organization of open-source developer tools, most of them written in Rust, with Swift and TypeScript where a platform needs it. Every tool has a free open-source edition. Examples:</p>
+      <ul>
+        <li><a href={u("/rtok/")}>rtok</a>: a token-reduction CLI for AI coding agents (hooks, MCP server and API proxy).</li>
+        <li><a href={u("/cox/")}>cox</a>: a modular terminal coding agent with a safe, event-driven core.</li>
+        <li><a href={u("/ketch/")}>ketch</a>: a single-binary CLI package manager that installs releases straight from GitHub.</li>
+        <li><a href={u("/runa/")}>runa</a>: a local-first AI runner with an OpenAI-compatible server.</li>
+        <li><a href={u("/stator/")}>Stator</a>: an ahead-of-time TypeScript/JavaScript compiler to native binaries.</li>
+        <li><a href="https://github.com/pyrlyn/crates">crates</a>: small focused Rust crates shared by ketch and rtok.</li>
+      </ul>
+      <p>Shared CI lives in <a href="https://github.com/pyrlyn/ci">pyrlyn/ci</a> (reusable GitHub Actions workflows). This site is built from <a href="https://github.com/pyrlyn/landing">pyrlyn/landing</a>.</p>
+
+      <h2>About me</h2>
+      <p>I'm Ivan Tugay (<a href="https://github.com/listepo">listepo</a>), an engineer. I work with Cursor and GitHub every day and build Pyrlyn: the backend, this landing site, CI on GitHub Actions and code quality checks with SonarCloud.</p>
+      <p>Need help? See <a href={u("/support")}>Support</a>.</p>
     </div>
   </section>
 </Base>
+
+<style>
+  .team__title { text-align: center; }
+  .team__orbit { --r: min(38vw, 220px); position: relative; width: calc(var(--r) * 2 + 120px); aspect-ratio: 1; margin: 2rem auto 1rem; max-width: 100%; }
+  .team__me { position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%); margin: 0; text-align: center; }
+  .team__me img { width: clamp(110px, 26vw, 180px); height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 3px solid var(--accent); }
+  .team__me figcaption { margin-top: .4rem; font-weight: 600; }
+  .team__tools { list-style: none; margin: 0; padding: 0; }
+  .team__tool { position: absolute; left: 50%; top: 50%; display: flex; flex-direction: column; align-items: center; width: 92px;
+    transform: rotate(calc(360deg / var(--n) * var(--i))) translateY(calc(var(--r) * -1)) rotate(calc(-360deg / var(--n) * var(--i))) translate(-50%, -50%); transform-origin: 0 0; }
+  .team__head { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--glass-bg-strong, #1e293b); border: 1px solid var(--line-strong, #334155); color: var(--text, inherit); }
+  .team__mono { font-weight: 700; font-size: 1.2rem; }
+  .team__body { width: 34px; height: 22px; margin-top: 3px; border-radius: 17px 17px 6px 6px; background: color-mix(in srgb, var(--accent) 35%, transparent); }
+  .team__name { margin-top: .3rem; font-size: var(--fs-xs, .75rem); color: var(--muted); text-align: center; line-height: 1.2; }
+  .team__note { text-align: center; font-size: var(--fs-xs, .75rem); color: var(--muted); max-width: 40rem; margin: 0 auto 2rem; }
+  .team__text { margin: 0 auto; }
+  @media (prefers-reduced-motion: no-preference) {
+    .team__head { transition: transform .2s ease; }
+    .team__tool:hover .team__head { transform: translateY(-3px); }
+  }
+  @media (max-width: 560px) {
+    .team__orbit { width: auto; aspect-ratio: auto; display: flex; flex-direction: column; align-items: center; gap: 1.25rem; }
+    .team__me { position: static; transform: none; }
+    .team__tools { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem .5rem; }
+    .team__tool { position: static; transform: none; width: auto; }
+  }
+</style>
