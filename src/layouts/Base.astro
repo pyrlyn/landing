@@ -1,7 +1,4 @@
 ---
-import "@fontsource-variable/inter";
-// Preload the Latin subset so text does not reflow when Inter replaces the fallback (CLS).
-import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import "../styles/tailwind.css";
 import "../styles/products.css";
@@ -10,11 +7,14 @@ import "../styles/search.css";
 import "../styles/light.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
+import ProPrices from "../components/islands/ProPrices/ProPrices";
+import NavPin from "../components/islands/NavPin/NavPin";
+import PageMotion from "../components/islands/PageMotion/PageMotion";
+import HeroStage from "../components/islands/HeroStage/HeroStage";
 import Search from "../components/Search.astro";
 import { API_URL, GA_MEASUREMENT_ID, POSTHOG_HOST, POSTHOG_KEY } from "../lib/config";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
-import { getTools, proFor, versionLabel, groupByCategory } from "../lib/catalog";
-import { productsWithDocs } from "../lib/docs";
+import { getTools, proFor, hasPro, versionLabel, groupByCategory } from "../lib/catalog";
 import SEO from "../components/SEO.astro";
 
 interface Props {
@@ -41,9 +41,13 @@ const vars = `--accent:${t.accent};--accent-dark:${t.accent};--accent-2:${t.acce
 const og = new URL(u(`/images/${t.images}/og.jpg`), Astro.site).href;
 const tools = await getTools();
 const current = tools.find((x) => x.id === theme);
-const withDocs = new Set(productsWithDocs());
-const docTools = tools.filter((x) => withDocs.has(x.id));
+const ghHref = current?.data.repo ?? "https://github.com/pyrlyn";
+const ghLabel = `${current?.data.title ?? "Pyrlyn"} on GitHub`;
 const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
+import Menu from "../components/islands/Menu/Menu";
+import ThemeToggle from "../components/islands/ThemeToggle/ThemeToggle";
+import CopyFeedback from "../components/islands/CopyFeedback/CopyFeedback";
+import IntroRing from "../components/islands/IntroRing/IntroRing";
 ---
 <!doctype html>
 <html lang="en" style={vars} data-theme={theme} class={inDocs ? "is-still" : undefined}>
@@ -53,18 +57,25 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
     {!inDocs && <script is:inline>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("intro")</script>}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SEO {title} {description} {ogType} {imageAlt} {jsonLd} {noindex} image={og} />
-    <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes. -->
+    <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes.
+         Stays an inline script on purpose (not an island): islands hydrate after the HTML is parsed, which is too late to avoid a dark/light flash. The ThemeToggle island only changes the mode afterwards. -->
     <script is:inline define:vars={{ darkBg: t.bg }}>(function(){var d=document.documentElement,s=null;try{s=localStorage.getItem("pyrlyn-theme")}catch(e){}var m=s==="light"||s==="dark"?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");d.setAttribute("data-mode",m);d.dataset.darkBg=darkBg;d.style.colorScheme=m;window.__applyThemeMeta=function(m){var c=document.getElementById("meta-theme-color");if(c)c.setAttribute("content",m==="light"?"#f4f6f9":darkBg);var k=document.getElementById("meta-color-scheme");if(k)k.setAttribute("content",m)};document.addEventListener("DOMContentLoaded",function(){window.__applyThemeMeta(m)});window.__applyThemeMeta(m)})()</script>
     <meta id="meta-color-scheme" name="color-scheme" content="dark light" />
     <meta id="meta-theme-color" name="theme-color" content={t.bg} />
     <!-- Pyrlyn favicon. public/pyrlyn/ and public/favicon.svg (the previous, unlinked listepo mark) are copied
          from @pyrlyn/brand by `npm run brand` (predev/prebuild), so these URLs stay the same. -->
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon.svg")} type="image/svg+xml" />
+    {/* TODO(brand pin bump): add <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-16.png")} type="image/png" sizes="16x16" /> once @pyrlyn/brand ships it (not in v0.2.0; a link to a missing file would 404). */}
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-32.png")} type="image/png" sizes="32x32" />
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-64.png")} type="image/png" sizes="64x64" />
     <link rel="apple-touch-icon" href={u("/pyrlyn/pyrlyn-apple-touch-icon.png")} />
     <link rel="sitemap" type="application/xml" href={u("/sitemap-index.xml")} />
-    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <!-- Satoshi (Indian Type Foundry, ITF Free Font License) is loaded from the Fontshare CDN as one
+         variable face (wght 300–900). The FFL forbids redistributing the font files, and this repo is
+         public, so they are not committed here. -->
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap" />
     {analytics && GA_MEASUREMENT_ID && (
       <>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
@@ -75,7 +86,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
       <script is:inline define:vars={{ phKey: POSTHOG_KEY, phHost: POSTHOG_HOST }}>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once unregister identify alias reset opt_in_capturing opt_out_capturing has_opted_out_capturing get_distinct_id getFeatureFlag isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init(phKey,{api_host:phHost,person_profiles:"identified_only"});</script>
     )}
   </head>
-  <body data-api={API_URL || undefined}>
+  <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <div class="mesh" aria-hidden="true">
       <span class="mesh__blob mesh__blob--1"></span>
@@ -87,18 +98,18 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
       <span class="mesh__grain"></span>
     </div>
 
-    <header class="nav tw:max-[459px]:px-2!">
+    <header class:list={["nav tw:max-[459px]:px-2!", { "nav--auto": current }]} data-nav-auto={current ? "" : undefined}>
+      {current && (
+        <NavPin client:load>
+          <PyrlynLogo />
+        </NavPin>
+      )}
       <div class="nav__inner tw:max-[459px]:gap-2! tw:max-[459px]:pl-3! tw:max-[359px]:gap-1!">
         <PyrlynLogo />
         <nav aria-label="Primary">
           <ul class="nav__links">
             <li class="menu">
-              <details class="menu__details" data-menu>
-                <summary class="menu__trigger tw:max-[459px]:px-2! tw:max-[359px]:px-1!" aria-current={current ? "page" : undefined}>
-                  Products{current && <span class="menu__current">· {current.data.title}</span>}
-                  <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="m3 4.5 3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </summary>
-                <div class="menu__panel glass glass--thick">
+              <Menu client:load currentTitle={current?.data.title} triggerClass="menu__trigger tw:max-[459px]:px-2! tw:max-[359px]:px-1!">
                   <p class="menu__label">All products · {tools.length}</p>
                   {groupByCategory(tools).map((g) => (
                     <section class="menu__group" aria-label={g.category.label}>
@@ -107,28 +118,17 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
                         {g.tools.map((x) => (
                           <li>
                             <a class="menu__item shine" href={u(`/${x.id}/`)} style={`--card-accent:${x.data.accent}`} aria-current={x.id === theme ? "page" : undefined}>
-                              <span class="menu__mark" aria-hidden="true">{x.data.title.slice(0, 2)}</span>
+                              <span class="menu__mark" aria-hidden="true">{x.data.rawTitle.slice(0, 2)}</span>
                               <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">{versionLabel(x)}</span></strong><small>{x.data.tagline}</small></span>
-                              <span class="menu__price">Free · Pro <span data-pro-price={x.id}>{proFor(x).price}</span>*</span>
+                              <span class="menu__price">{hasPro(x) ? <>Free · Pro <span data-pro-price={x.id}>{proFor(x).price}</span>*</> : "Free"}</span>
                             </a>
                           </li>
                         ))}
                       </ul>
                     </section>
                   ))}
-                  {docTools.length > 0 && (
-                    <>
-                      <p class="menu__label">Documentation</p>
-                      <ul class="menu__docs" role="list">
-                        {docTools.map((x) => (
-                          <li><a class="menu__doc" href={u(`/${x.id}/docs/`)} style={`--card-accent:${x.data.accent}`} aria-current={inDocs && x.id === theme ? "page" : undefined}><i aria-hidden="true"></i>{x.data.title} docs</a></li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
                   <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>{PRO_PRICE_NOTE}</span></p>
-                </div>
-              </details>
+                </Menu>
             </li>
             <li><a href={u("/#how")}>How it works</a></li>
             <li><a href={u("/#pricing")}>Pricing</a></li>
@@ -137,12 +137,17 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
         </nav>
         <div class="nav__actions">
           <Search />
-          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+          <ThemeToggle client:load>
             <span class="theme-toggle__sun"><Icon name="sun" size={18} /></span>
             <span class="theme-toggle__moon"><Icon name="moon" size={18} /></span>
-          </button>
-          <a class="btn btn--glass nav__gh" href="https://github.com/pyrlyn"><Icon name="github" size={16} /> GitHub</a>
-          <a class="btn btn--primary tw:max-[459px]:px-4! tw:max-[359px]:px-3!" href={u("/#catalog")}>Browse tools</a>
+          </ThemeToggle>
+          <a class="nav__gh" href={ghHref} aria-label={ghLabel} title={ghLabel}><Icon name="github" size={18} /></a>
+          <a class="btn btn--primary nav__cta tw:max-[459px]:px-4! tw:max-[359px]:px-3!" href={u("/#catalog")}><span class="nav__cta-icon" aria-hidden="true"><Icon name="app" size={18} /></span><span class="nav__cta-label">Browse tools</span></a>
+          {current && (
+            <button class="nav__peek-btn nav__unpin" type="button" aria-label="Hide menu" data-nav-pin>
+              <svg viewBox="0 0 12 12" width="14" height="14" aria-hidden="true"><path d="m3 7.5 3-3 3 3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          )}
         </div>
       </div>
     </header>
@@ -160,15 +165,18 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
             <li><a href={u("/#pricing")}>Pricing</a></li>
             <li><a href={u("/#faq")}>FAQ</a></li>
             <li><a href="https://github.com/pyrlyn">GitHub</a></li>
+            <li><a href={u("/team")}>Our team</a></li>
+            <li><a href={u("/support")}>Support</a></li>
           </ul>
         </nav>
       </div>
       <p>A storefront for AI developer tools. Every tool has a free open-source edition; Pro features shown on this site are placeholders, and so are Pro prices the backend does not list yet. Product facts come from each tool’s own README, docs and site copy.</p>
     </footer>
 
-    <script>
-      import "../scripts/main.ts";
-      import "../scripts/pro.ts";
-    </script>
+    <CopyFeedback client:idle />
+    <PageMotion client:load />
+    {API_URL && <ProPrices client:idle api={API_URL} />}
+    {!inDocs && <HeroStage client:load />}
+    {!inDocs && <IntroRing client:load />}
   </body>
 </html>

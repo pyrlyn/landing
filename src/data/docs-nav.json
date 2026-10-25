@@ -40,7 +40,7 @@
       "plugin-plan-template.md": "Internal template for plugin proposals",
       "research/": "Internal research notes",
       "assets/": "Notes about image assets, not documentation",
-      "agency.md": "Instructions for coding agents working on rtok",
+      "agency.md": "Instructions for coding agents working on Rtok",
       "batch-flex.md": "Cost-lever research and planned proxy work, not current behaviour",
       "llm-soft-compression.md": "Research and roadmap note",
       "model-routing.md": "Planned feature note, not current behaviour",
@@ -87,7 +87,7 @@
   "ketch": {
     "groups": [
       { "label": "Start", "items": [
-        { "page": "getting-started", "title": "Getting started", "summary": "Install ketch, install your first tool from a GitHub release, and see what a verified install prints." },
+        { "page": "getting-started", "title": "Getting started", "summary": "Install Ketch, install your first tool from a GitHub release, and see what a verified install prints." },
         { "file": "COMMANDS.md", "title": "Commands" }
       ] },
       { "label": "Guides", "items": [

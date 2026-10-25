@@ -1,4 +1,5 @@
 import { z } from "astro/zod";
+import { normalizeNames } from "./names";
 
 // Contract: CONTENT_CONTRACT.md. Front matter is synced from each product repository, so it is
 // untrusted input: link targets must be http(s), because z.string().url() alone accepts
@@ -6,7 +7,7 @@ import { z } from "astro/zod";
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, "6-digit hex, e.g. #5CE1FF");
 const webUrl = z.string().url().regex(/^https?:\/\//i, "http(s) URL");
 
-export const projectSchema = z.object({
+export const projectFields = z.object({
   title: z.string().min(1),
   tagline: z.string().min(1).max(160),
   repo: z.string().url().startsWith("https://github.com/"),
@@ -28,3 +29,15 @@ export const projectSchema = z.object({
   /** Sort order on the marketplace (ascending); unsorted tools follow alphabetically. */
   order: z.number().int().optional(),
 });
+
+/**
+ * `title` and `tagline` are display text: product names are capitalized here (see src/lib/names.ts),
+ * so the sync can keep writing `title: rtok`. `rawTitle` keeps the synced spelling for logo marks
+ * (the two-letter menu tile, card glyphs), which stay exactly as designed.
+ */
+export const projectSchema = projectFields.transform((d) => ({
+  ...d,
+  rawTitle: d.title,
+  title: normalizeNames(d.title),
+  tagline: normalizeNames(d.tagline),
+}));

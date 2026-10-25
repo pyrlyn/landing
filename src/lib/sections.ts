@@ -1,6 +1,7 @@
 // Turns a project Markdown body into the structured pieces the page template renders.
 import { Marked, type Tokens } from "marked";
 import { safeHref, safeHtml } from "./html";
+import { normalizeMdInline, normalizeToken } from "./names";
 
 const esc = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -23,6 +24,7 @@ export function codeBlock(text: string, lang = "bash", label = "command"): strin
 
 const md = new Marked({ gfm: true });
 md.use({
+  walkTokens: normalizeToken,
   renderer: {
     code({ text, lang }: Tokens.Code) {
       return codeBlock(text, lang === "powershell" ? "powershell" : lang || "bash");
@@ -66,7 +68,7 @@ export function parseFeatures(src = ""): Feature[] {
     const text = item.replace(/\s*\n\s*/g, " ");
     const m = text.match(/^\*\*(.+?)\*\*\s*[—–-]?\s*(.*)$/);
     const name = (m ? m[1] : text.split(".")[0]).replace(/[.:]\s*$/, "");
-    return { name, html: renderInline(m ? m[2] : text) };
+    return { name: normalizeMdInline(name), html: renderInline(m ? m[2] : text) };
   });
 }
 
@@ -96,7 +98,7 @@ export function parseLinks(src = ""): LinkItem[] {
     .filter((s) => s && !/^licen[cs]e/i.test(s))
     .map((s) => {
       const m = s.match(/^(.+?):\s*<?(https?:\/\/[^\s>]+)>?/) ?? s.match(/^\[(.+?)\]\((https?:\/\/[^)]+)\)/);
-      return m ? { label: m[1].trim(), href: m[2] } : null;
+      return m ? { label: normalizeMdInline(m[1].trim()), href: m[2] } : null;
     })
     .filter((x): x is LinkItem => !!x);
 }

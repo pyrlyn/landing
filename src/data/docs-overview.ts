@@ -20,9 +20,9 @@ export interface Overview {
 
 export const OVERVIEWS: Record<string, Overview> = {
   rtok: {
-    eyebrow: "rtok documentation",
+    eyebrow: "Rtok documentation",
     headline: "Less context for your agent, every saving on record.",
-    lead: "rtok reduces the context AI coding agents must carry. One Rust binary, three surfaces: Claude Code hooks, an MCP server, and an API proxy. Each reduction is measured; shortened payloads stay retrievable by id.",
+    lead: "Rtok reduces the context AI coding agents must carry. One Rust binary, three surfaces: Claude Code hooks, an MCP server, and an API proxy. Each reduction is measured; shortened payloads stay retrievable by id.",
     strip: [
       { label: "Install", cmd: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/rtok/releases/latest/download/rtok-installer.sh | sh" },
       { label: "Configure", cmd: "rtok config init" },
@@ -45,7 +45,7 @@ export const OVERVIEWS: Record<string, Overview> = {
     },
     table: {
       eyebrow: "Where things live",
-      title: "Everything rtok keeps, in one place.",
+      title: "Everything Rtok keeps, in one place.",
       head: ["Path", "What it holds"],
       rows: [
         ["`~/.rtok/config.toml`", "Configuration (`RTOK_HOME` overrides the directory)"],
@@ -60,8 +60,8 @@ export const OVERVIEWS: Record<string, Overview> = {
       text: "Token counts from `rtok stats` are estimates plus real `usage` rows from the proxy; only the proxy rows are the actual bill. The committed A/B bench has only been run offline, so rerun it against live traffic before adopting a configuration on its word.",
     },
     faq: [
-      { q: "Does rtok break the prompt cache?", a: "No — measured, not promised. The Prompt cache page reports `hit=97.5%` from `rtok stats` on the maintainer's machine (2026-09-18) and zero recorded prompt-cache busts in `rtok report`. Injection is byte-stable, rewrites stay outside the conversation's working edge, and hooks touch each result once." },
-      { q: "What happens if a plugin was compiled out?", a: "The subcommand prints `not implemented` and exits 0, so a stripped or half-installed rtok never blocks the host agent." },
+      { q: "Does Rtok break the prompt cache?", a: "No — measured, not promised. The Prompt cache page reports `hit=97.5%` from `rtok stats` on the maintainer's machine (2026-09-18) and zero recorded prompt-cache busts in `rtok report`. Injection is byte-stable, rewrites stay outside the conversation's working edge, and hooks touch each result once." },
+      { q: "What happens if a plugin was compiled out?", a: "The subcommand prints `not implemented` and exits 0, so a stripped or half-installed Rtok never blocks the host agent." },
       { q: "Which agents can it wire into?", a: "`rtok agents install <host>` configures Claude Code and other hosts such as `cursor`, `codex` and `opencode`. The Agents page lists, per host, what an install writes and which rtok plugins then reach that app." },
       { q: "Where did a setting come from?", a: "Every CLI flag is a config key in `~/.rtok/config.toml`, and `rtok config show --sources` always tells you where a value came from." },
     ],
@@ -70,7 +70,7 @@ export const OVERVIEWS: Record<string, Overview> = {
   },
 
   cox: {
-    eyebrow: "cox documentation",
+    eyebrow: "Cox documentation",
     headline: "One event stream behind every surface.",
     lead: "cox is a modular terminal coding agent in Rust. One core state machine turns submissions into typed events; the same stream powers the TUI, headless runs, editor clients (ACP), and MCP.",
     strip: [
@@ -102,10 +102,10 @@ export const OVERVIEWS: Record<string, Overview> = {
     notice: {
       label: "Status",
       kind: "warning",
-      text: "cox is under active development. APIs, configuration, and install paths are not yet stable. Treat the docs as the current manual, not a frozen release surface.",
+      text: "Cox is under active development. APIs, configuration, and install paths are not yet stable. Treat the docs as the current manual, not a frozen release surface.",
     },
     faq: [
-      { q: "Can I use cox from my editor?", a: "Yes. `cox acp` serves cox over the Agent Client Protocol on stdio — the same `Event` stream as the TUI, so prompts, tool calls, approvals and diffs show up in Zed, JetBrains or Neovim." },
+      { q: "Can I use Cox from my editor?", a: "Yes. `cox acp` serves Cox over the Agent Client Protocol on stdio — the same `Event` stream as the TUI, so prompts, tool calls, approvals and diffs show up in Zed, JetBrains or Neovim." },
       { q: "How are approvals handled in scripts?", a: "Under the headless default (`--approve never`), a `Write`/`Exec` call the policy would ask about is denied instead, with the reason in the tool result so the model can try another approach; the run exits `2`." },
       { q: "What happens to large tool output?", a: "Every tool writes untruncated output to the archive first; the model sees the capped visible form plus an `expand` pointer." },
       { q: "Where do costs show up?", a: "Costs land in `cox stats`, and the status line shows the session spend against the session cap (`budget.session_usd`)." },
@@ -115,9 +115,9 @@ export const OVERVIEWS: Record<string, Overview> = {
   },
 
   ketch: {
-    eyebrow: "ketch documentation",
+    eyebrow: "Ketch documentation",
     headline: "Catch releases straight from GitHub.",
-    lead: "ketch installs command-line tools and apps from GitHub releases on macOS, Linux, and Windows. It picks the release asset built for your machine, checks the checksum the project published, unpacks it into a versioned store, and links it onto your `PATH`.",
+    lead: "Ketch installs command-line tools and apps from GitHub releases on macOS, Linux, and Windows. It picks the release asset built for your machine, checks the checksum the project published, unpacks it into a versioned store, and links it onto your `PATH`.",
     strip: [
       { label: "Install", cmd: "curl -fsSL https://raw.githubusercontent.com/pyrlyn/ketch/main/install.sh | bash" },
       { label: "First tool", cmd: "ketch install BurntSushi/ripgrep" },
@@ -136,7 +136,7 @@ export const OVERVIEWS: Record<string, Overview> = {
       body: "Versioned payloads in `store/`, links in `bin/`, a `state.json` recording what is installed, and a `stats.db` recording what happened. Nothing is written outside that tree except the `.app` bundles that belong in `/Applications` and the files you ask for, such as `./ketch.lock`.\n\n`state.json` says what is installed now; `stats.db` is the append-only other half, which is why `ketch history rg` still works after `ketch uninstall rg`.",
       code: "~/.ketch/\n├── store/       versioned payloads\n├── bin/         links onto your PATH\n├── state.json   what is installed now\n└── stats.db     what happened, and when",
       lang: "",
-      caption: "Layout described in the ketch README",
+      caption: "Layout described in the Ketch README",
     },
     table: {
       eyebrow: "What you can install",
@@ -144,7 +144,7 @@ export const OVERVIEWS: Record<string, Overview> = {
       head: ["Reference", "What it means"],
       rows: [
         ["`BurntSushi/ripgrep`", "Any repository that publishes releases"],
-        ["`rg`", "A name ketch already knows from the registry"],
+        ["`rg`", "A name Ketch already knows from the registry"],
         ["`sharkdp/fd@v10.2.0`", "An exact version"],
         ["`--path ./mytool`", "A local binary, archive, symlink, or `.app`"],
         ["`local:/abs/or/rel`", "The same thing, as a package ref"],
@@ -153,13 +153,13 @@ export const OVERVIEWS: Record<string, Overview> = {
     notice: {
       label: "Tip",
       kind: "tip",
-      text: "You rarely need a manifest: ketch infers one from `owner/repo` alone. Write one when inference gets it wrong — an unusually named asset, a binary linked under a different name, an `.app` bundle, or a short alias.",
+      text: "You rarely need a manifest: Ketch infers one from `owner/repo` alone. Write one when inference gets it wrong — an unusually named asset, a binary linked under a different name, an `.app` bundle, or a short alias.",
     },
     faq: [
-      { q: "Can I install from GitLab or an internal server?", a: "Yes. GitHub is built in; anything else is a source plugin — an executable named `ketch-source-<scheme>` that ketch runs with a subcommand and that answers with one JSON document. No recompile and no ketch release needed." },
+      { q: "Can I install from GitLab or an internal server?", a: "Yes. GitHub is built in; anything else is a source plugin — an executable named `ketch-source-<scheme>` that Ketch runs with a subcommand and that answers with one JSON document. No recompile and no Ketch release needed." },
       { q: "How do I set up a new machine the same way?", a: "`ketch lock` writes `./ketch.lock` from what is installed. Commit it next to your dotfiles; `ketch sync` makes another machine match it, and `ketch lock --check` tells you whether anything has drifted." },
       { q: "What is the registry?", a: "An ordinary GitHub repository. Every top-level folder is a package and holds one `ketch.toml` describing it." },
-      { q: "How do I remove ketch again?", a: "`ketch self uninstall` removes every package ketch installed, the whole `~/.ketch` tree and the `PATH` block it added. It lists what it is about to delete and asks first; `--keep-packages` removes only ketch." },
+      { q: "How do I remove Ketch again?", a: "`ketch self uninstall` removes every package ketch installed, the whole `~/.ketch` tree and the `PATH` block it added. It lists what it is about to delete and asks first; `--keep-packages` removes only Ketch." },
     ],
     next: ["getting-started", "commands", "manifests"],
     from: ["README.md", "docs/MANIFESTS.md", "docs/PLUGINS.md", "docs/LOCKFILE.md", "docs/REGISTRY.md", "docs/COMMANDS.md"],

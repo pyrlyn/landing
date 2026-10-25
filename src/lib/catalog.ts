@@ -1,7 +1,7 @@
 // Marketplace helpers over the projects collection (works for any number of tools).
 import { getCollection, type CollectionEntry } from "astro:content";
 import { API_PROJECTS } from "./api";
-import { CATEGORIES, categoryOf, PRO, PRO_FALLBACK, RELEASE_STATUS, RELEASE_STATUS_FALLBACK, THEMES, type ThemeKey } from "./site";
+import { CATEGORIES, categoryOf, isFreeOnly, PRO, PRO_FALLBACK, RELEASE_STATUS, RELEASE_STATUS_FALLBACK, THEMES, type ThemeKey } from "./site";
 
 export type Tool = CollectionEntry<"projects">;
 
@@ -16,6 +16,9 @@ export async function getTools(): Promise<Tool[]> {
 export function featuredTool(tools: Tool[]): Tool {
   return tools.find((t) => t.data.featured) ?? tools[0];
 }
+
+/** Tools that sell a Pro tier; free-only products (FREE_ONLY in site.ts) are left out. */
+export const hasPro = (t: Tool) => !isFreeOnly(t.id);
 
 /** The API's price wins; front matter `pro_price` and PRO are placeholders for products it does not price. */
 export function proFor(t: Tool) {

@@ -1,4 +1,5 @@
 ---
+import CodeGraphIsland from "./islands/CodeGraph/CodeGraph";
 // rtok: the MCP code graph as an SVG. Edges draw in with stroke-dashoffset when scrolled into view
 // (drawn statically without JS / under reduced motion). Tool names are the ones the README lists.
 const tools = [
@@ -19,9 +20,10 @@ const edge = (t: { x: number; y: number }) => {
   return `M${f(hub.x + (dx / len) * HUB_R)} ${f(hub.y + (dy / len) * HUB_R)} L${f(t.x - dx * k)} ${f(t.y - dy * k)}`;
 };
 ---
+<CodeGraphIsland client:idle>
 <figure class="graph glass" data-graph aria-labelledby="graph-cap">
   <p class="flow__title">Code graph over MCP</p>
-  <svg class="graph__svg" viewBox="0 0 520 330" role="img" aria-label="An agent queries rtok's symbol index through five MCP tools: symbol, callers, impact, outline and explore.">
+  <svg class="graph__svg" viewBox="0 0 520 330" role="img" aria-label="An agent queries Rtok's symbol index through five MCP tools: symbol, callers, impact, outline and explore.">
     <defs>
       <radialGradient id="g-hub" cx="50%" cy="30%" r="70%"><stop offset="0" stop-color="#bff4ff" /><stop offset="1" stop-color="#5CE1FF" stop-opacity=".35" /></radialGradient>
     </defs>
@@ -46,3 +48,4 @@ const edge = (t: { x: number; y: number }) => {
   </svg>
   <figcaption id="graph-cap" class="muted small"><code>rtok graph index .</code> builds a symbol index that agents query as <code>symbol</code>, <code>callers</code>, <code>impact</code>, <code>outline</code> and <code>explore</code> instead of a grep-and-read chain.</figcaption>
 </figure>
+</CodeGraphIsland>

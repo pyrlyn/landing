@@ -19,6 +19,12 @@ export const PRO: Record<string, { price: string; features: string[] }> = {
   cox: { price: "$0 / mo", features: ["Shared session history", "Org permission policies", "Priority support"] },
   ketch: { price: "$0 / mo", features: ["Private package registry", "Fleet lockfile sync", "Priority support"] },
 };
+/**
+ * Products that are completely free: no Pro tier, no price, no paid options anywhere on the site.
+ * Owned by this site (not synced front matter), so a docs sync cannot bring a Pro block back.
+ */
+export const FREE_ONLY: ReadonlySet<string> = new Set(["stator", "weft"]);
+export const isFreeOnly = (slug: string) => FREE_ONLY.has(slug);
 /** Footnote for every Pro price shown on the site. */
 export const PRO_PRICE_NOTE = "* Free during the preview (beta) version.";
 export const PRO_FALLBACK = { price: "$0 / mo", features: ["Team features", "Hosted dashboard", "Priority support"] };
@@ -49,8 +55,13 @@ export const LICENSE = {
   ],
 };
 
-/** Products under another license than LICENSE (Weft is Apache-2.0). */
+/** Products under another license than LICENSE (Weft is Apache-2.0; Stator is free, shown as GPLv3 only, no commercial option). */
 export const LICENSE_OVERRIDES: Record<string, { short: string; lead: string; items: { name: string; text: string }[] }> = {
+  stator: {
+    short: "Free · GNU GPLv3",
+    lead: "Stator is free and licensed under the GNU GPLv3:",
+    items: [{ name: "GNU GPLv3", text: "use, modify and distribute it under the terms in LICENSE." }],
+  },
   weft: {
     short: "Apache License 2.0",
     lead: "Weft is licensed under the Apache License 2.0:",
@@ -117,7 +128,7 @@ export const RELEASE_STATUS_FALLBACK = "In development";
  *  Source: each repo's README.md (rtok: the limitations list; runa: the status paragraph its synced Overview carries).
  *  (cox's "under active development, APIs not stable" status is already in its synced Overview and the hero status card.) */
 export const CAVEATS: Partial<Record<ThemeKey, string>> = {
-  runa: "runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
+  runa: "Runa has no published release yet, so the installer above works from the first GitHub release. Until then, build from source (see Install below).",
   rtok: "Token savings are estimates from a chars-per-token heuristic until matched against provider usage. No live A/B cost reduction has been established yet.",
 };
 
