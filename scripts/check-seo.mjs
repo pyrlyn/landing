@@ -40,8 +40,9 @@ const expectTypes = (rel) => {
 const rows = [];
 for (const file of pages) {
   const rel = path.relative(dist, file).replace(/index\.html$/, "").split(path.sep).join("/");
-  if (rel.startsWith("404")) continue;
   const html = fs.readFileSync(file, "utf8");
+  // Pages kept out of search (404, the wishlist mail links) need no canonical, sitemap entry or JSON-LD.
+  if (rel.startsWith("404") || content(html.split(/<\/head>/i)[0], "name", "robots") === "noindex") continue;
   const err = (m) => errors.push(`${base}${rel}: ${m}`);
   const warn = (m) => warnings.push(`${base}${rel}: ${m}`);
   const head = html.split(/<\/head>/i)[0];

@@ -1,5 +1,6 @@
 // Marketplace helpers over the projects collection (works for any number of tools).
 import { getCollection, type CollectionEntry } from "astro:content";
+import { API_PROJECTS } from "./api";
 import { CATEGORIES, categoryOf, PRO, PRO_FALLBACK, RELEASE_STATUS, RELEASE_STATUS_FALLBACK, THEMES, type ThemeKey } from "./site";
 
 export type Tool = CollectionEntry<"projects">;
@@ -16,10 +17,14 @@ export function featuredTool(tools: Tool[]): Tool {
   return tools.find((t) => t.data.featured) ?? tools[0];
 }
 
+/** The API's price wins; front matter `pro_price` and PRO are placeholders for products it does not price. */
 export function proFor(t: Tool) {
   const base = PRO[t.id] ?? PRO_FALLBACK;
-  return { price: t.data.pro_price ?? base.price, features: base.features };
+  return { price: API_PROJECTS.get(t.id) ?? t.data.pro_price ?? base.price, features: base.features };
 }
+
+/** The API refuses wishlist entries for products it does not know, so only those get the form. */
+export const hasWishlist = (t: Tool) => API_PROJECTS.has(t.id);
 
 export function accentsFor(t: Tool) {
   const theme = THEMES[t.id as ThemeKey];

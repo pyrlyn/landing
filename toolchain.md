@@ -19,6 +19,7 @@
 | @tailwindcss/vite | local | https://github.com/tailwindlabs/tailwindcss | Tailwind Vite plugin |
 | marked | local | https://github.com/markedjs/marked | Render synced Markdown |
 | @fontsource-variable/inter | local | https://github.com/fontsource/fontsource | UI font |
+| @pyrlyn/sdk | local | https://github.com/pyrlyn/backend/tree/main/packages/sdk | Backend client for Pro prices and the wishlist (persisted GraphQL operations). `package.json` installs `vendor/pyrlyn-sdk-0.1.0.tgz` until it is on npm |
 | @pyrlyn/brand | local | https://github.com/pyrlyn/brand | Tokens, components, and logos. `package.json` installs `github:pyrlyn/brand#v0.2.0` |
 
 `art/` can shell out to other tools when someone regenerates images. The site build and the tests do not.

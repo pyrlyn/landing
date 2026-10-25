@@ -572,6 +572,11 @@
 .price-tier .tier__head strong { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--fg-strong); font-size: var(--fs-sm); }
 .price__num--sm { font-size: 1.5rem; }
 .pricing-pair { align-items: stretch; }
+/* Pro wishlist form (src/components/ProWishlist.astro); the status line takes no room until it speaks. */
+.wishlist { display: grid; gap: var(--s-2); }
+.wishlist__email { width: 100%; min-height: 44px; padding: 0 var(--s-3); border: 0; border-radius: var(--r-md); font: inherit; color: var(--fg-strong); background: rgb(0 0 0 / .25); box-shadow: inset 0 0 0 1px var(--hairline-strong); }
+.wishlist__email:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wishlist__status:empty { display: none; }
 @media (min-width: 640px) { .pricing-pair { max-width: 880px; } }
 
 /* Terminal demo */

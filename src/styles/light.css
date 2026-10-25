@@ -60,6 +60,7 @@ html[data-mode="light"] .ring__card {
 html[data-mode="light"] .ring__item:not(.is-active) .ring__face { opacity: 1; filter: saturate(.75) brightness(.95); scale: .94; }
 html[data-mode="light"] .ring__item.is-active .ring__card { box-shadow: 0 0 0 1px color-mix(in oklch, var(--card-accent) 45%, rgb(10 20 35 / .2)), 0 2px 4px rgb(15 25 40 / .08), 0 22px 44px -14px rgb(15 25 40 / .38); }
 html[data-mode="light"] .ring__btn { background: #ffffff; box-shadow: 0 0 0 1px rgb(10 20 35 / .14), var(--shadow-1); }
+html[data-mode="light"] .wishlist__email { background: #ffffff; }
 /* Disabled Pro waitlist button: neutral and readable for every product accent. */
 html[data-mode="light"] .btn[aria-disabled="true"] { opacity: 1; filter: none; background: #e7eaf0; color: #3f4b5c; box-shadow: inset 0 0 0 1px rgb(10 20 35 / .16); text-shadow: none; }
 /* Card art (light): the render is shot on a dark backdrop, so invert it into a clean light halo (hue kept),

@@ -1,0 +1,8 @@
+---
+// The backend's confirmation mail links here (apps/api Wishlist: `wishlist/confirm?token=`).
+import Base from "../../layouts/Base.astro";
+import WishlistLink from "../../components/WishlistLink.astro";
+---
+<Base title="Confirm your Pro wishlist place | Pyrlyn" description="Confirm the address you gave for a Pyrlyn Pro wishlist, so we can mail you once when paid plans open." theme="home" noindex analytics={false}>
+  <WishlistLink action="confirm" />
+</Base>

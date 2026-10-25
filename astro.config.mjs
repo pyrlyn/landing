@@ -15,7 +15,8 @@ export default defineConfig({
   trailingSlash: "ignore",
   output: "static",
   // sitemap-index.xml + sitemap-0.xml under the base; robots.txt (src/pages/robots.txt.ts) points to it.
-  integrations: [sitemap()],
+  // The wishlist pages are noindex mail-link targets (src/pages/wishlist/), not content.
+  integrations: [sitemap({ filter: (page) => !/\/wishlist\//.test(page) })],
   // Tailwind v4 utilities only (no preflight), see src/styles/tailwind.css.
   vite: { plugins: [tailwindcss()] },
 });
