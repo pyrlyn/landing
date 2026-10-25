@@ -10,6 +10,14 @@ const tools = [
 ];
 const hub = { x: 330, y: 172 };
 const agent = { x: 70, y: 172 };
+// Edges run boundary to boundary (hub circle r=36 -> tool pill 88x34), so no line crosses into a node.
+const HUB_R = 36, PILL_W = 44, PILL_H = 17;
+const edge = (t: { x: number; y: number }) => {
+  const dx = t.x - hub.x, dy = t.y - hub.y, len = Math.hypot(dx, dy);
+  const k = Math.min(PILL_W / Math.abs(dx || 1e-9), PILL_H / Math.abs(dy || 1e-9));
+  const f = (n: number) => +n.toFixed(1);
+  return `M${f(hub.x + (dx / len) * HUB_R)} ${f(hub.y + (dy / len) * HUB_R)} L${f(t.x - dx * k)} ${f(t.y - dy * k)}`;
+};
 ---
 <figure class="graph glass" data-graph aria-labelledby="graph-cap">
   <p class="flow__title">Code graph over MCP</p>
@@ -18,12 +26,13 @@ const agent = { x: 70, y: 172 };
       <radialGradient id="g-hub" cx="50%" cy="30%" r="70%"><stop offset="0" stop-color="#bff4ff" /><stop offset="1" stop-color="#5CE1FF" stop-opacity=".35" /></radialGradient>
     </defs>
     <path class="graph__edge graph__edge--agent" pathLength="1" d={`M${agent.x + 44} ${agent.y} C ${agent.x + 120} ${agent.y - 40}, ${hub.x - 120} ${hub.y - 40}, ${hub.x - 36} ${hub.y}`} style="--d:0" />
-    {tools.map((t, i) => <path class="graph__edge" pathLength="1" d={`M${hub.x} ${hub.y} L${t.x} ${t.y}`} style={`--d:${0.35 + i * 0.12}`} />)}
+    {tools.map((t, i) => <path class="graph__edge" pathLength="1" d={edge(t)} style={`--d:${0.35 + i * 0.12}`} />)}
     <g class="graph__node graph__node--agent" style="--d:0">
       <rect x={agent.x - 48} y={agent.y - 20} width="96" height="40" rx="12" />
       <text x={agent.x} y={agent.y + 5}>agent</text>
     </g>
     <g class="graph__node graph__node--hub" style="--d:.2">
+      <circle class="graph__base" cx={hub.x} cy={hub.y} r="36" />
       <circle cx={hub.x} cy={hub.y} r="36" fill="url(#g-hub)" />
       <text x={hub.x} y={hub.y - 2}>symbol</text>
       <text x={hub.x} y={hub.y + 13}>index</text>
