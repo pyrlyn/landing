@@ -723,10 +723,16 @@ html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .
 .stage--ring .pos-a { left: -2%; top: 0; z-index: 4; }
 .stage__ring { inset: 118px 0 0 0; display: grid; }
 .ring { position: relative; display: grid; gap: var(--s-4); align-content: start; }
-.ring__stage { position: relative; height: 400px; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab;
+.ring__stage { position: relative; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab;
   /* Side cards stop at the column edge: the carousel never runs under the hero text. */
   overflow-x: clip;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+  /* A mask clips everything outside the element box, so the cards' drop shadows were cut off in a
+     hard line at the stage bottom (a visible band, mostly in light mode). The box reaches 72px lower
+     (taken back by the negative margin) and that strip fades out instead of ending in an edge. */
+  height: 472px; padding-bottom: 72px; margin-bottom: -72px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(#000 calc(100% - 56px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(#000 calc(100% - 56px), transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
 .ring__stage.is-dragging { cursor: grabbing; }
 .ring__track {
   --a: calc(360deg / var(--n)); --r: 360px;
@@ -765,7 +771,7 @@ html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .
 .ring__hs { left: auto; right: 6px; top: 6px; translate: none; z-index: 3; }
 .ring__hs .hotspot__tip { right: 0; width: 250px; }
 .ring__item:not(.is-active) .ring__hs { visibility: hidden; }
-.ring__controls { display: flex; align-items: center; justify-content: center; gap: var(--s-3); }
+.ring__controls { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: var(--s-3); }
 .ring__controls[hidden] { display: none; }
 .ring__btn { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; cursor: pointer; color: var(--fg-strong);
   background: var(--glass-fill), rgb(255 255 255 / .04); box-shadow: var(--glass-edge), var(--shadow-1); }
@@ -810,7 +816,9 @@ html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .
 .graph__svg { width: 100%; height: auto; overflow: visible; }
 .graph__edge { fill: none; stroke: color-mix(in oklch, var(--accent) 70%, transparent); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .graph__edge--agent { stroke: color-mix(in oklch, var(--accent-2) 70%, transparent); stroke-dasharray: 1; }
-.graph__node rect { fill: rgb(10 22 34 / .85); stroke: color-mix(in oklch, var(--accent) 45%, transparent); }
+.graph__node rect { fill: rgb(10 22 34); stroke: color-mix(in oklch, var(--accent) 45%, transparent); }
+.graph__base { fill: rgb(10 22 34); }
+html[data-mode="light"] .graph__node rect, html[data-mode="light"] .graph__base { fill: var(--surface-opaque); }
 .graph__node--agent rect { stroke: color-mix(in oklch, var(--accent-2) 60%, transparent); }
 .graph__node text { fill: var(--fg-strong); font-family: var(--font-mono); font-size: 13px; text-anchor: middle; }
 .graph__node--hub text { fill: #04121c; font-weight: 700; font-size: 11px; }

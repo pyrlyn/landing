@@ -101,6 +101,8 @@
 [data-theme="scull"] .eyebrow::before { content: ">"; }
 [data-theme="scull"] .stage__art::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgb(0 0 0 / .22) 0 1px, transparent 1px 3px); border-radius: inherit; }
 [data-theme="scull"] .stage__art { position: relative; }
+/* Light mode: the black scanlines read as heavy grey stripes across the pale stage, so they are a faint tint there. */
+html[data-mode="light"] [data-theme="scull"] .stage__art::after, html[data-mode="light"][data-theme="scull"] .stage__art::after { background: repeating-linear-gradient(0deg, rgb(10 20 35 / .06) 0 1px, transparent 1px 3px); }
 [data-theme="scull"] .feature, [data-theme="scull"] .install-card, [data-theme="scull"] .feature .icon { border-radius: 4px; }
 [data-theme="scull"] .btn--primary { color: #0A0C0B; }
 
