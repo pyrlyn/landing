@@ -2,7 +2,9 @@
 // Home hero: 3D ring carousel of product cards (faux-3D, CSS preserve-3d).
 // Cards are real links; one glass hotspot per card opens a real feature from that tool's README.
 // No JS / <768px: a plain grid. Reduced motion: no auto-rotate, instant turns.
+// Behaviour, counter and controls: the RingCarousel React island; the cards stay static Astro markup (its children).
 import Icon from "./Icon.astro";
+import RingIsland from "./islands/RingCarousel/RingCarousel";
 import Picture from "./Picture.astro";
 import { u } from "../lib/site";
 import { proFor, versionLabel } from "../lib/catalog";
@@ -12,8 +14,7 @@ interface Props { tools: CollectionEntry<"projects">[]; hotspots: Hotspot[] }
 const { tools, hotspots } = Astro.props;
 const n = tools.length;
 ---
-<div class="ring" data-ring style={`--n:${n}`} role="region" aria-roledescription="carousel" aria-label="Products">
-  <div class="ring__stage" data-ring-stage>
+<RingIsland client:visible titles={tools.map((t) => t.data.title)}>
     <ul class="ring__track" data-ring-track data-hotspots>
       {tools.map((t, i) => {
         const hs = hotspots.find((h) => h.tool === t.id);
@@ -43,10 +44,4 @@ const n = tools.length;
         );
       })}
     </ul>
-  </div>
-  <div class="ring__controls" data-ring-controls hidden>
-    <button class="ring__btn" type="button" data-ring-prev aria-label="Previous product"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <p class="ring__status" aria-live="polite" data-ring-status>{tools[0].data.title} · 1 / {n}</p>
-    <button class="ring__btn" type="button" data-ring-next aria-label="Next product"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div>
+</RingIsland>

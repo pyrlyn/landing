@@ -44,6 +44,10 @@ const current = tools.find((x) => x.id === theme);
 const withDocs = new Set(productsWithDocs());
 const docTools = tools.filter((x) => withDocs.has(x.id));
 const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
+import Menu from "../components/islands/Menu/Menu";
+import ThemeToggle from "../components/islands/ThemeToggle/ThemeToggle";
+import CopyFeedback from "../components/islands/CopyFeedback/CopyFeedback";
+import IntroRing from "../components/islands/IntroRing/IntroRing";
 ---
 <!doctype html>
 <html lang="en" style={vars} data-theme={theme} class={inDocs ? "is-still" : undefined}>
@@ -53,7 +57,8 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
     {!inDocs && <script is:inline>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("intro")</script>}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SEO {title} {description} {ogType} {imageAlt} {jsonLd} {noindex} image={og} />
-    <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes. -->
+    <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes.
+         Stays an inline script on purpose (not a React island): islands hydrate after the HTML is parsed, which is too late to avoid a dark/light flash. The ThemeToggle island only changes the mode afterwards. -->
     <script is:inline define:vars={{ darkBg: t.bg }}>(function(){var d=document.documentElement,s=null;try{s=localStorage.getItem("pyrlyn-theme")}catch(e){}var m=s==="light"||s==="dark"?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");d.setAttribute("data-mode",m);d.dataset.darkBg=darkBg;d.style.colorScheme=m;window.__applyThemeMeta=function(m){var c=document.getElementById("meta-theme-color");if(c)c.setAttribute("content",m==="light"?"#f4f6f9":darkBg);var k=document.getElementById("meta-color-scheme");if(k)k.setAttribute("content",m)};document.addEventListener("DOMContentLoaded",function(){window.__applyThemeMeta(m)});window.__applyThemeMeta(m)})()</script>
     <meta id="meta-color-scheme" name="color-scheme" content="dark light" />
     <meta id="meta-theme-color" name="theme-color" content={t.bg} />
@@ -93,12 +98,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
         <nav aria-label="Primary">
           <ul class="nav__links">
             <li class="menu">
-              <details class="menu__details" data-menu>
-                <summary class="menu__trigger tw:max-[459px]:px-2! tw:max-[359px]:px-1!" aria-current={current ? "page" : undefined}>
-                  Products{current && <span class="menu__current">· {current.data.title}</span>}
-                  <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="m3 4.5 3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </summary>
-                <div class="menu__panel glass glass--thick">
+              <Menu client:load currentTitle={current?.data.title} triggerClass="menu__trigger tw:max-[459px]:px-2! tw:max-[359px]:px-1!">
                   <p class="menu__label">All products · {tools.length}</p>
                   {groupByCategory(tools).map((g) => (
                     <section class="menu__group" aria-label={g.category.label}>
@@ -127,8 +127,7 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
                     </>
                   )}
                   <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>{PRO_PRICE_NOTE}</span></p>
-                </div>
-              </details>
+                </Menu>
             </li>
             <li><a href={u("/#how")}>How it works</a></li>
             <li><a href={u("/#pricing")}>Pricing</a></li>
@@ -137,10 +136,10 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
         </nav>
         <div class="nav__actions">
           <Search />
-          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+          <ThemeToggle client:load>
             <span class="theme-toggle__sun"><Icon name="sun" size={18} /></span>
             <span class="theme-toggle__moon"><Icon name="moon" size={18} /></span>
-          </button>
+          </ThemeToggle>
           <a class="btn btn--glass nav__gh" href="https://github.com/pyrlyn"><Icon name="github" size={16} /> GitHub</a>
           <a class="btn btn--primary tw:max-[459px]:px-4! tw:max-[359px]:px-3!" href={u("/#catalog")}>Browse tools</a>
         </div>
@@ -166,6 +165,8 @@ const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
       <p>A storefront for AI developer tools. Every tool has a free open-source edition; Pro features shown on this site are placeholders, and so are Pro prices the backend does not list yet. Product facts come from each tool’s own README, docs and site copy.</p>
     </footer>
 
+    <CopyFeedback client:idle />
+    {!inDocs && <IntroRing client:load />}
     <script>
       import "../scripts/main.ts";
       import "../scripts/pro.ts";

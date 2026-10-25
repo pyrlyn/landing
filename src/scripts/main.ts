@@ -1,5 +1,7 @@
 import { initSearch } from "./search";
 // Progressive enhancement only — every page is complete without JavaScript.
+// Theme toggle, products menu, ring carousel, copy feedback and the intro sweep are React islands
+// (src/components/islands/); what is left here is phase 2 of that migration.
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)");
 const motionOK = () => !reduceMotion.matches && finePointer.matches;
@@ -67,48 +69,6 @@ function initStill() {
   const hero = document.querySelector("[data-stage]");
   if (!hero || root.classList.contains("is-still")) return;
   new IntersectionObserver(([en]) => root.classList.toggle("is-still", !en.isIntersecting)).observe(hero);
-}
-
-/* Copy buttons: button label flips to "Copied", a small toast confirms, aria-live announces. */
-function initCopy() {
-  const live = document.createElement("p");
-  live.className = "sr-only";
-  live.setAttribute("aria-live", "polite");
-  document.body.append(live);
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.setAttribute("aria-hidden", "true");
-  toast.innerHTML = '<svg viewBox="0 0 16 16" width="14" height="14"><path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Copied</span>';
-  document.body.append(toast);
-  let toastTimer = 0;
-  const showToast = (text: string) => {
-    toast.querySelector("span")!.textContent = text;
-    toast.classList.add("is-on");
-    clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => toast.classList.remove("is-on"), 1600);
-  };
-  for (const btn of document.querySelectorAll<HTMLButtonElement>("button[data-copy]")) {
-    if (!navigator.clipboard) continue;
-    btn.hidden = false;
-    const label = btn.querySelector(".copy__label");
-    btn.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(btn.dataset.copy ?? "");
-        btn.dataset.state = "copied";
-        if (label) label.textContent = "Copied";
-        live.textContent = "Copied to clipboard";
-        showToast("Copied to clipboard");
-        setTimeout(() => {
-          delete btn.dataset.state;
-          if (label) label.textContent = "Copy";
-          live.textContent = "";
-        }, 1800);
-      } catch {
-        live.textContent = "Copy failed — select the text instead";
-        showToast("Copy failed — select the text instead");
-      }
-    });
-  }
 }
 
 /* Docs nav: edge fades while the strip overflows, current tab scrolled into view, and a
@@ -225,27 +185,6 @@ function initHotspots() {
   });
 }
 
-/* Products menu: close on Esc / outside click, keep focus sensible. */
-function initMenu() {
-  const menus = [...document.querySelectorAll<HTMLDetailsElement>("[data-menu]")];
-  if (!menus.length) return;
-  document.addEventListener("click", (e) => {
-    for (const m of menus) if (m.open && !m.contains(e.target as Node)) m.open = false;
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-    for (const m of menus) if (m.open) { m.open = false; m.querySelector("summary")?.focus(); }
-  });
-  // Tabbing past the last item closes the panel instead of leaving it open over the page.
-  // (A null relatedTarget is a click on a non-focusable spot; outside clicks are handled above.)
-  for (const m of menus) {
-    m.addEventListener("focusout", (e) => {
-      const to = e.relatedTarget as Node | null;
-      if (m.open && to && !m.contains(to)) m.open = false;
-    });
-  }
-}
-
 /* Terminal demo: type once in view; Pause / Replay; static final state under reduced motion. */
 function initTerminals() {
   for (const term of document.querySelectorAll<HTMLElement>("[data-term]")) {
@@ -329,78 +268,6 @@ const progress = (el: Element, start = 0.9, end = 0.25) => {
   const a = innerHeight * start, b = innerHeight * end - r.height;
   return Math.min(1, Math.max(0, (a - r.top) / (a - b)));
 };
-
-/* Home: 3D ring carousel — buttons, ←/→, drag, focus-follow; auto-rotate unless reduced motion. */
-function initRing() {
-  const ring = document.querySelector<HTMLElement>("[data-ring]");
-  if (!ring) return;
-  const stage = ring.querySelector<HTMLElement>("[data-ring-stage]")!;
-  const track = ring.querySelector<HTMLElement>("[data-ring-track]")!;
-  const items = [...ring.querySelectorAll<HTMLElement>("[data-ring-item]")];
-  const status = ring.querySelector<HTMLElement>("[data-ring-status]");
-  const n = items.length, step = 360 / n;
-  let index = 0, rot = 0, auto = 0, userTouched = false;
-  ring.classList.add("is-ready");
-  ring.querySelector<HTMLElement>("[data-ring-controls]")!.hidden = false;
-  const titleOf = (el: HTMLElement) => el.querySelector(".ring__title")?.textContent?.replace(/\.$/, "") ?? "";
-  const render = (announce = true) => {
-    track.style.setProperty("--rot", `${rot}deg`);
-    items.forEach((el, k) => el.classList.toggle("is-active", k === index));
-    if (status && announce) status.textContent = `${titleOf(items[index])} · ${index + 1} / ${n}`;
-  };
-  const go = (k: number, announce = true) => {
-    const delta = ((k - index) % n + n) % n;           // shortest way round
-    const signed = delta > n / 2 ? delta - n : delta;
-    index = ((k % n) + n) % n; rot += signed * step; render(announce);
-  };
-  const stop = () => { userTouched = true; clearInterval(auto); };
-  ring.querySelector("[data-ring-prev]")!.addEventListener("click", () => { stop(); go(index - 1); });
-  ring.querySelector("[data-ring-next]")!.addEventListener("click", () => { stop(); go(index + 1); });
-  ring.addEventListener("keydown", (e) => {
-    if ((e.target as Element).closest(".hotspot")) return;
-    if (e.key === "ArrowRight") { e.preventDefault(); stop(); go(index + 1); items[index].querySelector<HTMLElement>(".ring__card")?.focus({ preventScroll: true }); }
-    if (e.key === "ArrowLeft") { e.preventDefault(); stop(); go(index - 1); items[index].querySelector<HTMLElement>(".ring__card")?.focus({ preventScroll: true }); }
-  });
-  items.forEach((el, k) => el.addEventListener("focusin", () => { stop(); if (k !== index) go(k); }));
-  // drag
-  let startX = 0, startRot = 0, dragging = false, moved = false;
-  stage.addEventListener("pointerdown", (e) => {
-    if (matchMedia("(max-width: 767px)").matches || (e.target as Element).closest(".hotspot")) return;
-    dragging = true; moved = false; startX = e.clientX; startRot = rot;
-  });
-  addEventListener("pointermove", (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - startX;
-    if (!moved && Math.abs(dx) > 6) { moved = true; stop(); stage.classList.add("is-dragging"); }
-    if (moved) { rot = startRot - dx * 0.35; track.style.setProperty("--rot", `${rot}deg`); }
-  });
-  const endDrag = () => {
-    if (!dragging) return;
-    dragging = false; stage.classList.remove("is-dragging");
-    if (!moved) return;
-    const k = Math.round(rot / step); rot = k * step; index = ((k % n) + n) % n; render();
-    // The click that ends a drag (if any) fires right after pointerup; forget the drag after it,
-    // so a drag released outside the stage cannot swallow the next click.
-    setTimeout(() => { moved = false; }, 0);
-  };
-  addEventListener("pointerup", endDrag);
-  // A touch that turns into a vertical scroll is cancelled: snap to the nearest card instead of
-  // leaving the ring half-turned with dragging still on.
-  addEventListener("pointercancel", endDrag);
-  stage.addEventListener("click", (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
-  // auto-rotate: only with motion allowed, never after the user took over, paused on hover/focus
-  const startAuto = () => {
-    clearInterval(auto);
-    if (userTouched || reduceMotion.matches) return;
-    auto = window.setInterval(() => {
-      if (document.hidden || ring.matches(":hover") || ring.contains(document.activeElement)) return;
-      if (ring.querySelector('.hotspot__dot[aria-expanded="true"]')) return;
-      go(index + 1, false);
-    }, 4200);
-  };
-  reduceMotion.addEventListener("change", startAuto);
-  render(false); startAuto();
-}
 
 /* rtok: MCP code graph draws in once visible. */
 function initGraph() {
@@ -556,19 +423,6 @@ function initRoute() {
   reduceMotion.addEventListener("change", tick);
 }
 
-/* Load: a one-off full-screen WebGL light wave (fixed canvas on <body>), fetched as its own chunk after first paint. */
-function initIntro() {
-  const root = document.documentElement;
-  const hero = document.querySelector<HTMLElement>(".hero");
-  if (!hero || reduceMotion.matches || !root.classList.contains("intro") || hero.getBoundingClientRect().bottom < 0) return;
-  // Drop the entrance class once it has played, so later style changes never re-trigger it.
-  setTimeout(() => root.classList.remove("intro"), 2200);
-  const cs = getComputedStyle(root);
-  const a = cs.getPropertyValue("--accent").trim(), b = cs.getPropertyValue("--accent-2").trim();
-  if (!/^#[0-9a-f]{6}$/i.test(a) || !/^#[0-9a-f]{6}$/i.test(b)) return;
-  requestAnimationFrame(() => import("./intro").then((m) => m.playIntro(hero, a, b)).catch(() => {}));
-}
-
 /* Scroll reveals: blocks below the fold rise in once as they enter. Elements already on screen at
    load are never hidden, so nothing flashes; under reduced motion nothing is touched. */
 function initScrollReveal() {
@@ -595,39 +449,9 @@ function initScrollReveal() {
   reduceMotion.addEventListener("change", () => { if (reduceMotion.matches) els.forEach((el) => el.classList.add("is-in")); });
 }
 
-/* Theme toggle: light <-> dark. The saved choice lives in localStorage; without one the page follows the system
-   setting (the head script in Base.astro applies it before first paint). */
-function initThemeToggle() {
-  const root = document.documentElement;
-  const btns = [...document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")];
-  const apply = (m: "light" | "dark") => {
-    root.setAttribute("data-mode", m);
-    root.style.colorScheme = m;
-    (window as unknown as { __applyThemeMeta?: (m: string) => void }).__applyThemeMeta?.(m);
-    for (const b of btns) b.setAttribute("aria-label", m === "light" ? "Switch to dark theme" : "Switch to light theme");
-  };
-  const cur = () => (root.getAttribute("data-mode") === "light" ? "light" : "dark");
-  apply(cur());
-  for (const b of btns) b.addEventListener("click", () => {
-    const next = cur() === "light" ? "dark" : "light";
-    try { localStorage.setItem("pyrlyn-theme", next); } catch {}
-    apply(next);
-  });
-  // No saved choice: follow the system as it changes.
-  matchMedia("(prefers-color-scheme: light)").addEventListener("change", (e) => {
-    let saved: string | null = null;
-    try { saved = localStorage.getItem("pyrlyn-theme"); } catch {}
-    if (!saved) apply(e.matches ? "light" : "dark");
-  });
-}
-
-initThemeToggle();
 initSearch();
-initIntro();
 initScrollReveal();
-initMenu();
 initTerminals();
-initRing();
 initGraph();
 initParticles();
 initScenes();
@@ -637,7 +461,6 @@ initHotspots();
 initShine();
 initStage();
 initStill();
-initCopy();
 initAudience();
 initDocsNav();
 initToc();
