@@ -10,11 +10,12 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveDistDir } from "./lib/dist-dir.mjs";
 import { countDocHeadings } from "../src/lib/doc-source.ts";
 
 // fileURLToPath decodes %20 and drive letters; URL.pathname would break on such checkouts.
 const root = fileURLToPath(new URL("..", import.meta.url));
-const dist = path.resolve(root, process.argv[2] ?? "dist");
+const dist = resolveDistDir(root, process.argv[2]);
 const base = (process.env.SITE_BASE ?? "/landing/").replace(/\/?$/, "/");
 const nav = JSON.parse(fs.readFileSync(path.join(root, "src/data/docs-nav.json"), "utf8"));
 const errors = [];
@@ -71,7 +72,8 @@ for (const [product, cfg] of Object.entries(nav)) {
 }
 
 // ---------- 3: links ----------
-const htmlFiles = walk(dist).filter((f) => f.endsWith(".html"));
+// 500.html is served by nginx at any path and links to "/" on purpose (see src/pages/500.astro).
+const htmlFiles = walk(dist).filter((f) => f.endsWith(".html") && path.relative(dist, f) !== "500.html");
 const idCache = new Map();
 const idsOf = (file) => {
   if (!idCache.has(file)) idCache.set(file, new Set([...read(file).matchAll(/\sid="([^"]+)"/g)].map((m) => decodeURIComponent(m[1]))));

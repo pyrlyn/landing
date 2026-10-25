@@ -11,10 +11,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveDistDir } from "./lib/dist-dir.mjs";
 
 // fileURLToPath decodes %20 and drive letters; URL.pathname would break on such checkouts.
 const root = fileURLToPath(new URL("..", import.meta.url));
-const dist = path.resolve(root, process.argv[2] ?? "dist");
+const dist = resolveDistDir(root, process.argv[2]);
 const site = (process.env.SITE_URL ?? "https://pyrlyn.dev").replace(/\/$/, "");
 const base = (process.env.SITE_BASE ?? "/landing/").replace(/\/?$/, "/");
 const errors = [];
