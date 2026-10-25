@@ -38,7 +38,10 @@ export default function NavPin({ children }: { children?: ReactNode }) {
     const n = nav();
     if (!n) return;
     const ms = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--header-autohide")) || 4) * 1000;
-    const t = prefersReducedMotion() ? window.setTimeout(() => n.setAttribute("data-collapsed", ""), ms) : (n.setAttribute("data-collapsed", ""), 0);
+    // With cached JS the island can mount before the header has a computed style; then the change would not
+    // transition and the header would be hidden at once. Reading the style first gives the transition its start.
+    const arm = () => { const inner = n.querySelector(".nav__inner"); if (inner) void getComputedStyle(inner).opacity; n.setAttribute("data-collapsed", ""); };
+    const t = window.setTimeout(arm, prefersReducedMotion() ? ms : 0);
     return () => { clearTimeout(t); n.removeAttribute("data-collapsed"); };
   }, []);
 
