@@ -10,6 +10,8 @@ import "../styles/search.css";
 import "../styles/light.css";
 import PyrlynLogo from "../components/PyrlynLogo.astro";
 import Icon from "../components/Icon.astro";
+import PageMotion from "../components/islands/PageMotion/PageMotion";
+import HeroStage from "../components/islands/HeroStage/HeroStage";
 import Search from "../components/Search.astro";
 import { API_URL, GA_MEASUREMENT_ID, POSTHOG_HOST, POSTHOG_KEY } from "../lib/config";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
@@ -166,6 +168,8 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
     </footer>
 
     <CopyFeedback client:idle />
+    <PageMotion client:load />
+    {!inDocs && <HeroStage client:load />}
     {!inDocs && <IntroRing client:load />}
     <script>
       import "../scripts/main.ts";

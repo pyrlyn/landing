@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { snap, statusText, turnTo, type RingState } from "../../../lib/client/ring";
 import { REDUCE_MOTION } from "../../../lib/client/media";
+import { useHotspots } from "../hooks/useHotspots";
 
 interface Props { titles: string[]; children?: ReactNode }
 const AUTO_MS = 4200;
@@ -27,6 +28,8 @@ export default function RingCarousel({ titles, children }: Props) {
   const takeOver = useCallback(() => setUserTouched(true), []);
 
   useEffect(() => setReady(true), []);
+  // Card hotspots (one open at a time, Esc / outside click closes); an open one pauses auto-rotate.
+  useHotspots(rootRef);
 
   // Derived DOM: angle + highlighted card follow the single state.
   useEffect(() => {
