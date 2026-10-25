@@ -27,3 +27,14 @@ mise x -- hk install --mise            # install the pre-push hook once per clon
 Do not invent ratings, reviews, or Pro prices in structured data. Real Pro prices and the Pro wishlist come from the backend through `@pyrlyn/sdk` when `API_URL` is set (`src/lib/api.ts` at build time, `src/scripts/pro.ts` in the browser; see `.env.example`); `PRO` in `src/lib/site.ts` and front matter `pro_price` are placeholders for products the API does not price. Without `API_URL`, or when the API is unreachable, the build warns and keeps the placeholders. `@pyrlyn/sdk` is installed from `vendor/` (packed from `pyrlyn/backend` `packages/sdk`) until it is published on npm; then depend on the registry version and delete `vendor/`.
 
 Product categories live in `src/lib/site.ts` (`CATEGORIES` and `PRODUCT_CATEGORY`). Every new, renamed or removed product must be put into the right category there. Keep the categories up to date and consistent in the Products menu, the home catalog and pricing cards, and the product-page badge. `tests/categories.test.mjs` enforces it. The site footer lists product names only, with no per-product docs links.
+
+## Client-side code: React islands
+
+All client-side interactivity is React + TypeScript islands (`@astrojs/react`); Astro stays for static markup, content and MDX.
+
+- `src/components/islands/<Name>/<Name>.tsx` — one island per folder. Static markup the island does not need to re-render (cards, icons, menu panel) is passed from Astro as children, so it stays server-rendered and works without JS.
+- `src/components/islands/hooks/` — shared hooks (`useMediaQuery`, `useDocumentEvent`).
+- `src/lib/client/` — browser-side helpers and pure logic (ring maths, media queries, the intro WebGL sweep). Pure logic gets node tests in `tests/`.
+- Hydration: `client:load` for above-the-fold controls (ThemeToggle, products Menu, IntroRing), `client:visible` for below-the-fold/heavy widgets (RingCarousel), `client:idle` for page-wide helpers (CopyFeedback).
+- Exception: the pre-paint theme script in `Base.astro` stays inline — it must run before first paint.
+- `src/scripts/main.ts` still holds the not-yet-migrated parts (phase 2); do not add new behaviour there.
