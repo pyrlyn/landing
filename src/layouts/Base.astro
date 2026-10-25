@@ -15,7 +15,6 @@ import Search from "../components/Search.astro";
 import { API_URL, GA_MEASUREMENT_ID, POSTHOG_HOST, POSTHOG_KEY } from "../lib/config";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
 import { getTools, proFor, hasPro, versionLabel, groupByCategory } from "../lib/catalog";
-import { productsWithDocs } from "../lib/docs";
 import SEO from "../components/SEO.astro";
 
 interface Props {
@@ -42,8 +41,6 @@ const vars = `--accent:${t.accent};--accent-dark:${t.accent};--accent-2:${t.acce
 const og = new URL(u(`/images/${t.images}/og.jpg`), Astro.site).href;
 const tools = await getTools();
 const current = tools.find((x) => x.id === theme);
-const withDocs = new Set(productsWithDocs());
-const docTools = tools.filter((x) => withDocs.has(x.id));
 const ghHref = current?.data.repo ?? "https://github.com/pyrlyn";
 const ghLabel = `${current?.data.title ?? "Pyrlyn"} on GitHub`;
 const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
@@ -130,16 +127,6 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
                       </ul>
                     </section>
                   ))}
-                  {docTools.length > 0 && (
-                    <>
-                      <p class="menu__label">Documentation</p>
-                      <ul class="menu__docs" role="list">
-                        {docTools.map((x) => (
-                          <li><a class="menu__doc" href={u(`/${x.id}/docs/`)} style={`--card-accent:${x.data.accent}`} aria-current={inDocs && x.id === theme ? "page" : undefined}><i aria-hidden="true"></i>{x.data.title} docs</a></li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
                   <p class="menu__foot"><a href={u("/#catalog")}>Browse the catalog →</a><span>{PRO_PRICE_NOTE}</span></p>
                 </Menu>
             </li>
