@@ -62,7 +62,7 @@ export default function CoxScenes({ children }: { children?: ReactNode }) {
     prev.current = active;
   }, [active, seen]);
 
-  const onKey = (e: KeyboardEvent) => {
+  const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
     const onTab = (document.activeElement as HTMLElement | null)?.getAttribute("role") === "tab" && !!root()?.contains(document.activeElement);
     if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); go(active + (e.key === "ArrowRight" ? 1 : -1), onTab); }
     if ((e.key === "Home" || e.key === "End") && (e.target as Element).getAttribute("role") === "tab") {

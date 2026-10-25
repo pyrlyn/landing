@@ -62,7 +62,7 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SEO {title} {description} {ogType} {imageAlt} {jsonLd} {noindex} image={og} />
     <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes.
-         Stays an inline script on purpose (not a React island): islands hydrate after the HTML is parsed, which is too late to avoid a dark/light flash. The ThemeToggle island only changes the mode afterwards. -->
+         Stays an inline script on purpose (not an island): islands hydrate after the HTML is parsed, which is too late to avoid a dark/light flash. The ThemeToggle island only changes the mode afterwards. -->
     <script is:inline define:vars={{ darkBg: t.bg }}>(function(){var d=document.documentElement,s=null;try{s=localStorage.getItem("pyrlyn-theme")}catch(e){}var m=s==="light"||s==="dark"?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");d.setAttribute("data-mode",m);d.dataset.darkBg=darkBg;d.style.colorScheme=m;window.__applyThemeMeta=function(m){var c=document.getElementById("meta-theme-color");if(c)c.setAttribute("content",m==="light"?"#f4f6f9":darkBg);var k=document.getElementById("meta-color-scheme");if(k)k.setAttribute("content",m)};document.addEventListener("DOMContentLoaded",function(){window.__applyThemeMeta(m)});window.__applyThemeMeta(m)})()</script>
     <meta id="meta-color-scheme" name="color-scheme" content="dark light" />
     <meta id="meta-theme-color" name="theme-color" content={t.bg} />

@@ -28,9 +28,9 @@ Do not invent ratings, reviews, or Pro prices in structured data. Real Pro price
 
 Product categories live in `src/lib/site.ts` (`CATEGORIES` and `PRODUCT_CATEGORY`). Every new, renamed or removed product must be put into the right category there. Keep the categories up to date and consistent in the Products menu, the home catalog and pricing cards, and the product-page badge. `tests/categories.test.mjs` enforces it. The site footer lists product names only, with no per-product docs links.
 
-## Client-side code: React islands
+## Client-side code: Preact islands (React API)
 
-All client-side interactivity is React + TypeScript islands (`@astrojs/react`); Astro stays for static markup, content and MDX.
+All client-side interactivity is TypeScript islands written against the React API and run on Preact (`@astrojs/preact` with `compat: true`, so `react` / `react-dom` imports resolve to `preact/compat`; `tsconfig.json` sets `jsxImportSource: "preact"` and path aliases for the types). Write them as ordinary React function components with hooks; do not add `react` or `react-dom` back as dependencies. Astro stays for static markup, content and MDX.
 
 - `src/components/islands/<Name>/<Name>.tsx` — one island per folder. Static markup the island does not need to re-render (cards, icons, menu panel) is passed from Astro as children, so it stays server-rendered and works without JS.
 - `src/components/islands/hooks/` — shared hooks (`useMediaQuery`, `useDocumentEvent`).

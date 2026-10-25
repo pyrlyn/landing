@@ -15,6 +15,8 @@ type Result = { kind: "idle" } | { kind: "hits"; hits: SearchHit[]; q: string } 
 const isTyping = (el: EventTarget | null) =>
   el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
 const DEBOUNCE_MS = 150;
+// Preact's input types only allow role="combobox" together with `list`; ours is an ARIA 1.2 combobox with a listbox.
+const COMBOBOX = { role: "combobox" } as Record<string, string>;
 
 export default function Search({ appId, searchKey, index }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -126,12 +128,12 @@ export default function Search({ appId, searchKey, index }: Props) {
       <button ref={btnRef} className="search__btn" type="button" aria-label="Search" aria-expanded={open} aria-controls="search-input" title="Search (/ or ⌘K)" onClick={doOpen}>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
       </button>
-      <input ref={inputRef} id="search-input" className="search__input" type="search" role="combobox" aria-expanded={panelShown}
+      <input ref={inputRef} id="search-input" className="search__input" type="search" {...COMBOBOX} aria-expanded={panelShown}
         aria-controls="search-results" aria-autocomplete="list" aria-label="Search tools and docs" autoComplete="off" placeholder="Search tools and docs"
         aria-activedescendant={panelShown && active >= 0 ? `search-opt-${active}` : undefined}
         tabIndex={open ? 0 : -1} value={value}
         onFocus={() => { if (!openRef.current) doOpen(); }}
-        onChange={(e) => { setValue(e.target.value); schedule(e.target.value); }} onKeyDown={onKeyDown} />
+        onInput={(e) => { const v = (e.currentTarget as HTMLInputElement).value; setValue(v); schedule(v); }} onKeyDown={onKeyDown} />
       <kbd className="search__kbd">Esc</kbd>
       <button className="search__cancel" type="button" tabIndex={open ? 0 : -1} aria-label="Close search" onClick={() => { setValue(""); close(); }}>Cancel</button>
       <div id="search-results" className="search__panel" role="listbox" aria-label="Search results" hidden={!panelShown} data-visible={String(visible)}>

@@ -56,7 +56,7 @@ export default function NavPin({ children }: { children?: ReactNode }) {
   useDocumentEvent("keydown", (e) => { if (e.key === "Escape" && pinnedRef.current) set(false, true); });
 
   // detail === 0: activated from the keyboard (Enter / Space), not a pointer.
-  const onPeek = (e: MouseEvent) => set(true, e.detail === 0);
+  const onPeek = (e: MouseEvent<HTMLButtonElement>) => set(true, e.detail === 0);
   return (
     <div className="nav__peek" ref={ref}>
       <div className="nav__peek-pill glass">
