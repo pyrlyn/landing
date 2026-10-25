@@ -8,7 +8,7 @@ export interface Flow { title: string; nodes: { label: string; detail: string }[
 export const DEMOS: Record<string, Demo> = {
   rtok: {
     title: "rtok — zsh",
-    caption: "Commands and output from the rtok README (dry-run output abridged with …).",
+    caption: "Commands and output from the Rtok README (dry-run output abridged with …).",
     steps: [
       { cmd: "rtok agents install claude --dry-run", out: ["+ PreToolUse Bash rtok hook PreToolUse", "+ PreToolUse Read rtok hook PreToolUse", "+ PostToolUse * rtok hook PostToolUse", "…", "8 additions"] },
       { cmd: "rtok run -- cargo test", out: ["[rtok 7f3a91 · 412 lines · expand: rtok expand 7f3a91]"] },
@@ -18,7 +18,7 @@ export const DEMOS: Record<string, Demo> = {
   },
   cox: {
     title: "cox — zsh",
-    caption: "Commands and comments from the cox README; the README shows no output, so none is invented.",
+    caption: "Commands and comments from the Cox README; the README shows no output, so none is invented.",
     steps: [
       { cmd: "export ANTHROPIC_API_KEY=sk-...", note: "# or OPENAI_API_KEY" },
       { cmd: "cox doctor", note: "# green except prices? you are good" },
@@ -30,7 +30,7 @@ export const DEMOS: Record<string, Demo> = {
   },
   ketch: {
     title: "ketch — zsh",
-    caption: "Commands and comments from the ketch README.",
+    caption: "Commands and comments from the Ketch README.",
     steps: [
       { cmd: "ketch install BurntSushi/ripgrep", note: "# any repo that publishes releases" },
       { cmd: "ketch install sharkdp/fd@v10.2.0", note: "# or an exact version" },
@@ -73,10 +73,11 @@ export const FLOWS: Record<string, Flow> = {
 };
 
 /** Generic fallback for tools added later: type the Usage example commands, no output. */
-export function demoFromUsage(title: string, blocks: { code: string }[]): Demo {
+/** `title` is the terminal chrome (synced spelling, e.g. "rtok"); `name` is the display name for the caption. */
+export function demoFromUsage(title: string, blocks: { code: string }[], name = title): Demo {
   const steps = blocks.flatMap((b) => b.code.split("\n")).filter((l) => l.trim()).slice(0, 6)
     .map((l) => { const m = l.match(/^(.*?)(\s+#\s.*)$/); return m ? { cmd: m[1], note: m[2].trim() } : { cmd: l }; });
-  return { title: `${title} — zsh`, caption: `Commands from the ${title} usage examples.`, steps };
+  return { title: `${title} — zsh`, caption: `Commands from the ${name} usage examples.`, steps };
 }
 
 /** cox scenes (TUI / headless / editor). Commands and comments from the cox README usage examples. */
@@ -85,7 +86,7 @@ export const COX_SCENES: { id: string; label: string; sub: string; demo: Demo }[
     id: "tui", label: "TUI", sub: "cox",
     demo: {
       title: "cox — interactive",
-      caption: "From the cox README: Enter sends, Esc interrupts; y/s/n answer approval prompts, /model switches tiers, /compact compacts context.",
+      caption: "From the Cox README: Enter sends, Esc interrupts; y/s/n answer approval prompts, /model switches tiers, /compact compacts context.",
       steps: [
         { cmd: "cox", note: "# Enter sends, Esc interrupts" },
         { cmd: 'cox "explain the layout of this repository"', note: "# optionally with a first prompt" },
@@ -96,7 +97,7 @@ export const COX_SCENES: { id: string; label: string; sub: string; demo: Demo }[
     id: "headless", label: "Headless", sub: "cox run -p",
     demo: {
       title: "cox — headless",
-      caption: "From the cox README: script a headless run and pick up where it stopped.",
+      caption: "From the Cox README: script a headless run and pick up where it stopped.",
       steps: [
         { cmd: 'cox run -p "add a unit test for parse_args" --output-format json --max-turns 20' },
         { cmd: 'cox run --continue -p "now run the tests"' },
@@ -109,7 +110,7 @@ export const COX_SCENES: { id: string; label: string; sub: string; demo: Demo }[
     id: "editor", label: "Editor", sub: "cox acp",
     demo: {
       title: "cox — editor & agents",
-      caption: "From the cox README: cox acp serves Zed and JetBrains over the Agent Client Protocol; cox mcp serves the built-in tools to other agents (read-only unless you opt in).",
+      caption: "From the Cox README: cox acp serves Zed and JetBrains over the Agent Client Protocol; cox mcp serves the built-in tools to other agents (read-only unless you opt in).",
       steps: [
         { cmd: "cox acp", note: "# Zed and JetBrains, over the Agent Client Protocol" },
         { cmd: "cox mcp --allow-write", note: "# built-in tools for other agents; read-only unless you opt in" },

@@ -35,18 +35,18 @@ export const firstSentence = (md = "") => plain(md).match(/^(.*?[.!?])(\s|$)/)?.
 /** Copywriter-approved product <title> and meta description, keyed by project id. Front matter in
  * content/projects is synced from each product repo, so site SEO copy lives here instead. */
 export const PRODUCT_SEO: Record<string, { title: string; description: string }> = {
-  rtok: { title: "rtok: token-reduction CLI for AI coding agents | Pyrlyn", description: "rtok cuts tokens for AI coding agents with hooks, an MCP server and an API proxy, all in one Rust binary. Install guides, commands and examples." },
-  ketch: { title: "ketch: install CLI tools from GitHub releases | Pyrlyn", description: "ketch is a single-binary package manager for macOS, Linux and Windows: it downloads GitHub release assets, verifies checksums and puts them on your PATH." },
+  rtok: { title: "Rtok: token-reduction CLI for AI coding agents | Pyrlyn", description: "Rtok cuts tokens for AI coding agents with hooks, an MCP server and an API proxy, all in one Rust binary. Install guides, commands and examples." },
+  ketch: { title: "Ketch: install CLI tools from GitHub releases | Pyrlyn", description: "Ketch is a single-binary package manager for macOS, Linux and Windows: it downloads GitHub release assets, verifies checksums and puts them on your PATH." },
   cox: { title: "cox: modular terminal coding agent in Rust | Pyrlyn", description: "cox is a terminal coding agent in Rust with a safe, event-driven core: interactive TUI, headless runs, editor integration via ACP and MCP tools." },
-  runa: { title: "runa: local-first AI CLI for GGUF models | Pyrlyn", description: "runa checks whether a GGUF model fits your hardware before you download it, runs it locally via ggml / llama.cpp, or calls OpenAI and Anthropic." },
+  runa: { title: "Runa: local-first AI CLI for GGUF models | Pyrlyn", description: "Runa checks whether a GGUF model fits your hardware before you download it, runs it locally via ggml / llama.cpp, or calls OpenAI and Anthropic." },
   mailune: { title: "Mailune: local-first mail client with private AI | Pyrlyn", description: "Mailune is a local-first mail client with private AI for macOS, iOS, Windows, Linux, Android and the web. In development, no release yet." },
-  swarfr: { title: "swarfr: shrink Cargo target/ directories safely | Pyrlyn", description: "swarfr compresses and dedupes Cargo target/ build dirs without deleting what you still build with. Runs under cargo's build lock and keeps mtimes." },
+  swarfr: { title: "Swarfr: shrink Cargo target/ directories safely | Pyrlyn", description: "Swarfr compresses and dedupes Cargo target/ build dirs without deleting what you still build with. Runs under cargo's build lock and keeps mtimes." },
   weft: { title: "Weft: agent-friendly UI description format | Pyrlyn", description: "Weft is an open UI format: strict markup that AI agents read and write, canonical JSON that tools validate and patch. CLI, MCP and editor plugins." },
   stator: { title: "Stator: compile TypeScript to native binaries | Pyrlyn", description: "Stator compiles TypeScript and JavaScript ahead of time to native binaries: unboxed values for typed code, a dynamic path for untyped. Research compiler." },
-  aulo: { title: "aulo: local-first voice agent for your computer | Pyrlyn", description: "aulo is a planned voice agent that drives your shell, apps and browser, with MCP both ways and local or remote models. Specification stage." },
+  aulo: { title: "Aulo: local-first voice agent for your computer | Pyrlyn", description: "Aulo is a planned voice agent that drives your shell, apps and browser, with MCP both ways and local or remote models. Specification stage." },
   scull: { title: "Scull: Rust terminal emulator with native UI | Pyrlyn", description: "Scull is a terminal emulator with a Rust core and a native interface per platform: SwiftUI on macOS, WinUI on Windows. Early scaffold." },
   kerf: { title: "Kerf: Rust IDE core with sandboxed WASM plugins | Pyrlyn", description: "Kerf is an IDE with a small Rust core, a tree-sitter semantic index and sandboxed WASM plugins; LSP and DAP run as separate processes. Research stage." },
-  bindsmith: { title: "bindsmith: Dart bindings for native APIs | Pyrlyn", description: "bindsmith generates Dart bindings for native APIs on six Flutter platforms from one bindsmith.yaml: Android, iOS, macOS, Windows, Linux and Web." },
+  bindsmith: { title: "Bindsmith: Dart bindings for native APIs | Pyrlyn", description: "Bindsmith generates Dart bindings for native APIs on six Flutter platforms from one bindsmith.yaml: Android, iOS, macOS, Windows, Linux and Web." },
 };
 
 /** Product <title>: approved copy, else `{Title}: {tagline} | Pyrlyn`. */

@@ -11,7 +11,7 @@ const hasPhoto = existsSync(join(process.cwd(), "public/team/ivan.jpg"));
 const photo = u(hasPhoto ? "/team/ivan.jpg" : "/team/ivan-placeholder.svg");
 const n = TEAM_TOOLS.length;
 ---
-<Base title="Our team | Pyrlyn" description="About Pyrlyn: open-source developer tools in Rust, Swift and TypeScript, such as rtok, cox, ketch, runa and Stator, and the engineer who builds them." theme="home">
+<Base title="Our team | Pyrlyn" description="About Pyrlyn: open-source developer tools in Rust, Swift and TypeScript, such as Rtok, Cox, Ketch, Runa and Stator, and the engineer who builds them." theme="home">
   <section class="section container team" aria-labelledby="team-title">
     <h1 id="team-title" class="team__title">Our team</h1>
 
@@ -40,12 +40,12 @@ const n = TEAM_TOOLS.length;
       <h2>About Pyrlyn</h2>
       <p>Pyrlyn is a GitHub organization of open-source developer tools, most of them written in Rust, with Swift and TypeScript where a platform needs it. Every tool has a free open-source edition. Examples:</p>
       <ul>
-        <li><a href={u("/rtok/")}>rtok</a>: a token-reduction CLI for AI coding agents (hooks, MCP server and API proxy).</li>
-        <li><a href={u("/cox/")}>cox</a>: a modular terminal coding agent with a safe, event-driven core.</li>
-        <li><a href={u("/ketch/")}>ketch</a>: a single-binary CLI package manager that installs releases straight from GitHub.</li>
-        <li><a href={u("/runa/")}>runa</a>: a local-first AI runner with an OpenAI-compatible server.</li>
+        <li><a href={u("/rtok/")}>Rtok</a>: a token-reduction CLI for AI coding agents (hooks, MCP server and API proxy).</li>
+        <li><a href={u("/cox/")}>Cox</a>: a modular terminal coding agent with a safe, event-driven core.</li>
+        <li><a href={u("/ketch/")}>Ketch</a>: a single-binary CLI package manager that installs releases straight from GitHub.</li>
+        <li><a href={u("/runa/")}>Runa</a>: a local-first AI runner with an OpenAI-compatible server.</li>
         <li><a href={u("/stator/")}>Stator</a>: an ahead-of-time TypeScript/JavaScript compiler to native binaries.</li>
-        <li><a href="https://github.com/pyrlyn/crates">crates</a>: small focused Rust crates shared by ketch and rtok.</li>
+        <li><a href="https://github.com/pyrlyn/crates">crates</a>: small focused Rust crates shared by Ketch and Rtok.</li>
       </ul>
       <p>Shared CI lives in <a href="https://github.com/pyrlyn/ci">pyrlyn/ci</a> (reusable GitHub Actions workflows). This site is built from <a href="https://github.com/pyrlyn/landing">pyrlyn/landing</a>.</p>
 
