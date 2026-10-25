@@ -14,7 +14,7 @@ import HeroStage from "../components/islands/HeroStage/HeroStage";
 import Search from "../components/Search.astro";
 import { API_URL, GA_MEASUREMENT_ID, POSTHOG_HOST, POSTHOG_KEY } from "../lib/config";
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
-import { getTools, proFor, versionLabel, groupByCategory } from "../lib/catalog";
+import { getTools, proFor, hasPro, versionLabel, groupByCategory } from "../lib/catalog";
 import { productsWithDocs } from "../lib/docs";
 import SEO from "../components/SEO.astro";
 
@@ -122,7 +122,7 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
                             <a class="menu__item shine" href={u(`/${x.id}/`)} style={`--card-accent:${x.data.accent}`} aria-current={x.id === theme ? "page" : undefined}>
                               <span class="menu__mark" aria-hidden="true">{x.data.title.slice(0, 2)}</span>
                               <span class="menu__text"><strong>{x.data.title} <span class="menu__ver">{versionLabel(x)}</span></strong><small>{x.data.tagline}</small></span>
-                              <span class="menu__price">Free · Pro <span data-pro-price={x.id}>{proFor(x).price}</span>*</span>
+                              <span class="menu__price">{hasPro(x) ? <>Free · Pro <span data-pro-price={x.id}>{proFor(x).price}</span>*</> : "Free"}</span>
                             </a>
                           </li>
                         ))}
