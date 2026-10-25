@@ -723,7 +723,7 @@ html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .
 .stage--ring .pos-a { left: -2%; top: 0; z-index: 4; }
 .stage__ring { inset: 118px 0 0 0; display: grid; }
 .ring { position: relative; display: grid; gap: var(--s-4); align-content: start; }
-.ring__stage { position: relative; height: 400px; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab;
+.ring__stage { position: relative; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab;
   /* Side cards stop at the column edge: the carousel never runs under the hero text. */
   overflow-x: clip;
   /* A mask clips everything outside the element box, so the cards' drop shadows were cut off in a
