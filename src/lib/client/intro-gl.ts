@@ -1,8 +1,8 @@
 // Light sweep: one WebGL pass, about 1.6 s, then the canvas is removed. The canvas is mounted on
 // <body> (one level above the hero container) as a fixed full-viewport layer, so the sweep extends
-// past the hero's bounds instead of being clipped by it. It plays on page load (main.ts),
+// past the hero's bounds instead of being clipped by it. It plays on page load (IntroRing island),
 // unless reduced motion is requested. No loading UI.
-// Loaded lazily by main.ts only when motion is allowed and the hero is on screen; the page itself
+// Loaded lazily by the IntroRing island (src/components/islands/IntroRing) only when motion is allowed and the hero is on screen; the page itself
 // is fully visible without it (the hero's CSS entrance in motion.css does not depend on this file).
 const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
 // Domain-warped value noise in the page accents, carried by a ring that expands from the hero art.
@@ -26,7 +26,8 @@ void main(){
  gl_FragColor=vec4(c*al,al);
 }`;
 
-export function playIntro(hero: HTMLElement, accent: string, accent2: string) {
+/** Plays the sweep once; returns a stop function (idempotent) that removes the canvas. */
+export function playIntro(hero: HTMLElement, accent: string, accent2: string): (() => void) | undefined {
   const cv = document.createElement("canvas");
   cv.className = "intro-gl";
   cv.setAttribute("aria-hidden", "true");
@@ -84,4 +85,5 @@ export function playIntro(hero: HTMLElement, accent: string, accent2: string) {
     raf = requestAnimationFrame(frame);
   }
   raf = requestAnimationFrame(frame);
+  return stop;
 }

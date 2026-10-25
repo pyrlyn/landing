@@ -2,7 +2,9 @@
 // rtok: canvas-2D token particles. Scrolling down squeezes them into a narrow "context" band
 // (thinned tokens shrink, cut tokens peel off in coral to the archive); scrolling back expands them
 // again — the archive is lossless. Every number here is illustrative, and labelled so.
+import TokenParticlesIsland from "./islands/TokenParticles/TokenParticles";
 ---
+<TokenParticlesIsland client:idle>
 <div class="particles glass glass--thick" data-particles>
   <div class="particles__head">
     <div>
@@ -22,3 +24,4 @@
   </div>
   <p class="muted small">Scroll to compress, scroll back to expand. An illustration of the idea, not a measurement: in Rtok a saving only counts when a Measurement row in the ledger records it, and archived payloads come back whole with <code>rtok expand &lt;id&gt;</code>.</p>
 </div>
+</TokenParticlesIsland>

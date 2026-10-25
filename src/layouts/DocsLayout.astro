@@ -3,6 +3,7 @@
 // on-page TOC on wide screens (≥1280px) and prev/next links.
 import Base from "./Base.astro";
 import DocsNav from "../components/DocsNav.astro";
+import DocsToc from "../components/islands/DocsToc/DocsToc";
 import "../styles/docs.css";
 import type { Tool } from "../lib/catalog";
 import { accentsFor } from "../lib/catalog";
@@ -62,12 +63,14 @@ const showToc = !wide && toc.filter((t) => t.depth === 2).length >= 3;
       </nav>
     </div>
     {showToc && (
+      <DocsToc client:idle>
       <aside class="toc" aria-labelledby="toc-title">
         <p id="toc-title" class="toc__title">On this page</p>
         <ul role="list">
           {toc.filter((t) => t.depth === 2).map((t) => <li><a href={`#${t.id}`} data-toc-link>{t.text}</a></li>)}
         </ul>
       </aside>
+      </DocsToc>
     )}
   </div>
 </Base>
