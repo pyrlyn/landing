@@ -1,7 +1,4 @@
 ---
-import "@fontsource-variable/inter";
-// Preload the Latin subset so text does not reflow when Inter replaces the fallback (CLS).
-import interLatin from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "../styles/global.css";
 import "../styles/tailwind.css";
 import "../styles/products.css";
@@ -47,6 +44,8 @@ const tools = await getTools();
 const current = tools.find((x) => x.id === theme);
 const withDocs = new Set(productsWithDocs());
 const docTools = tools.filter((x) => withDocs.has(x.id));
+const ghHref = current?.data.repo ?? "https://github.com/pyrlyn";
+const ghLabel = `${current?.data.title ?? "Pyrlyn"} on GitHub`;
 const inDocs = /\/docs(\/|$)/.test(Astro.url.pathname);
 import Menu from "../components/islands/Menu/Menu";
 import ThemeToggle from "../components/islands/ThemeToggle/ThemeToggle";
@@ -73,7 +72,12 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-64.png")} type="image/png" sizes="64x64" />
     <link rel="apple-touch-icon" href={u("/pyrlyn/pyrlyn-apple-touch-icon.png")} />
     <link rel="sitemap" type="application/xml" href={u("/sitemap-index.xml")} />
-    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <!-- Satoshi (Indian Type Foundry, ITF Free Font License) is loaded from the Fontshare CDN as one
+         variable face (wght 300–900). The FFL forbids redistributing the font files, and this repo is
+         public, so they are not committed here. -->
+    <link rel="preconnect" href="https://api.fontshare.com" />
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap" />
     {analytics && GA_MEASUREMENT_ID && (
       <>
         <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
@@ -149,7 +153,7 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
             <span class="theme-toggle__sun"><Icon name="sun" size={18} /></span>
             <span class="theme-toggle__moon"><Icon name="moon" size={18} /></span>
           </ThemeToggle>
-          <a class="btn btn--glass nav__gh" href="https://github.com/pyrlyn"><Icon name="github" size={16} /> GitHub</a>
+          <a class="nav__gh" href={ghHref} aria-label={ghLabel} title={ghLabel}><Icon name="github" size={18} /></a>
           <a class="btn btn--primary nav__cta tw:max-[459px]:px-4! tw:max-[359px]:px-3!" href={u("/#catalog")}><span class="nav__cta-icon" aria-hidden="true"><Icon name="app" size={18} /></span><span class="nav__cta-label">Browse tools</span></a>
           {current && (
             <button class="nav__peek-btn nav__unpin" type="button" aria-label="Hide menu" data-nav-pin>

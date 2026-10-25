@@ -37,7 +37,7 @@ export function initDocsNav(nav: HTMLElement) {
   scroller.addEventListener("pointerleave", back);
   scroller.addEventListener("focusout", onFocusOut);
   let alive = true;
-  document.fonts?.ready.then(() => { if (alive) { moveTo(current); fades(); } });
+  document.fonts?.ready.then(() => { if (alive) { moveTo(current); fades(); } }).catch(() => { /* fonts failed to load; keep fallback layout */ });
 
   const menus = [...nav.querySelectorAll<HTMLDetailsElement>("details[data-menu]")];
   const onDocClick = (e: MouseEvent) => { for (const m of menus) if (m.open && !m.contains(e.target as Node)) m.open = false; };
