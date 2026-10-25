@@ -630,13 +630,20 @@ html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .
 .price__num--sm { font-size: 1.5rem; }
 .pricing-pair { align-items: stretch; }
 /* Free-only products (FREE_ONLY in src/lib/site.ts): one tier, no Pro column. */
-.pricing-pair--free { max-width: 440px; }
 /* Pro wishlist form (src/components/ProWishlist.astro); the status line takes no room until it speaks. */
 .wishlist { display: grid; gap: var(--s-2); }
 .wishlist__email { width: 100%; min-height: 44px; padding: 0 var(--s-3); border: 0; border-radius: var(--r-md); font: inherit; color: var(--fg-strong); background: rgb(0 0 0 / .25); box-shadow: inset 0 0 0 1px var(--hairline-strong); }
 .wishlist__email:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .wishlist__status:empty { display: none; }
 @media (min-width: 640px) { .pricing-pair { max-width: 880px; } }
+/* Free-only products (FREE_ONLY in src/lib/site.ts): one tier, no Pro column, so one card-width column
+   instead of the two-tier width. Declared after the rule above so it wins at every width. */
+.pricing-pair--free { max-width: 440px; }
+/* Home pricing grid: a free-only card sits in a row with taller Free + Pro cards. Let its one tier fill
+   the card and keep "Install free" at the bottom, aligned with the other cards' first button row. */
+.price-card:not(:has(.price-tier--pro)) { grid-template-rows: auto auto 1fr; }
+.price-card:not(:has(.price-tier--pro)) .price-tier { grid-template-rows: auto 1fr auto; align-content: stretch; }
+.price-card:not(:has(.price-tier--pro)) .price-tier .checklist { align-content: start; }
 
 /* Terminal demo */
 .term { margin: 0; border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
