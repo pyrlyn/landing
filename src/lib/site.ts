@@ -45,13 +45,12 @@ export const FREE_HIGHLIGHTS: Record<string, string[]> = {
   bindsmith: ["Six platforms from one YAML", "Review markers and verify", "CI-safe dump, diff and --check"],
 };
 
-/** One license wording for every project (rtok, cox, ketch, runa, Mailune, swarfr, aulo, Kerf, Stator and bindsmith share the same triple license; Weft and Scull override it in LICENSE_OVERRIDES). */
+/** One license wording for every project (rtok, cox, ketch, runa, Mailune, swarfr, aulo, Kerf, Stator and bindsmith share the same dual license; Weft and Scull override it in LICENSE_OVERRIDES). */
 export const LICENSE = {
-  short: "GPLv3, royalty-free or commercial — your choice",
+  short: "GPLv3 or commercial — your choice",
   items: [
     { name: "GNU GPLv3", text: "free for open-source applications on any platform, including embedded systems." },
-    { name: "Royalty-free license", text: "free for proprietary desktop, mobile and web applications, as long as you disclose that your application uses the project. Embedded systems are not covered." },
-    { name: "Commercial license", text: "for proprietary applications, including embedded systems, without the attribution requirement." },
+    { name: "Commercial license", text: "for proprietary applications, including embedded systems." },
   ],
 };
 

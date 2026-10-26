@@ -79,8 +79,7 @@ from its source, or when any internal link or `#fragment` does not resolve under
 ## Site rules
 
 - **License:** the page ignores the `License:` bullet in `## Links` and renders one shared license block for
-  every project: GNU GPLv3, a royalty-free license (proprietary desktop, mobile and web apps with
-  attribution), or a commercial license — at your choice (`LICENSE` in `src/lib/site.ts`).
+  every project: your choice of GNU GPLv3 or a commercial license (`LICENSE` in `src/lib/site.ts`).
 - **README caveats** the synced copy lacks are kept in `CAVEATS` in `src/lib/site.ts` (e.g. rtok: no live
   A/B cost reduction has been established yet).
 - **Pro tiers are placeholders:** every Pro price and Pro feature is labelled “Placeholder” on the site.

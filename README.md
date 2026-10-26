@@ -136,5 +136,5 @@ and commit `package.json` and `package-lock.json`. To change a landing token or 
 
 All Pro tiers, Pro prices, Pro features and the waitlist buttons are **placeholders** and are labelled on
 the page. Product facts (features, install commands, versions, terminal commands) come only from each
-tool's own README, docs and site copy. Licensing for every tool: GNU GPLv3, a royalty-free license, or a
-commercial license — your choice.
+tool's own README, docs and site copy. Licensing for every tool: your choice of GNU GPLv3 or a commercial
+license (Weft is Apache-2.0).
