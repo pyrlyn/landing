@@ -16,3 +16,6 @@ public/favicon.svg
 .env
 .env.local
 .env.*.local
+
+# Satoshi, fetched from Fontshare by `npm run font` (predev/prebuild); not redistributable (ITF FFL)
+public/fonts/

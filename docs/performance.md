@@ -1,6 +1,6 @@
 # Loading performance
 
-Two build-level settings keep the first paint from waiting on resources it does not need.
+Four build-level settings keep the first paint from waiting on resources it does not need.
 
 ## 1. Only the hero image loads eagerly
 
@@ -24,6 +24,29 @@ for an extra request. No new dependency, no change in the CSS itself.
 - Cost: the CSS (~95 KB raw, ~15 KB gzip) is repeated in every HTML page and not cached across
   navigations; HTML of the home page grows from ~111 KB to ~205 KB raw.
 
+## 3. Satoshi is self-hosted and preloaded
+
+- `scripts/fetch-font.mjs` (`npm run font`, run by `predev`/`prebuild`) downloads the Satoshi variable
+  woff2 (one file, wght 300–900, ~42 KB) from Fontshare into `public/fonts/` (gitignored).
+- `src/layouts/Base.astro` then emits `<link rel="preload" as="font">` for it and an inline
+  `@font-face` with `font-display: block` (no flash of the fallback font). The external
+  `api.fontshare.com` stylesheet and its preconnects are gone.
+- License: Satoshi is under the ITF Free Font License (v2.0). It allows self-hosting on our own site
+  via `@font-face`, but forbids redistributing the files, including in public repositories. This repo
+  is public, so the file is fetched at build time and never committed.
+- Fallback: if the download fails (offline build), the script only warns and `Base.astro` falls back
+  to the Fontshare CDN stylesheet, as before.
+- Disable: `PERF_SELF_HOST_FONT=0 npm run build` (CDN stylesheet again).
+
+## 4. Analytics load after the page
+
+- The `gtag` queue (`dataLayer`, `gtag("js")`, `gtag("config", id)`) and the PostHog stub with the same
+  `posthog.init(key, { api_host, person_profiles: "identified_only" })` are set up immediately, so
+  calls made early are queued, not lost.
+- `gtag.js` and PostHog `array.js` are injected after the `load` event, in `requestIdleCallback`
+  (3 s timeout; `setTimeout` where unsupported).
+- Disable: `PERF_DEFER_ANALYTICS=0 npm run build` (libraries injected at once).
+
 ## Testing
 
 - `npm run build && npm run check:seo && npm run check:docs && npm test`.
@@ -33,9 +56,9 @@ for an extra request. No new dependency, no change in the CSS itself.
 
 ## Limitations
 
-- The page still loads one render-blocking third-party stylesheet (Satoshi from
-  `api.fontshare.com`, `src/layouts/Base.astro`) and third-party analytics scripts (Google Analytics
-  `gtag.js`, ~180 KB; PostHog `array.js`, ~107 KB). Lighthouse attributes most remaining mobile
-  render-blocking time and LCP (the hero `<h1>`, which waits for the font) to these. Changing them
-  is out of scope here: self-hosting the font or deferring analytics are separate decisions.
+- Visitors who leave before `load` + idle are not counted by GA/PostHog (bounces under ~1 s).
+- The self-hosted font does not update automatically when Fontshare ships a new version; delete
+  `public/fonts/` and rebuild to refresh it. CI builds always fetch a fresh copy.
+- Home and `/rtok/` mobile LCP is still ~6 s in Lighthouse: the LCP element (hero `<h1>`) spends
+  ~93% in render delay, not in loading the font or analytics. `/rtok/docs/` reaches ~2.9 s.
 - Inlining helps the first visit; repeat navigations re-download the CSS inside each HTML page.

@@ -4,7 +4,7 @@
 @property --rx { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
 @property --ry { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
 
-/* UI font: Satoshi, loaded from the Fontshare CDN (link in layouts/Base.astro). Overrides the "Inter Variable" stack
+/* UI font: Satoshi, self-hosted (@font-face in layouts/Base.astro, see docs/performance.md). Overrides the "Inter Variable" stack
    that @pyrlyn/brand/landing/tokens.css still sets, without editing the package. */
 :root { --font-sans: "Satoshi", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 
