@@ -1,8 +1,8 @@
 // Pure ring-carousel maths, shared by the RingCarousel island and tests/ring.test.mjs.
 /** Wrap any integer into 0..n-1. */
-export const wrap = (k        , n        ) => ((k % n) + n) % n;
+const wrap = (k        , n        ) => ((k % n) + n) % n;
 /** Signed number of steps from `from` to `to` going the shortest way round. */
-export function shortestDelta(from        , to        , n        ) {
+function shortestDelta(from        , to        , n        ) {
   const delta = wrap(to - from, n);
   return delta > n / 2 ? delta - n : delta;
 }

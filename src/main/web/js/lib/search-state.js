@@ -1,13 +1,6 @@
 /* Pure open/close rules for the header search, kept DOM-free so they can be unit-tested. */
                                                                              
 
-/** The field stays open while it has text or focus. */
-export const shouldStayOpen = (s             ) => s.open && (s.focused || s.value.trim() !== "");
-
-/** Escape: first clears text, then closes. */
-export const onEscape = (s             )              =>
-  s.value ? { ...s, value: "" } : { ...s, open: false, focused: false };
-
 /** Wrap-around move through results; -1 when there are none. */
 export const moveActive = (active        , delta        , count        ) =>
   count ? (active + delta + count) % count : -1;

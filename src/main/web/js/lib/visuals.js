@@ -5,28 +5,6 @@ import { onScrub, progress } from "./scrub";
 
 const rm = () => matchMedia(REDUCE_MOTION);
 
-/* rtok bitset: blocks settle into their target state; Δtok counts removed blocks. */
-export function initBitset(root             ) {
-  if (rm().matches) return;
-  const timers           = [];
-  const bits = [...root.querySelectorAll             (".bit")];
-  const out = root.querySelector             ("[data-bitset-count]");
-  const run = () => {
-    bits.forEach((b) => (b.dataset.state = "K"));
-    if (out) out.textContent = "−0";
-    let removed = 0;
-    const order = bits.map((b, k) => ({ b, k, r: Math.random() })).sort((a, b) => a.r - b.r);
-    order.forEach(({ b }, n) => {
-      timers.push(window.setTimeout(() => {
-        b.dataset.state = b.dataset.target ;
-        if (b.dataset.target !== "K") { removed++; if (out) out.textContent = `−${removed}`; }
-      }, 500 + n * 140));
-    });
-  };
-  const io = new IntersectionObserver(([en]) => { if (en.isIntersecting) { io.disconnect(); run(); } }, { threshold: 0.4 });
-  io.observe(root);
-  return () => { io.disconnect(); timers.forEach(clearTimeout); };
-}
 /* rtok: MCP code graph draws in once visible. */
 export function initGraph(g             ) {
   if (rm().matches) return;

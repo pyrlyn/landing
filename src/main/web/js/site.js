@@ -4,7 +4,7 @@
 import { FINE_POINTER, REDUCE_MOTION, prefersReducedMotion } from "./lib/media.js";
 import { initStage, initShine, initStill, initScrollReveal, initStepReveal } from "./lib/hero.js";
 import { createTerminal } from "./lib/terminal.js";
-import { initBitset, initGraph, initParticles, initRoute } from "./lib/visuals.js";
+import { initGraph, initParticles, initRoute } from "./lib/visuals.js";
 import { initDocsNav, initToc } from "./lib/docs.js";
 import { snap, statusText, turnTo } from "./lib/ring.js";
 import { pickProvider } from "./lib/search-provider.js";
@@ -123,7 +123,6 @@ idle(() => {
 
 // ---- Product visuals.
 idle(() => {
-  $$("[data-bitset]").forEach(initBitset);
   $$("[data-graph]").forEach(initGraph);
   $$("[data-particles]").forEach(initParticles);
   $$("[data-route]").forEach(initRoute);
