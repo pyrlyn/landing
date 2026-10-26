@@ -16,3 +16,6 @@ public/favicon.svg
 .env
 .env.local
 .env.*.local
+
+# Lighthouse CI output (CI only)
+.lighthouseci/
