@@ -15,12 +15,16 @@
         { "file": "agents.md", "title": "Agents" },
         { "file": "cmd-rules.md", "title": "Command rules" },
         { "file": "prompt-cache.md", "title": "Prompt cache" },
+        { "file": "token-savings.md", "title": "Token savings defaults" },
+        { "file": "mcp-cache.md", "title": "MCP tool-result memo" },
         { "file": "lsp.md", "title": "LSP backend" },
         { "file": "otel.md", "title": "OpenTelemetry" },
         { "file": "agents-and-worktrees.md", "title": "Agents and worktrees" },
         { "file": "tasks.md", "title": "Tasks" },
         { "file": "web-auth.md", "title": "Web access token" },
-        { "file": "ci-platforms.md", "title": "CI platforms" }
+        { "file": "ci-platforms.md", "title": "CI platforms" },
+        { "file": "review.md", "title": "Graph review" },
+        { "file": "review-context.md", "title": "Review context" }
       ] },
       { "label": "Extend", "items": [
         { "file": "plugin-authoring.md", "title": "Writing a plugin" },
@@ -259,7 +263,10 @@
       "architecture/": "Diagram sources",
       "assets/": "Images",
       "brand/": "Visual design system of the stator site",
-      "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud"
+      "sonarcloud-setup.md": "Maintainer CI setup for SonarCloud",
+      "SELF-HOSTING.md": "Planned self-hosting design, not current behaviour",
+      "SELFHOST-DIAGNOSTICS.md": "Maintainer log of self-compilation gate fixes",
+      "zig-core.md": "Experimental Zig rewrite that the shipping compiler does not use"
     }
   },
   "bindsmith": {
