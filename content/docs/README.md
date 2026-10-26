@@ -7,7 +7,7 @@ repository instead.
 
 | Folder | Source |
 | --- | --- |
-| `rtok/` | [`pyrlyn/rtok` `docs/`](https://github.com/pyrlyn/rtok/tree/main/docs) |
+| `rtok/` | `pyrlyn/rtok` `docs/` (snapshot of the Rust version; no longer synced) |
 | `cox/` | [`pyrlyn/cox` `docs/`](https://github.com/pyrlyn/cox/tree/main/docs) |
 | `ketch/` | [`pyrlyn/ketch` `docs/`](https://github.com/pyrlyn/ketch/tree/main/docs) |
 | `weft/` | [`pyrlyn/weft` `docs/`](https://github.com/pyrlyn/weft/tree/main/docs) (copied by hand until Weft has a `sync-docs.yml`) |

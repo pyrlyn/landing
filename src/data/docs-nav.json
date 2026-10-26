@@ -22,7 +22,6 @@
         { "file": "agents-and-worktrees.md", "title": "Agents and worktrees" },
         { "file": "tasks.md", "title": "Tasks" },
         { "file": "web-auth.md", "title": "Web access token" },
-        { "file": "ci-platforms.md", "title": "CI platforms" },
         { "file": "review.md", "title": "Graph review" },
         { "file": "review-context.md", "title": "Review context" }
       ] },

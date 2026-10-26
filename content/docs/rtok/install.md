@@ -4,14 +4,7 @@ Every way to install rtok, plus shell completions and man pages. The short path 
 
 ## Install
 
-macOS on Apple silicon, and Linux x86-64. The script is POSIX `sh`, so it behaves the
-same whether your shell is bash or zsh; it puts `rtok` in `~/.cargo/bin`.
-
-```bash
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/rtok/releases/latest/download/rtok-installer.sh | sh
-```
-
-Or with [ketch](https://github.com/pyrlyn/ketch) — it installs straight from these
+Install with [ketch](https://github.com/pyrlyn/ketch) — it installs straight from
 GitHub Release archives, no tap or formula:
 
 ```bash

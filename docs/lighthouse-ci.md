@@ -1,7 +1,9 @@
 # Lighthouse CI
 
 Lighthouse CI ([`@lhci/cli`](https://github.com/GoogleChrome/lighthouse-ci)) audits the built site on
-every pull request to `main`, every push to `main` and on manual dispatch. It runs **only in CI**:
+every pull request to `main`, every push to `main` and on manual dispatch, **only when the repo
+variable `LIGHTHOUSE_ENABLED` is `true`**. It is not set now, so the `lighthouse` job is skipped (to be
+revisited); the `test` job still runs. It runs **only in CI**:
 it is not a `package.json` dependency, so `npm install`, `npm run build` and the local workflow
 are unchanged.
 
@@ -9,13 +11,13 @@ are unchanged.
 
 The workflow is `.github/workflows/lighthouse.yaml`, generated from the Kotlin script
 `.github/workflows/lighthouse.main.kts` (see [Kotlin workflow config](#kotlin-workflow-config)).
-It is self-contained and does not call the shared `pyrlyn/ci` workflows. Jobs:
+It is self-contained and does not call any shared (reusable) workflows. Jobs:
 
 | Job | What it does |
 |---|---|
 | `check_yaml_consistency` | Re-runs the Kotlin script and fails if the committed YAML differs from its output |
 | `test` | `npm ci`, `npm test`, production build (`SITE_URL=https://pyrlyn.dev`, as in `release.yml`), `npm run check:seo`, `npm run check:docs`. Steps after the tests run even if the tests fail, so one run shows every failing check |
-| `lighthouse` | Builds with `SITE_BASE=/`, then runs `npx @lhci/cli@0.15.1 autorun` twice: `lighthouserc.mobile.json` and `lighthouserc.desktop.json` |
+| `lighthouse` | Builds with `SITE_BASE=/`, then runs `npx --yes --ignore-scripts @lhci/cli@0.15.1 autorun` twice: `lighthouserc.mobile.json` and `lighthouserc.desktop.json` |
 
 Each Lighthouse config serves `dist/` through `staticDistDir` (LHCI's built-in static server),
 audits `/`, `/rtok/` and `/rtok/docs/` three times each and asserts on the median run. Reports
@@ -68,7 +70,8 @@ and the other jobs depend on it.
 
 ## Enable and disable
 
-- Disable temporarily: Actions → `lighthouse` → "Disable workflow", or `gh workflow disable lighthouse`.
+- Turn the audit on or off: set the repo variable `LIGHTHOUSE_ENABLED` to `true`, or delete it.
+- Disable the whole workflow: Actions → `lighthouse` → "Disable workflow", or `gh workflow disable lighthouse`.
 - Make it non-blocking: change `"error"` to `"warn"` in the `lighthouserc.*.json` assertions.
 - Drop desktop: remove the desktop step from the script and regenerate.
 - Remove: delete the script, the YAML and both `lighthouserc.*.json` files.
@@ -79,7 +82,7 @@ and the other jobs depend on it.
 - Open a PR or run the workflow manually (`gh workflow run lighthouse --ref <branch>`), then
   download the `lighthouse-reports` artifact and open the HTML reports.
 - Locally, without adding a dependency (optional; CI is the source of truth):
-  `SITE_BASE=/ npm run build && npx --yes @lhci/cli@0.15.1 autorun --config=lighthouserc.mobile.json`.
+  `SITE_BASE=/ npm run build && npx --yes --ignore-scripts @lhci/cli@0.15.1 autorun --config=lighthouserc.mobile.json`.
   This needs a local Chrome.
 
 ## Limitations
