@@ -81,7 +81,7 @@ test("seo text stays inside the meta limits and omits pro prices", async () => {
 
   const short = tool("demo", { title: "demo", tagline: "Cut the context.", version: "1.0.0", repo: "https://github.com/pyrlyn/rtok" });
   assert.equal(productTitle(short), "demo: Cut the context | Pyrlyn");
-  assert.equal(productTitle(tool("rtok", short.data)), "rtok: token-reduction CLI for AI coding agents | Pyrlyn");
+  assert.equal(productTitle(tool("rtok", short.data)), "Rtok: token-reduction CLI for AI coding agents | Pyrlyn");
   const longLead = `${"Long lead ".repeat(6)}with the rest of the sentence that should not be the title.`;
   const long = tool("demo", { ...short.data, tagline: longLead });
   const title = productTitle(long);

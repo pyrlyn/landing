@@ -99,7 +99,7 @@ The visual identity comes from the [`pyrlyn/brand`](https://github.com/pyrlyn/br
 installed from git and pinned to a tag in `package.json`:
 
 ```json
-"@pyrlyn/brand": "github:pyrlyn/brand#v0.2.0"
+"@pyrlyn/brand": "github:pyrlyn/brand#v0.5.0"
 ```
 
 What the site takes from it:
@@ -119,7 +119,7 @@ so the URLs (`/landing/pyrlyn/pyrlyn-favicon.svg` …) stay the same without kee
 The import order in `global.css` (brand tokens → `base.css` → brand components → page CSS) is the cascade
 order the rules had when they lived in this repo, so moving them changed nothing visually.
 
-Not from the package: Inter is self-hosted through `@fontsource-variable/inter` and the monospace stack
+Not from the package: Satoshi (ITF Free Font License) is loaded from the Fontshare CDN (the license forbids committing the font files to this public repo) and the monospace stack
 is system fonts; product art, hero images and OG cards in `public/images/` (drawn by `art/`) are content.
 
 To update: tag a new version in `pyrlyn/brand`, then

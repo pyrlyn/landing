@@ -15,7 +15,9 @@ const stops = [
   { id: "lockfile", x: 800, y: 150, label: "Lockfile", text: "ketch lock writes ketch.lock; ketch sync installs exactly those versions elsewhere.", pos: "up" },
   { id: "rollback", x: 720, y: 300, label: "Rollback", text: "ketch rollback <pkg> relinks the previous version, no re-download.", pos: "down", back: true },
 ];
+import KetchRouteIsland from "./islands/KetchRoute/KetchRoute";
 ---
+<KetchRouteIsland client:idle>
 <div class="route-wrap">
   <div class="route glass" data-route>
     <p class="flow__title">{flow.title}</p>
@@ -35,7 +37,8 @@ const stops = [
         <div class="route__chip glass glass--thick" data-route-chip aria-hidden="true"><span class="route__chip-dot"></span>sharkdp/fd <small>v10.2.0</small></div>
       </div>
     </div>
-    <p class="muted small">Scroll to follow one package through install, lock and rollback. Steps and commands are from the ketch README; <code>sharkdp/fd@v10.2.0</code> is its install example.</p>
+    <p class="muted small">Scroll to follow one package through install, lock and rollback. Steps and commands are from the Ketch README; <code>sharkdp/fd@v10.2.0</code> is its install example.</p>
   </div>
   <div class="route-fallback"><FlowViz flow={flow} /></div>
 </div>
+</KetchRouteIsland>

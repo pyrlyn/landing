@@ -1,7 +1,9 @@
 ---
 // Animated console demo. Server-rendered in its final state (works without JS and under
-// reduced motion); JS types it out once when scrolled into view, with Pause / Replay.
+// reduced motion); the Terminal island types it out once when scrolled into view, with Pause / Replay.
+// `manual` terminals (cox scenes) get no island of their own: the CoxScenes island drives them.
 import type { Demo } from "../data/showcase";
+import TerminalIsland from "./islands/Terminal/Terminal";
 interface Props { demo: Demo; id: string; class?: string; manual?: boolean }
 const { demo, id, class: cls, manual } = Astro.props;
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -15,6 +17,7 @@ lines.push(`<span class="term__line term__line--cmd term__line--idle"><span clas
 const html = lines.join("\n");
 const transcript = demo.steps.map((s) => [`$ ${s.cmd}`, s.note, ...(s.out ?? [])].filter(Boolean).join("\n")).join("\n");
 ---
+{manual ? (
 <figure class:list={["term glass glass--thick", cls]} data-term data-term-manual={manual ? "" : undefined} aria-labelledby={`${id}-cap`}>
   <div class="term__bar">
     <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -26,3 +29,18 @@ const transcript = demo.steps.map((s) => [`$ ${s.cmd}`, s.note, ...(s.out ?? [])
   <pre class="sr-only">{transcript}</pre>
   <figcaption id={`${id}-cap`} class="term__cap">{demo.caption}</figcaption>
 </figure>
+) : (
+<TerminalIsland client:idle>
+<figure class:list={["term glass glass--thick", cls]} data-term data-term-manual={manual ? "" : undefined} aria-labelledby={`${id}-cap`}>
+  <div class="term__bar">
+    <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="term__title" id={`${id}-title`}>{demo.title}</span>
+    <!-- Described by the terminal title, so several Pause/Replay buttons on a page are told apart. -->
+    <button class="term__ctl" type="button" data-term-ctl aria-describedby={`${id}-title`} hidden>Replay</button>
+  </div>
+  <pre class="term__body" aria-hidden="true"><code set:html={html} /></pre>
+  <pre class="sr-only">{transcript}</pre>
+  <figcaption id={`${id}-cap`} class="term__cap">{demo.caption}</figcaption>
+</figure>
+</TerminalIsland>
+)}

@@ -6,7 +6,9 @@
 html:has(.dnav) { scroll-padding-top: 156px; }
 
 /* ---------- Sticky horizontal docs nav ---------- */
-.dnav { position: sticky; top: 80px; z-index: 45; padding: var(--s-2) var(--s-4) 0; }
+.dnav { --dnav-top: 80px; position: sticky; top: var(--dnav-top); z-index: 45; padding: var(--s-2) var(--s-4) 0; animation: dnav-in 1.5s var(--ease) both; }
+@keyframes dnav-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .dnav { animation: none; } }
 .dnav__inner {
   position: relative; display: flex; align-items: center; gap: var(--s-3);
   max-width: calc(var(--container) - 2 * var(--s-5)); margin-inline: auto;
@@ -89,7 +91,7 @@ html:has(.dnav) { scroll-padding-top: 156px; }
 .dnav__item[aria-current="page"] { color: var(--fg-strong); background: color-mix(in oklch, var(--accent) 12%, transparent); box-shadow: inset 2px 0 0 var(--accent); }
 .dnav__item:focus-visible { border-radius: var(--r-sm); }
 @media (max-width: 767px) {
-  .dnav { top: 76px; padding-inline: var(--s-3); }
+  .dnav { --dnav-top: 76px; padding-inline: var(--s-3); }
   .dnav__inner { min-height: 52px; }
   .dnav__name span { display: none; }
   .dnav__scroller--compact { display: none; }

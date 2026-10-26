@@ -6,14 +6,12 @@
 
    Brand tokens and shared brand components come from the @pyrlyn/brand package (pinned in
    package.json, see README "Brand tokens"); the imports below keep the original cascade order:
-     1. @pyrlyn/brand/tokens.css             rtok brand variables (--rtok-*), unused by the page CSS
-     2. @pyrlyn/brand/landing/tokens.css     this site's tokens (--accent, --bg, --fg, --s-*, --r-* …)
-     3. ./base.css                           @property, base reset, background mesh (local)
-     4. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by (the page no longer uses .pyrlyn-by / .brand__mark)
-     5. the rest of this file                page layout, sections, project pages, fallbacks
+     1. @pyrlyn/brand/landing/tokens.css     this site's tokens (--accent, --bg, --fg, --s-*, --r-* …)
+     2. ./base.css                           @property, base reset, background mesh (local)
+     3. @pyrlyn/brand/landing/components.css glass, shine, .btn, .eyebrow, .pill, .badge, .brand, .pyrlyn-by (the page no longer uses .pyrlyn-by / .brand__mark)
+     4. the rest of this file                page layout, sections, project pages, fallbacks
    ========================================================================== */
 
-@import "@pyrlyn/brand/tokens.css";
 @import "@pyrlyn/brand/landing/tokens.css";
 @import "./base.css";
 @import "@pyrlyn/brand/landing/components.css";
@@ -141,7 +139,64 @@
 .nav__actions { display: flex; gap: var(--s-2); margin-left: auto; }
 .nav__gh { display: none; }
 @media (min-width: 900px) { .nav__links { display: flex; } }
-@media (min-width: 1100px) { .nav__gh { display: inline-flex; } }
+@media (min-width: 600px) { .nav__gh { display: inline-grid; } }
+/* Icon-only GitHub link, same 44x44 target as .theme-toggle. */
+.nav__gh {
+  place-items: center; width: 44px; height: 44px; border-radius: var(--r-full); flex: none;
+  color: var(--muted); background: transparent; box-shadow: inset 0 0 0 1px var(--hairline); transition: color .2s, background-color .2s;
+}
+.nav__gh:hover { color: var(--fg-strong); background: var(--hover-1, rgb(255 255 255 / .05)); }
+.nav__gh:focus-visible { outline: none; box-shadow: var(--focus); }
+
+/* ---------- Auto-hiding header (product and docs pages) ----------
+   The header shows on load. The NavPin island sets [data-collapsed] once it mounts; the header then slides
+   up after --header-autohide (transition-delay), and comes back at once on hover, on keyboard focus inside
+   it, or when pinned from the chevron (data-pinned). Without JS it simply stays. A slim glass strip with
+   the logo and the chevron stays at the top. Transform/opacity only, so nothing below moves. Hidden items
+   are not inert: tabbing into them reveals the header first, so focus is never on something invisible. */
+:root { --header-autohide: 4s; --nav-strip: 52px; } /* shared by the header and the docs nav */
+.nav--auto { pointer-events: none; }
+.nav--auto .nav__inner, .nav__peek-pill { pointer-events: auto; }
+.nav--auto .nav__inner { transition: transform .45s var(--ease), opacity .3s var(--ease); }
+.nav--auto[data-collapsed]:not(:hover, :has(:focus-visible), [data-pinned]) .nav__inner {
+  transform: translateY(calc(-100% - var(--s-4))); opacity: 0;
+  transition-delay: var(--header-autohide);
+}
+.nav__peek { position: absolute; inset: var(--s-2) var(--s-4) auto; max-width: calc(var(--container) - 2 * var(--s-5)); margin-inline: auto; pointer-events: none; }
+.nav__peek-pill {
+  display: flex; align-items: center; gap: var(--s-1); width: fit-content; height: 44px; padding: 0 0 0 var(--s-3);
+  border-radius: var(--r-full); opacity: 0; transition: opacity .3s var(--ease);
+}
+.nav__peek-pill .brand svg { height: 20px; width: auto; }
+.nav--auto[data-collapsed]:not(:hover, :has(:focus-visible), [data-pinned]) .nav__peek-pill { opacity: 1; transition-delay: var(--header-autohide); }
+.nav--auto .nav__peek-pill:has(:focus-visible) { opacity: 1; }
+.nav__peek-btn {
+  display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--r-full);
+  cursor: pointer; color: var(--muted); background: transparent; transition: color .2s, background-color .2s;
+}
+.nav__peek .nav__peek-btn svg { transform: rotate(180deg); } /* points down: "pull the menu down" */
+/* "Hide menu" (chevron up) inside the header, only while pinned. */
+.nav__unpin { display: none; flex: none; box-shadow: inset 0 0 0 1px var(--hairline); }
+.nav--auto[data-pinned] .nav__unpin { display: inline-grid; }
+@media (max-width: 599px) { .nav--auto[data-pinned] .nav__unpin { display: none; } }
+.nav__peek-btn:hover { color: var(--fg-strong); background: var(--hover-1, rgb(255 255 255 / .05)); }
+.nav__peek-btn:focus-visible { box-shadow: var(--focus); }
+/* Docs nav follows the strip: --dnav-top (docs.css) under the full header, var(--nav-strip) under the strip. */
+html:has(.nav--auto) .dnav { transition: transform .45s var(--ease); }
+html:has(.nav--auto[data-collapsed]) .dnav {
+  transform: translateY(calc(var(--nav-strip) - var(--dnav-top)));
+  transition-delay: var(--header-autohide);
+}
+html:has(.nav--auto:hover, .nav--auto :focus-visible, .nav--auto[data-pinned]) .dnav { transform: none; transition-delay: 0s; }
+/* Touch: a tap leaves :hover stuck on the header, which kept it open after "Hide menu". Without a
+   hovering pointer only the chevron (data-pinned) or keyboard focus reveals it. */
+@media (hover: none) {
+  .nav--auto[data-collapsed]:not(:has(:focus-visible), [data-pinned]) .nav__inner { transform: translateY(calc(-100% - var(--s-4))); opacity: 0; transition-delay: var(--header-autohide); }
+  .nav--auto[data-collapsed]:not(:has(:focus-visible), [data-pinned]) .nav__peek-pill { opacity: 1; transition-delay: var(--header-autohide); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav--auto .nav__inner, .nav__peek-pill, html:has(.nav--auto) .dnav { transition: none !important; transition-delay: 0s !important; }
+}
 
 /* ---------- Hero (shared) ---------- */
 .hero { display: grid; gap: var(--s-8); align-items: center; padding-block: var(--s-8) var(--s-8); }
@@ -572,12 +627,21 @@
 .price-tier .tier__head strong { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--fg-strong); font-size: var(--fs-sm); }
 .price__num--sm { font-size: 1.5rem; }
 .pricing-pair { align-items: stretch; }
+/* Free-only products (FREE_ONLY in src/lib/site.ts): one tier, no Pro column. */
 /* Pro wishlist form (src/components/ProWishlist.astro); the status line takes no room until it speaks. */
 .wishlist { display: grid; gap: var(--s-2); }
 .wishlist__email { width: 100%; min-height: 44px; padding: 0 var(--s-3); border: 0; border-radius: var(--r-md); font: inherit; color: var(--fg-strong); background: rgb(0 0 0 / .25); box-shadow: inset 0 0 0 1px var(--hairline-strong); }
 .wishlist__email:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .wishlist__status:empty { display: none; }
 @media (min-width: 640px) { .pricing-pair { max-width: 880px; } }
+/* Free-only products (FREE_ONLY in src/lib/site.ts): one tier, no Pro column, so one card-width column
+   instead of the two-tier width. Declared after the rule above so it wins at every width. */
+.pricing-pair--free { max-width: 440px; }
+/* Home pricing grid: a free-only card sits in a row with taller Free + Pro cards. Let its one tier fill
+   the card and keep "Install free" at the bottom, aligned with the other cards' first button row. */
+.price-card:not(:has(.price-tier--pro)) { grid-template-rows: auto auto 1fr; }
+.price-card:not(:has(.price-tier--pro)) .price-tier { grid-template-rows: auto 1fr auto; align-content: stretch; }
+.price-card:not(:has(.price-tier--pro)) .price-tier .checklist { align-content: start; }
 
 /* Terminal demo */
 .term { margin: 0; border-radius: var(--r-lg); overflow: hidden; display: flex; flex-direction: column; }
@@ -659,10 +723,16 @@
 .stage--ring .pos-a { left: -2%; top: 0; z-index: 4; }
 .stage__ring { inset: 118px 0 0 0; display: grid; }
 .ring { position: relative; display: grid; gap: var(--s-4); align-content: start; }
-.ring__stage { position: relative; height: 400px; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab;
+.ring__stage { position: relative; perspective: 1400px; perspective-origin: 50% 40%; touch-action: pan-y; cursor: grab;
   /* Side cards stop at the column edge: the carousel never runs under the hero text. */
   overflow-x: clip;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent); }
+  /* A mask clips everything outside the element box, so the cards' drop shadows were cut off in a
+     hard line at the stage bottom (a visible band, mostly in light mode). The box reaches 72px lower
+     (taken back by the negative margin) and that strip fades out instead of ending in an edge. */
+  height: 472px; padding-bottom: 72px; margin-bottom: -72px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(#000 calc(100% - 56px), transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(#000 calc(100% - 56px), transparent);
+  -webkit-mask-composite: source-in; mask-composite: intersect; }
 .ring__stage.is-dragging { cursor: grabbing; }
 .ring__track {
   --a: calc(360deg / var(--n)); --r: 360px;
@@ -701,7 +771,7 @@
 .ring__hs { left: auto; right: 6px; top: 6px; translate: none; z-index: 3; }
 .ring__hs .hotspot__tip { right: 0; width: 250px; }
 .ring__item:not(.is-active) .ring__hs { visibility: hidden; }
-.ring__controls { display: flex; align-items: center; justify-content: center; gap: var(--s-3); }
+.ring__controls { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; gap: var(--s-3); }
 .ring__controls[hidden] { display: none; }
 .ring__btn { display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; cursor: pointer; color: var(--fg-strong);
   background: var(--glass-fill), rgb(255 255 255 / .04); box-shadow: var(--glass-edge), var(--shadow-1); }
@@ -746,7 +816,9 @@
 .graph__svg { width: 100%; height: auto; overflow: visible; }
 .graph__edge { fill: none; stroke: color-mix(in oklch, var(--accent) 70%, transparent); stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .graph__edge--agent { stroke: color-mix(in oklch, var(--accent-2) 70%, transparent); stroke-dasharray: 1; }
-.graph__node rect { fill: rgb(10 22 34 / .85); stroke: color-mix(in oklch, var(--accent) 45%, transparent); }
+.graph__node rect { fill: rgb(10 22 34); stroke: color-mix(in oklch, var(--accent) 45%, transparent); }
+.graph__base { fill: rgb(10 22 34); }
+html[data-mode="light"] .graph__node rect, html[data-mode="light"] .graph__base { fill: var(--surface-opaque); }
 .graph__node--agent rect { stroke: color-mix(in oklch, var(--accent-2) 60%, transparent); }
 .graph__node text { fill: var(--fg-strong); font-family: var(--font-mono); font-size: 13px; text-anchor: middle; }
 .graph__node--hub text { fill: #04121c; font-weight: 700; font-size: 11px; }
@@ -862,18 +934,6 @@
 .pager__link, .bento__tile, .gs__links a { transition: translate .2s ease-out, box-shadow .2s ease-out; }
 .pager__link:hover, .bento__tile:hover, .gs__links a:hover { translate: 0 -2px; box-shadow: var(--glass-edge), var(--shadow-3), 0 0 0 1px var(--accent-line); }
 
-/* Products menu: docs row */
-.menu__docs { display: flex; flex-wrap: wrap; gap: var(--s-2); padding: 0 var(--s-3) var(--s-2); }
-.menu__doc {
-  display: inline-flex; align-items: center; gap: var(--s-2); min-height: 40px; padding: 0 var(--s-3); border-radius: var(--r-full);
-  font-size: var(--fs-sm); font-weight: 600; color: var(--fg); box-shadow: inset 0 0 0 1px var(--hairline-strong);
-  transition: color .18s ease-out, background-color .18s ease-out, box-shadow .18s ease-out;
-}
-.menu__doc i { width: 8px; height: 8px; border-radius: 50%; background: var(--card-accent); box-shadow: 0 0 8px var(--card-accent); }
-.menu__doc:hover { color: var(--fg-strong); background: rgb(255 255 255 / .05); box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--card-accent) 45%, transparent); }
-.menu__doc[aria-current="page"] { color: var(--fg-strong); box-shadow: inset 0 0 0 1px var(--card-accent); }
-.menu__doc:focus-visible { border-radius: var(--r-full); }
-
 /* Product categories: Products menu groups, home catalog groups, chips, tags and the product-page badge. */
 .menu__group + .menu__group { margin-top: var(--s-2); }
 .menu__cat { display: flex; align-items: center; gap: var(--s-2); padding: var(--s-2) var(--s-3) var(--s-1); font-size: var(--fs-xs); font-weight: 600; color: var(--accent); }
@@ -902,6 +962,14 @@
 .theme-toggle__sun, .theme-toggle__moon { display: none; }
 html[data-mode="light"] .theme-toggle__moon, html:not([data-mode="light"]) .theme-toggle__sun { display: inline-grid; }
 .nav__actions { align-items: center; }
+/* "Browse tools": below 400px only the icon shows (the text stays the accessible name), so the Products
+   chevron fits and nothing touches the edge next to the search and theme buttons. */
+.nav__cta-icon { display: none; }
+@media (max-width: 399px) {
+  .nav__cta { width: 44px; height: 44px; padding: 0 !important; justify-content: center; flex: none; }
+  .nav__cta-icon { display: inline-grid; place-items: center; }
+  .nav__cta-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+}
 
 /* Error pages (404 / 500) */
 .err { display: grid; place-content: center; justify-items: center; gap: var(--s-3); min-height: 80dvh; padding: var(--s-8) var(--s-4); text-align: center; }

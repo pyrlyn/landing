@@ -1,0 +1,27 @@
+---
+// Support: a static form that opens a prefilled GitHub issue in pyrlyn/support. No backend, no email.
+import Base from "../layouts/Base.astro";
+import { u } from "../lib/site";
+---
+<Base title="Support | Pyrlyn" description="Get help with Pyrlyn tools: write your message here and it opens a prefilled GitHub issue in the pyrlyn organization." theme="home">
+  <section class="section container" aria-labelledby="support-title">
+    <div class="prose">
+      <h1 id="support-title">Support</h1>
+      <p>Questions, bugs or ideas? Write them below. Sending opens a prefilled public issue on GitHub (you need a GitHub account); nothing is stored on this site.</p>
+      <form class="support-form" action="https://github.com/pyrlyn/support/issues/new" method="get" target="_blank">
+        <label>Subject<input name="title" required maxlength="200" /></label>
+        <label>Message<textarea name="body" required rows="8" maxlength="5000"></textarea></label>
+        <button class="btn btn--primary" type="submit">Open issue on GitHub</button>
+      </form>
+      <p>Existing requests: <a href="https://github.com/pyrlyn/support/issues">pyrlyn/support issues</a>. For a bug in one tool, you can also open an issue in its own repository, for example <a href="https://github.com/pyrlyn/rtok/issues">pyrlyn/rtok</a>. All repositories: <a href="https://github.com/pyrlyn">github.com/pyrlyn</a>. Common questions: <a href={u("/#faq")}>FAQ</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .support-form { display: grid; gap: 1rem; max-width: 36rem; margin: 1.5rem 0; }
+  .support-form label { display: grid; gap: .35rem; font-weight: 600; }
+  .support-form input, .support-form textarea { font: inherit; padding: .6rem .75rem; border-radius: 8px; border: 1px solid var(--line-strong, #334155); background: var(--glass-bg, transparent); color: inherit; }
+  .support-form input:focus-visible, .support-form textarea:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  .support-form button { justify-self: start; }
+</style>

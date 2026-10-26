@@ -6,7 +6,7 @@ import Terminal from "../components/Terminal.astro";
 import RingCarousel from "../components/RingCarousel.astro";
 import ProWishlist from "../components/ProWishlist.astro";
 import { u, BRAND, PRO_PRICE_NOTE, LICENSE, THEMES, FREE_HIGHLIGHTS } from "../lib/site";
-import { getTools, featuredTool, proFor, hasWishlist, cardInstall, versionLabel, groupByCategory, categoryFor } from "../lib/catalog";
+import { getTools, featuredTool, proFor, hasPro, hasWishlist, cardInstall, versionLabel, groupByCategory, categoryFor } from "../lib/catalog";
 import { parseFeatures, splitSections } from "../lib/sections";
 import { DEMOS, demoFromUsage } from "../data/showcase";
 import { parseUsage } from "../lib/sections";
@@ -18,10 +18,10 @@ const featured = featuredTool(tools);
 const fSections = splitSections(featured.body ?? "");
 const firstSentence = (html: string) => { const m = html.match(/^(.*?[.!?])(\s|$)/); return m ? m[1] : html; };
 const fFeatures = parseFeatures(fSections["features"]).slice(0, 3).map((f) => ({ ...f, html: firstSentence(f.html) }));
-const fDemo = DEMOS[featured.id] ?? demoFromUsage(featured.data.title, parseUsage(fSections["usage examples"] ?? fSections["usage"]).map((g) => ({ code: g.code })));
-const minPro = tools.map((t) => proFor(t).price).sort((a, b) => parseFloat(a.replace(/[^\d.]/g, "")) - parseFloat(b.replace(/[^\d.]/g, "")))[0];
+const fDemo = DEMOS[featured.id] ?? demoFromUsage(featured.data.rawTitle, parseUsage(fSections["usage examples"] ?? fSections["usage"]).map((g) => ({ code: g.code })), featured.data.title);
+const minPro = tools.filter(hasPro).map((t) => proFor(t).price).sort((a, b) => parseFloat(a.replace(/[^\d.]/g, "")) - parseFloat(b.replace(/[^\d.]/g, "")))[0];
 const homeTitle = `${BRAND}: local AI developer tools for agentic coding`;
-const homeDescription = "Pyrlyn builds local-first developer tools for agentic coding: rtok, ketch, cox, runa, swarfr, Stator and more.";
+const homeDescription = "Pyrlyn builds local-first developer tools for agentic coding: Rtok, Ketch, Cox, Runa, Swarfr, Stator and more.";
 const jsonLd = [
   organization(),
   website(homeDescription),
@@ -36,10 +36,11 @@ const glyph: Record<string, string> = { rtok: "Δ", cox: "◎", ketch: "↓", ru
 
 /* Hero hotspots — real features, taken from each project's synced site copy. Positions are % of the art layer. */
 const hotspots = [
-  { x: 60, y: 34, tool: "cox", label: "cox · TUI and editors", accent: THEMES.cox.accent, href: "/cox/", text: "Terminal UI with streaming replies, approval prompts and a diff view; cox acp serves Zed and JetBrains." },
-  { x: 80, y: 58, tool: "rtok", label: "rtok · code graph", accent: THEMES.rtok.accent, href: "/rtok/", text: "Code graph over MCP: agents query symbol, callers, impact, outline and explore instead of grep-and-read." },
-  { x: 35, y: 64, tool: "ketch", label: "ketch · verified installs", accent: THEMES.ketch.accent, href: "/ketch/", text: "Installs from any repo that ships releases and checks the published SHA-256 sums against what landed on disk." },
+  { x: 60, y: 34, tool: "cox", label: "Cox · TUI and editors", accent: THEMES.cox.accent, href: "/cox/", text: "Terminal UI with streaming replies, approval prompts and a diff view; cox acp serves Zed and JetBrains." },
+  { x: 80, y: 58, tool: "rtok", label: "Rtok · code graph", accent: THEMES.rtok.accent, href: "/rtok/", text: "Code graph over MCP: agents query symbol, callers, impact, outline and explore instead of grep-and-read." },
+  { x: 35, y: 64, tool: "ketch", label: "Ketch · verified installs", accent: THEMES.ketch.accent, href: "/ketch/", text: "Installs from any repo that ships releases and checks the published SHA-256 sums against what landed on disk." },
 ];
+import AudienceToggle from "../components/islands/Audience/Audience";
 ---
 <Base title={homeTitle} description={homeDescription} theme="home" imageAlt={homeTitle} jsonLd={jsonLd}>
   <!-- HERO -->
@@ -69,10 +70,7 @@ const hotspots = [
         <div class="layer pos-a" data-depth="34">
           <div class="chip glass glass--thick toggle-chip float">
             <span class="toggle-chip__label" id="aud-label">Pricing model</span>
-            <div class="segmented" role="group" aria-labelledby="aud-label">
-              <button type="button" data-set-audience="oss" aria-pressed="true">Free</button>
-              <button type="button" data-set-audience="pro" aria-pressed="false">Pro</button>
-            </div>
+            <AudienceToggle client:load labelledBy="aud-label" />
             <div class="toggle-chip__body" aria-live="polite">
               <span class="for-oss"><strong>$0 · every tool</strong>open-source editions</span>
               <span class="for-pro"><strong>from {minPro}*</strong>per tool · placeholder pricing</span>
@@ -127,13 +125,13 @@ const hotspots = [
             <span class="oss-card__mesh" aria-hidden="true"></span>
             <Picture class="oss-card__preview" dir={p.id} name="hero" widths={[800, 1200]} sizes="300px" w={2400} h={1600} />
             <div class="oss-card__top">
-              <span class="icon" aria-hidden="true">{glyph[p.id] ?? p.data.title.slice(0, 1)}</span>
+              <span class="icon" aria-hidden="true">{glyph[p.id] ?? p.data.rawTitle.slice(0, 1)}</span>
               <span class="badge badge--version" style={`--accent:${p.data.accent}`}>{versionLabel(p)}</span>
             </div>
             <h3 class="oss-card__title">{p.data.title}<span>.</span></h3>
             <p>{p.data.tagline}</p>
             <pre class="code" role="group" aria-label={`Install ${p.data.title}`}><code><span class="tok-p" aria-hidden="true">$ </span>{cardInstall(p)}</code></pre>
-            <p class="price-chips"><span class="price-chip">Free · OSS</span><span class="price-chip price-chip--pro">Pro <span data-pro-price={p.id}>{proFor(p).price}</span>*</span></p>
+            <p class="price-chips">{hasPro(p) ? <><span class="price-chip">Free · OSS</span><span class="price-chip price-chip--pro">Pro <span data-pro-price={p.id}>{proFor(p).price}</span>*</span></> : <span class="price-chip">Free</span>}</p>
             <a class="oss-card__link" href={u(`/${p.id}/`)}>Explore {p.data.title} <Icon name="arrow" size={16} /></a>
           </li>
           ))}
@@ -158,7 +156,7 @@ const hotspots = [
     </header>
     <ol class="steps">
       <li class="card glass step"><span class="step__n" aria-hidden="true">01</span><h3 class="h3">Pick a tool</h3><p>Browse the catalog; every product page shows a live terminal demo and the exact install command.</p></li>
-      <li class="card glass step"><span class="step__n" aria-hidden="true">02</span><h3 class="h3">Install the free edition</h3><p>One command — installer script, ketch, Homebrew or your package manager. The open-source edition is the full tool.</p></li>
+      <li class="card glass step"><span class="step__n" aria-hidden="true">02</span><h3 class="h3">Install the free edition</h3><p>One command — installer script, Ketch, Homebrew or your package manager. The open-source edition is the full tool.</p></li>
       <li class="card glass step"><span class="step__n" aria-hidden="true">03</span><h3 class="h3">Add Pro per tool</h3><p>Only for the tools your team relies on, on top of the same binary. <span class="badge badge--placeholder">Placeholder</span></p></li>
     </ol>
   </section>
@@ -172,7 +170,7 @@ const hotspots = [
     <ul class="grid grid--4" role="list">
       <li class="card glass shine"><span class="icon" aria-hidden="true"><Icon name="box" /></span><h3 class="h3">One binary each</h3><p>Written in Rust and shipped as a single native binary for macOS and Linux; ketch runs on Windows too.</p></li>
       <li class="card glass shine"><span class="icon" aria-hidden="true"><Icon name="tree" /></span><h3 class="h3">Local first</h3><p>Ledgers, archives and installs live on your machine; export telemetry only if you choose.</p></li>
-      <li class="card glass shine"><span class="icon" aria-hidden="true"><Icon name="chart" /></span><h3 class="h3">Measured and verified</h3><p>rtok records every saving, cox records every request’s cost, ketch checks every checksum.</p></li>
+      <li class="card glass shine"><span class="icon" aria-hidden="true"><Icon name="chart" /></span><h3 class="h3">Measured and verified</h3><p>Rtok records every saving, Cox records every request’s cost, Ketch checks every checksum.</p></li>
       <li class="card glass shine"><span class="icon" aria-hidden="true"><Icon name="lock" /></span><h3 class="h3">Open licensing</h3><p>{LICENSE.short}; Weft is Apache-2.0.</p></li>
     </ul>
   </section>
@@ -190,15 +188,15 @@ const hotspots = [
           <h3 id={`pr-${p.id}`} class="oss-card__title">{p.data.title}<span>.</span></h3>
           <p class="cat-tag">{categoryFor(p).label}</p>
           <div class="price-tier">
-            <div class="tier__head"><strong>Free · OSS</strong><span class="price__num price__num--sm">$0</span></div>
+            <div class="tier__head"><strong>Free · OSS</strong><span class="price__num price__num--sm">{hasPro(p) ? "$0" : "Free"}</span></div>
             <ul class="checklist">{(FREE_HIGHLIGHTS[p.id] ?? ["The full open-source tool"]).map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
             <a class="btn btn--glass btn--block" href={u(`/${p.id}/#install`)}>Install free</a>
           </div>
-          <div class="price-tier price-tier--pro">
+          {hasPro(p) && <div class="price-tier price-tier--pro">
             <div class="tier__head"><strong>Pro <span class="badge badge--placeholder">Placeholder</span></strong><span class="price__num price__num--sm"><span data-pro-price={p.id}>{proFor(p).price}</span>*</span></div>
             <ul class="checklist">{proFor(p).features.map((f) => <li><Icon name="check" size={16} /> {f}</li>)}</ul>
             <ProWishlist tool={p} describedby="pricing-note" />
-          </div>
+          </div>}
         </article>
       ))}
     </div>
@@ -225,7 +223,7 @@ const hotspots = [
       </details>
       <details class="faq__item glass">
         <summary>What data leaves my machine?</summary>
-        <div class="faq__body"><p>The open-source tools run locally and keep their ledgers on disk; rtok and cox export telemetry only if you point them at an OTLP endpoint. Pro data handling terms are a placeholder and will be published before any launch.</p></div>
+        <div class="faq__body"><p>The open-source tools run locally and keep their ledgers on disk; Rtok and Cox export telemetry only if you point them at an OTLP endpoint. Pro data handling terms are a placeholder and will be published before any launch.</p></div>
       </details>
       <details class="faq__item glass">
         <summary>Can I self-host?</summary>
