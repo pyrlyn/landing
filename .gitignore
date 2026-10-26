@@ -2,8 +2,6 @@ node_modules/
 dist/
 .astro/
 .DS_Store
-_prototype-vite/node_modules/
-_prototype-vite/dist/
 .scaffold-import.tgz
 .transfer/
 .agents/
