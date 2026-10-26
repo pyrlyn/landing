@@ -1,4 +1,13 @@
 {
   "version": 1,
-  "entries": []
+  "entries": [
+    {
+      "file": ".github/workflows/lighthouse.yaml",
+      "rule": "artipacked",
+      "fingerprint": "4a6531a79c8f5b5a",
+      "context": "4da7e23091866c00",
+      "occurrence": 0,
+      "message": "actions/checkout leaves the GITHUB_TOKEN in the git config of the workspace, where a later step such as an artifact upload can publish it. set \"persist-credentials: false\" under \"with:\" unless a later step needs to push"
+    }
+  ]
 }
