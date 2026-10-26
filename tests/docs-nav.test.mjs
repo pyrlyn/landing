@@ -14,9 +14,9 @@ const walk = (url, rel = "") =>
     e.isDirectory() ? walk(new URL(`${e.name}/`, url), `${rel}${e.name}/`) : [`${rel}${e.name}`],
   );
 
-// Translations (ru/, uk/) and rtok's comparison/ pages land under "More" on purpose until the
-// docs nav gets localized and comparison groups (plan.md, Audit 2026-10-19).
-const DEFERRED = /^(?:ru|uk|comparison)\//;
+// rtok's comparison/ pages land under "More" on purpose until the
+// docs nav gets comparison groups (plan.md, Audit 2026-10-19).
+const DEFERRED = /^comparison\//;
 
 test("every English product doc is placed in docs-nav.json or excluded", () => {
   const unplaced = [];

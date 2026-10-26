@@ -169,10 +169,8 @@ export const graph = (nodes: object[]) => ({ "@context": "https://schema.org", "
 
 
 // Doc page <title>: `{Doc} · {Product} docs | Pyrlyn`; over 60 chars drop the brand, then shorten the doc title.
-// ru/uk translations stay English for now but keep a language mark so titles remain unique.
 export function documentationTitle(title: string, product: string, file: string | null): string {
-  const language = file?.match(/^(ru|uk)\//)?.[1];
-  const tail = ` · ${product} docs${language ? ` (${language})` : ""}`;
+  const tail = ` · ${product} docs`;
   const doc = plain(title);
   const full = `${doc}${tail} | ${BRAND}`;
   if (full.length <= 60) return full;

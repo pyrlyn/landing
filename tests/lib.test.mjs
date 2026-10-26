@@ -142,11 +142,9 @@ test("doc slugs, heading ids, and code blocks", async () => {
 });
 
 
-test("translated documentation has distinct metadata titles", async () => {
+test("documentation metadata titles", async () => {
   const { documentationTitle } = await seoP;
   assert.equal(documentationTitle("Lock file", "ketch", "LOCKFILE.md"), "Lock file · ketch docs | Pyrlyn");
-  assert.equal(documentationTitle("Lock-файл", "ketch", "ru/LOCKFILE.md"), "Lock-файл · ketch docs (ru) | Pyrlyn");
-  assert.equal(documentationTitle("Lock-файл", "ketch", "uk/LOCKFILE.md"), "Lock-файл · ketch docs (uk) | Pyrlyn");
   assert.equal(documentationTitle("Overview", "ketch", null), "Overview · ketch docs | Pyrlyn");
 });
 
