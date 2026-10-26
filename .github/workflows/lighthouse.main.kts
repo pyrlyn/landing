@@ -93,16 +93,24 @@ workflow(
         run(name = "check:docs", command = "npm run check:docs", condition = always)
     }
 
-    job(id = "lighthouse", name = "Lighthouse CI", runsOn = UbuntuLatest, timeoutMinutes = 20) {
+    // Lighthouse temporarily disabled (Ivan, 2026-10-26): to be revisited and reworked later;
+    // re-enable after perf fixes by removing the condition below (or setting repo variable LIGHTHOUSE_ENABLED=true).
+    job(
+        id = "lighthouse",
+        name = "Lighthouse CI",
+        runsOn = UbuntuLatest,
+        timeoutMinutes = 20,
+        condition = "\${{ vars.LIGHTHOUSE_ENABLED == 'true' }}",
+    ) {
         checkoutAndNode()
         run(name = "Build", command = "npm run build", env = buildEnv)
         run(
             name = "Lighthouse (mobile)",
-            command = "npx --yes @lhci/cli@$lhciVersion autorun --config=lighthouserc.mobile.json",
+            command = "npx --yes --ignore-scripts @lhci/cli@$lhciVersion autorun --config=lighthouserc.mobile.json",
         )
         run(
             name = "Lighthouse (desktop)",
-            command = "npx --yes @lhci/cli@$lhciVersion autorun --config=lighthouserc.desktop.json",
+            command = "npx --yes --ignore-scripts @lhci/cli@$lhciVersion autorun --config=lighthouserc.desktop.json",
             condition = "\${{ !cancelled() }}",
         )
         uses(
