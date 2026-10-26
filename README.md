@@ -6,8 +6,10 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 - **Templates:** kotlinx.html
 - **Data:** kotlinx-serialization (JSON copy in `src/main/resources/data`)
 - **Dev preview:** Ktor CIO. It is for preview only; production serves the static `build/site`.
-- **Content:** `content/projects/*.md` (products) and `content/docs/<product>/` (docs), rendered by a
-  built-in GFM-subset Markdown renderer (`markdown/`).
+- **Content:** `content/projects/*.md` (products) and `content/docs/<product>/` (docs). Markdown is parsed
+  only at build time by JetBrains markdown (GFM) behind `markdown/MarkdownRenderer`, and baked into static
+  HTML. No Markdown parser ships to the browser (`generateSite` fails if a JS asset contains one), and the
+  preview only serves `build/site`.
 - **CSS:** written in Kotlin with kotlin-css (JetBrains kotlin-wrappers) in `styles/`, rendered at
   build time, minified and inlined into each page. The sheets use the `sel`/`atMedia`/`atSupports`/`at`/`prop` helpers
   from `styles/Dsl.kt`, which keep the source order and never merge rules.
@@ -46,7 +48,7 @@ Search Console is verified via a DNS TXT record, so the site needs no meta tag.
 src/main/kotlin/dev/pyrlyn/landing/
   config/     SiteConfig (env)
   content/    front matter, catalog, sections, docs, names
-  markdown/   parser + renderer
+  markdown/   MarkdownRenderer (JetBrains markdown AST → HTML hooks), escaping, HTML guards
   seo/        JSON-LD, titles
   html/       layout, components, icons
   pages/      home, product, docs, misc

@@ -1,9 +1,8 @@
 package dev.pyrlyn.landing.content
 
-import dev.pyrlyn.landing.markdown.Block
-import dev.pyrlyn.landing.markdown.BlockParser
 import dev.pyrlyn.landing.markdown.Esc
-import dev.pyrlyn.landing.markdown.Renderer
+import dev.pyrlyn.landing.markdown.MarkdownRenderer
+import dev.pyrlyn.landing.markdown.Outline
 import dev.pyrlyn.landing.markdown.SafeHtml
 
 /** Turns a project Markdown body into the structured pieces the page templates render (port of src/lib/sections.ts). */
@@ -28,7 +27,7 @@ object Sections {
     }
 
     /** The site renderer for product copy: copyable code blocks, safe links/images/HTML. */
-    private object SiteRenderer : Renderer() {
+    private object SiteRenderer : MarkdownRenderer() {
         override fun code(text: String, lang: String) = codeBlock(text, if (lang == "powershell") "powershell" else lang.ifEmpty { "bash" })
         override fun link(href: String, title: String?, text: String): String {
             val out = SafeHtml.href(href)
@@ -71,9 +70,9 @@ object Sections {
     fun usage(src: String?): List<Usage> {
         val out = mutableListOf<Usage>()
         var caption = ""
-        for (b in BlockParser().parse(src ?: "")) {
-            if (b is Block.Paragraph) caption = renderInline(b.text.replace(Regex("\\s*\\n\\s*"), " "))
-            if (b is Block.Code) { out += Usage(caption, b.text, b.lang.ifEmpty { "bash" }); caption = "" }
+        for (b in SiteRenderer.outline(src ?: "")) {
+            if (b is Outline.Paragraph) caption = renderInline(b.source.replace(Regex("\\s*\\n\\s*"), " "))
+            if (b is Outline.Code) { out += Usage(caption, b.text, b.lang.ifEmpty { "bash" }); caption = "" }
         }
         return out
     }

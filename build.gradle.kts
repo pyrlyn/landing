@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.server.cio)
     implementation(libs.kotlin.css)
+    implementation(libs.jetbrains.markdown)
     testImplementation(kotlin("test"))
 }
 
