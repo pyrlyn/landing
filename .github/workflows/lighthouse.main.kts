@@ -111,6 +111,8 @@ workflow(
                 name = "lighthouse-reports",
                 path = listOf(".lighthouseci/"),
                 ifNoFilesFound = UploadArtifact.BehaviorIfNoFilesFound.Warn,
+                // .lighthouseci is a dot-directory; upload-artifact skips hidden files by default.
+                includeHiddenFiles = true,
                 retentionDays = UploadArtifact.RetentionPeriod.Value(14),
                 _customVersion = uploadArtifactSha,
             ),
