@@ -1,0 +1,97 @@
+/* Landing web theme: shared brand components (glass, shine, buttons, eyebrow, pill, badges, site brand, "by Pyrlyn" credit).
+ * Hand-authored; copied to dist/landing/components.css by build.mjs. Needs themes/landing/tokens.css.
+ * Import it after the page base styles (reset, background) and before page layout CSS: the order matches the
+ * cascade the landing had when these rules lived in its global.css. */
+
+/* ---------- Glass & surfaces ---------- */
+.glass {
+  position: relative;
+  background: var(--glass-fill), var(--surface-fill);
+  box-shadow: var(--glass-edge), var(--shadow-2);
+  -webkit-backdrop-filter: blur(var(--blur-2)) saturate(160%);
+  backdrop-filter: blur(var(--blur-2)) saturate(160%);
+}
+.glass--thin { -webkit-backdrop-filter: blur(var(--blur-1)) saturate(140%); backdrop-filter: blur(var(--blur-1)) saturate(140%); }
+.glass--thick { -webkit-backdrop-filter: blur(var(--blur-3)) saturate(180%); backdrop-filter: blur(var(--blur-3)) saturate(180%); box-shadow: var(--glass-edge), var(--shadow-3); }
+
+/* Linear-style cursor-follow shine (enabled by JS on fine pointers only) */
+.shine { isolation: isolate; overflow: hidden; }
+.shine::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklch, var(--card-accent, var(--accent)) 16%, transparent), transparent 55%);
+  opacity: 0; transition: opacity .4s var(--ease);
+}
+.shine::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), color-mix(in oklch, var(--card-accent, var(--accent)) 70%, white 10%), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  opacity: 0; transition: opacity .4s var(--ease);
+}
+.has-shine .shine:hover::before, .has-shine .shine:hover::after { opacity: 1; }
+
+/* ---------- Components ---------- */
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+  min-height: 44px; padding: 0 var(--s-5); border: 0; border-radius: var(--r-full);
+  font: inherit; font-size: var(--fs-sm); font-weight: 600; letter-spacing: -.005em; white-space: nowrap; cursor: pointer;
+  transition: translate .18s ease-out, scale .12s ease-out, box-shadow .18s ease-out, background-color .18s ease-out;
+}
+@media (prefers-reduced-motion: no-preference) { .btn:active { scale: .98; } }
+.btn:focus-visible { border-radius: var(--r-full); }
+.btn--lg { min-height: 52px; padding: 0 var(--s-6); font-size: var(--fs-md); }
+.btn--block { width: 100%; }
+.btn--primary {
+  color: var(--on-accent);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--accent) 78%, white), var(--accent));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .55), inset 0 -1px 0 rgb(0 0 0 / .18), 0 0 0 1px color-mix(in oklch, var(--accent) 60%, black), 0 8px 24px -8px var(--accent-glow);
+}
+.btn--primary:hover { translate: 0 -1px; box-shadow: inset 0 1px 0 rgb(255 255 255 / .55), inset 0 -1px 0 rgb(0 0 0 / .18), 0 0 0 1px color-mix(in oklch, var(--accent) 60%, black), 0 14px 36px -10px var(--accent-glow); }
+.btn--primary:focus-visible { box-shadow: var(--focus); }
+/* Placeholder actions (Pro waitlist): focusable and announced as unavailable, visibly muted. */
+.btn[aria-disabled="true"] { opacity: .55; cursor: not-allowed; filter: saturate(.6); }
+.btn[aria-disabled="true"]:hover { translate: none; }
+.btn[aria-disabled="true"]:active { scale: none; }
+.btn--glass { color: var(--fg-strong); background: var(--glass-fill), rgb(255 255 255 / .03); box-shadow: var(--glass-edge), var(--shadow-1); -webkit-backdrop-filter: blur(var(--blur-2)); backdrop-filter: blur(var(--blur-2)); }
+.btn--glass:hover { translate: 0 -1px; background: var(--glass-fill), rgb(255 255 255 / .07); }
+.btn--glass:focus-visible { box-shadow: var(--focus); }
+.btn svg { flex: none; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: var(--s-2); width: fit-content;
+  font-size: var(--fs-xs); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+}
+.pill {
+  display: inline-flex; align-items: center; gap: var(--s-2); width: fit-content; min-height: 32px;
+  padding: 0 var(--s-3) 0 var(--s-2); border-radius: var(--r-full);
+  background: var(--glass-fill), rgb(255 255 255 / .02); box-shadow: var(--glass-edge);
+  font-size: var(--fs-xs); font-weight: 500; color: var(--muted);
+}
+.pill__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent-2) 22%, transparent); }
+.badge {
+  display: inline-flex; align-items: center; gap: var(--s-1); width: fit-content;
+  padding: 2px var(--s-2); border-radius: var(--r-full);
+  font-size: var(--fs-xs); font-weight: 600; line-height: 1.5; letter-spacing: .01em;
+}
+.badge--accent { color: var(--on-accent); background: var(--accent); }
+.badge--line { color: var(--muted); box-shadow: inset 0 0 0 1px var(--hairline-strong); }
+.badge--version { font-family: var(--font-mono); color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent-line); }
+
+/* Site brand (nav and footer) */
+.brand { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 44px; min-width: 44px; padding-right: var(--s-2); font-weight: 700; letter-spacing: -.02em; color: var(--fg-strong); }
+.brand__mark { width: 26px; height: 26px; border-radius: 8px; flex: none;
+  background: conic-gradient(from 210deg, var(--accent), var(--accent-2), var(--accent));
+  box-shadow: inset 0 1px #ffffff66, inset 0 -1px #0004, 0 4px 12px -4px var(--accent-glow); position: relative; }
+.brand__mark::after { content: ""; position: absolute; inset: 7px; border-radius: 3px; background: var(--bg); opacity: .8; }
+/* "by Pyrlyn" credit (logo/pyrlyn/): header, hero, product pages, footer. A hairline separates it from
+   the brand or badge before it; it stays quieter than the site brand. The link's accessible name is "Pyrlyn". */
+.pyrlyn-by { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; padding-inline: var(--s-3) var(--s-2);
+  border-radius: var(--r-full); font-size: var(--fs-xs); font-weight: 500; color: var(--subtle); position: relative;
+  opacity: .88; transition: opacity .2s, color .2s; }
+.pyrlyn-by::before { content: ""; position: absolute; left: 0; top: 50%; width: 1px; height: 20px; translate: 0 -50%; background: var(--hairline-strong); }
+.pyrlyn-by:hover, .pyrlyn-by:focus-visible { opacity: 1; color: var(--muted); }
+.pyrlyn-by img { display: block; width: auto; height: 20px; }
+.pyrlyn-by--nav { margin-left: calc(-1 * var(--s-1)); }
+.pyrlyn-by--hero { padding-left: var(--s-4); }
+.pyrlyn-by--hero img { height: 28px; }
+.pyrlyn-by--footer img { height: 26px; }
