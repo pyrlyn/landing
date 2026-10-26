@@ -11,7 +11,6 @@
     "prebuild": "npm run brand",
     "build": "astro build",
     "preview": "astro preview --port 4321",
-    "check": "astro check",
     "check:docs": "node scripts/check-docs.mjs",
     "check:seo": "node scripts/check-seo.mjs",
     "test": "node --test tests/*.test.mjs"
@@ -26,7 +25,6 @@
     "preact": "^11.0.2"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.3.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"
