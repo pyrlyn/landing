@@ -8,8 +8,10 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 - **Dev preview:** Ktor CIO. It is for preview only; production serves the static `build/site`.
 - **Content:** `content/projects/*.md` (products) and `content/docs/<product>/` (docs), rendered by a
   built-in GFM-subset Markdown renderer (`markdown/`).
-- **CSS/JS:** self-hosted from `src/main/web`. The CSS is bundled, minified and inlined into each page.
-  The JS is one hashed ES module plus a lazily loaded WebGL intro. There is no framework runtime.
+- **CSS:** written in Kotlin with kotlin-css (JetBrains kotlin-wrappers) in `styles/`, rendered at
+  build time, minified and inlined into each page. The sheets use the `sel`/`atMedia`/`atSupports`/`at`/`prop` helpers
+  from `styles/Dsl.kt`, which keep the source order and never merge rules.
+- **JS:** self-hosted from `src/main/web/js`. It is one hashed ES module plus a lazily loaded WebGL intro. There is no framework runtime.
 - **Font:** Satoshi from the Fontshare CDN, preloaded with `font-display: swap`.
 
 ## Commands
@@ -48,10 +50,11 @@ src/main/kotlin/dev/pyrlyn/landing/
   seo/        JSON-LD, titles
   html/       layout, components, icons
   pages/      home, product, docs, misc
+  styles/     kotlin-css stylesheets (Styles.site, Styles.docs)
   build/      CSS/JS pipeline
   Generate.kt static generator, sitemap, robots
   Preview.kt  Ktor dev server
-src/main/web/ css + js sources
+src/main/web/ js sources
 content/      markdown content
 public/       static files copied as-is
 ```
