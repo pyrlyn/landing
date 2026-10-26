@@ -13,7 +13,12 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 - **CSS:** written in Kotlin with kotlin-css (JetBrains kotlin-wrappers) in `styles/`, rendered at
   build time, minified and inlined into each page. The sheets use the `sel`/`atMedia`/`atSupports`/`at`/`prop` helpers
   from `styles/Dsl.kt`, which keep the source order and never merge rules.
-- **JS:** self-hosted from `src/main/web/js`. It is one hashed ES module plus a lazily loaded WebGL intro. There is no framework runtime.
+- **JS:** Kotlin/JS (IR, browser target) in `web/` (site bundle) and `web-intro/` (the WebGL intro sweep).
+  Production webpack builds apply DCE and minification. `generateSite` builds both, hashes them into
+  `/_assets/` and loads the intro only on hero pages when motion is allowed. Pages are fully pre-rendered
+  and work without JS; the scripts only enhance widgets (menus, theme, search, carousels, terminals,
+  visuals, docs nav/TOC, wishlist links). The web code sticks to externals and native JS helpers
+  (`web/.../Dom.kt`) instead of Kotlin collections, Regex and exceptions, which keeps the stdlib out of the bundle.
 - **Font:** Satoshi from the Fontshare CDN, preloaded with `font-display: swap`.
 
 ## Commands
@@ -24,7 +29,7 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 ./gradlew build          # compile + tests
 ```
 
-Requires JDK 21. Gradle comes from the wrapper.
+Requires JDK 21. Gradle comes from the wrapper; the Kotlin Gradle plugin downloads its own Node/webpack toolchain for the JS build.
 
 ## Environment
 
@@ -56,7 +61,9 @@ src/main/kotlin/dev/pyrlyn/landing/
   build/      CSS/JS pipeline
   Generate.kt static generator, sitemap, robots
   Preview.kt  Ktor dev server
-src/main/web/ js sources
+web/          Kotlin/JS site bundle (progressive enhancement)
+web-intro/    Kotlin/JS WebGL intro, loaded lazily
+kotlin-js-store/ yarn.lock for the Kotlin/JS toolchain
 content/      markdown content
 public/       static files copied as-is
 ```

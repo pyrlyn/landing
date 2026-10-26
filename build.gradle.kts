@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.multiplatform) apply false
     application
 }
 
@@ -22,6 +23,10 @@ application {
 
 val siteDir = layout.buildDirectory.dir("site")
 
+// Kotlin/JS bundles (production webpack: DCE + terser) that generateSite hashes into /_assets/.
+val webBundle = project(":web").layout.buildDirectory.file("kotlin-webpack/js/productionExecutable/web.js")
+val introBundle = project(":web-intro").layout.buildDirectory.file("kotlin-webpack/js/productionExecutable/web-intro.js")
+
 /** Static site generation: renders every page into build/site. */
 val generateSite by tasks.registering(JavaExec::class) {
     group = "site"
@@ -29,10 +34,12 @@ val generateSite by tasks.registering(JavaExec::class) {
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass.set("dev.pyrlyn.landing.GenerateKt")
     workingDir = projectDir
-    args(siteDir.get().asFile.absolutePath)
+    dependsOn(":web:jsBrowserProductionWebpack", ":web-intro:jsBrowserProductionWebpack")
+    args(siteDir.get().asFile.absolutePath, webBundle.get().asFile.absolutePath, introBundle.get().asFile.absolutePath)
     inputs.dir("content")
     inputs.dir("public")
-    inputs.dir("src/main/web")
+    inputs.file(webBundle)
+    inputs.file(introBundle)
     inputs.files(sourceSets.main.get().runtimeClasspath)
     // Build-time config from env; declared so a change re-runs the task.
     listOf("SITE_URL", "SITE_BASE", "GA_MEASUREMENT_ID", "POSTHOG_KEY", "POSTHOG_HOST", "ALGOLIA_APP_ID", "ALGOLIA_SEARCH_KEY", "ALGOLIA_INDEX", "API_URL")
