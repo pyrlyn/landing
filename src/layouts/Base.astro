@@ -16,7 +16,7 @@ import { API_URL, GA_MEASUREMENT_ID, POSTHOG_HOST, POSTHOG_KEY } from "../lib/co
 import { u, BRAND, PRO_PRICE_NOTE, THEMES, type ThemeKey } from "../lib/site";
 import { getTools, proFor, hasPro, versionLabel, groupByCategory } from "../lib/catalog";
 import SEO from "../components/SEO.astro";
-import fs from "node:fs";
+import { importMap } from "../lib/cdn-modules.mjs";
 
 interface Props {
   title: string;
@@ -36,9 +36,9 @@ interface Props {
   /** Load GA and PostHog; off on pages whose address carries a secret (the wishlist mail links). */
   analytics?: boolean;
 }
-// Satoshi is self-hosted when scripts/fetch-font.mjs managed to download it (see docs/performance.md).
-const selfHostFont = process.env.PERF_SELF_HOST_FONT !== "0" && fs.existsSync("public/fonts/satoshi-variable.woff2");
-const fontUrl = u("/fonts/satoshi-variable.woff2");
+// Satoshi woff2 on the Fontshare CDN: the exact file api.fontshare.com/v2/css?f[]=satoshi@1 references
+// (see docs/performance.md). Re-check it when Fontshare publishes a new Satoshi version.
+const fontUrl = "https://cdn.fontshare.com/wf/NWBQYJIM7GCZ5XWD7D26ARB3VDY55ZRT/K63EV2KZIGKLE7RANQ2U42S6SVHU5RJ7/X6XYTKIVDUW7GZTZPZNN4EUM5KH54KHF.woff2";
 // Analytics load after the page's load event, when the browser is idle; PERF_DEFER_ANALYTICS=0 loads them at once.
 const deferAnalytics = process.env.PERF_DEFER_ANALYTICS !== "0";
 const { title, description, theme, ogType = "website", imageAlt, jsonLd = [], noindex = false, analytics = true, ...over } = Astro.props;
@@ -63,6 +63,9 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
     {!inDocs && <script is:inline>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("intro")</script>}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <SEO {title} {description} {ogType} {imageAlt} {jsonLd} {noindex} image={og} />
+    <!-- Import map for Preact/signals on jsDelivr (pinned, SRI); must precede every module script. -->
+    {importMap && <script is:inline type="importmap" set:html={JSON.stringify(importMap)} />}
+    {importMap && <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />}
     <!-- Theme: a saved choice (localStorage "pyrlyn-theme") wins, otherwise the system setting. Applied before first paint, so nothing flashes.
          Stays an inline script on purpose (not an island): islands hydrate after the HTML is parsed, which is too late to avoid a dark/light flash. The ThemeToggle island only changes the mode afterwards. -->
     <script is:inline define:vars={{ darkBg: t.bg }}>(function(){var d=document.documentElement,s=null;try{s=localStorage.getItem("pyrlyn-theme")}catch(e){}var m=s==="light"||s==="dark"?s:(matchMedia("(prefers-color-scheme: light)").matches?"light":"dark");d.setAttribute("data-mode",m);d.dataset.darkBg=darkBg;d.style.colorScheme=m;window.__applyThemeMeta=function(m){var c=document.getElementById("meta-theme-color");if(c)c.setAttribute("content",m==="light"?"#f4f6f9":darkBg);var k=document.getElementById("meta-color-scheme");if(k)k.setAttribute("content",m)};document.addEventListener("DOMContentLoaded",function(){window.__applyThemeMeta(m)});window.__applyThemeMeta(m)})()</script>
@@ -76,21 +79,11 @@ import IntroRing from "../components/islands/IntroRing/IntroRing";
     <link rel="icon" href={u("/pyrlyn/pyrlyn-favicon-64.png")} type="image/png" sizes="64x64" />
     <link rel="apple-touch-icon" href={u("/pyrlyn/pyrlyn-apple-touch-icon.png")} />
     <link rel="sitemap" type="application/xml" href={u("/sitemap-index.xml")} />
-    <!-- Satoshi (Indian Type Foundry, ITF Free Font License): one variable face (wght 300–900), self-hosted
-         and preloaded. The FFL allows self-hosting but not committing the files to this public repo, so
-         `npm run font` downloads it from Fontshare at build time; without it we fall back to the CDN. -->
-    {selfHostFont ? (
-      <>
-        <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
-        <style is:inline set:html={`@font-face{font-family:"Satoshi";src:url("${fontUrl}") format("woff2");font-weight:300 900;font-style:normal;font-display:block}`} />
-      </>
-    ) : (
-      <>
-        <link rel="preconnect" href="https://api.fontshare.com" />
-        <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
-        <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap" />
-      </>
-    )}
+    <!-- Satoshi (Indian Type Foundry, ITF Free Font License): one variable face (wght 300–900) from the
+         Fontshare CDN, preloaded, with an inline @font-face instead of the render-blocking Fontshare stylesheet. -->
+    <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin />
+    <link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+    <style is:inline set:html={`@font-face{font-family:"Satoshi";src:url("${fontUrl}") format("woff2");font-weight:300 900;font-style:normal;font-display:block}`} />
     <!-- Analytics: the gtag queue and the PostHog stub are set up at once (same IDs and config), the
          libraries are fetched after window load + idle so they do not compete with first paint. -->
     {analytics && (GA_MEASUREMENT_ID || POSTHOG_KEY) && (

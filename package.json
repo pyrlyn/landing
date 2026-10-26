@@ -6,10 +6,9 @@
   "description": "Pyrlyn — a storefront for AI developer tools (rtok, cox, ketch), built with Astro.",
   "scripts": {
     "brand": "pyrlyn-brand-copy public pyrlyn --favicon listepo/listepo-favicon.svg",
-    "predev": "npm run brand && npm run font",
-    "font": "node scripts/fetch-font.mjs",
+    "predev": "npm run brand",
     "dev": "astro dev",
-    "prebuild": "npm run brand && npm run font",
+    "prebuild": "npm run brand",
     "build": "astro build",
     "preview": "astro preview --port 4321",
     "check": "astro check",

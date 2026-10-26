@@ -1,6 +1,6 @@
 # Loading performance
 
-Four build-level settings keep the first paint from waiting on resources it does not need.
+Five build-level settings keep the first paint from waiting on resources it does not need.
 
 ## 1. Only the hero image loads eagerly
 
@@ -24,19 +24,18 @@ for an extra request. No new dependency, no change in the CSS itself.
 - Cost: the CSS (~95 KB raw, ~15 KB gzip) is repeated in every HTML page and not cached across
   navigations; HTML of the home page grows from ~111 KB to ~205 KB raw.
 
-## 3. Satoshi is self-hosted and preloaded
+## 3. Satoshi from the Fontshare CDN, without a blocking stylesheet
 
-- `scripts/fetch-font.mjs` (`npm run font`, run by `predev`/`prebuild`) downloads the Satoshi variable
-  woff2 (one file, wght 300–900, ~42 KB) from Fontshare into `public/fonts/` (gitignored).
-- `src/layouts/Base.astro` then emits `<link rel="preload" as="font">` for it and an inline
-  `@font-face` with `font-display: block` (no flash of the fallback font). The external
-  `api.fontshare.com` stylesheet and its preconnects are gone.
-- License: Satoshi is under the ITF Free Font License (v2.0). It allows self-hosting on our own site
-  via `@font-face`, but forbids redistributing the files, including in public repositories. This repo
-  is public, so the file is fetched at build time and never committed.
-- Fallback: if the download fails (offline build), the script only warns and `Base.astro` falls back
-  to the Fontshare CDN stylesheet, as before.
-- Disable: `PERF_SELF_HOST_FONT=0 npm run build` (CDN stylesheet again).
+- `src/layouts/Base.astro` has an inline `@font-face` (`font-display: block`, no flash of the
+  fallback font) whose `src` is the Satoshi variable woff2 on `cdn.fontshare.com` (one file, wght
+  300–900, ~42 KB), plus `<link rel="preconnect">` to that host and `<link rel="preload" as="font"
+  crossorigin>` for the file. The render-blocking `api.fontshare.com` stylesheet is gone.
+- The URL is the exact file `api.fontshare.com/v2/css?f[]=satoshi@1` references (same for every
+  user agent, `last-modified` 2021, `access-control-allow-origin: *`). The path is a content hash,
+  so a new Satoshi release on Fontshare will not update the site automatically: re-check the
+  stylesheet and update `fontUrl` in `Base.astro`.
+- License: Satoshi is under the ITF Free Font License; the files are not committed to this public repo.
+- Revert: put back `<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@1&display=swap">`.
 
 ## 4. Analytics load after the page
 
@@ -46,6 +45,35 @@ for an extra request. No new dependency, no change in the CSS itself.
 - `gtag.js` and PostHog `array.js` are injected after the `load` event, in `requestIdleCallback`
   (3 s timeout; `setTimeout` where unsupported).
 - Disable: `PERF_DEFER_ANALYTICS=0 npm run build` (libraries injected at once).
+
+## 5. Third-party client modules from jsDelivr
+
+`src/lib/cdn-modules.mjs` keeps `preact`, `preact/hooks`, `preact/compat`, `preact/jsx-runtime`,
+`@preact/signals` and `@preact/signals-core` (and the `react`/`react-dom` names that alias to
+`preact/compat`) out of the client bundle. `Base.astro` emits an import map at the top of `<head>`
+pointing them at `cdn.jsdelivr.net/npm/<pkg>@<version>/<file>` and a preconnect to jsDelivr.
+
+- Versions come from `node_modules` (that is, `package-lock.json`), so updating a dependency
+  updates the URL.
+- SRI: the import map's `integrity` field has a sha384 for every URL, computed from the same file in
+  `node_modules` (jsDelivr serves npm files byte-for-byte). Browsers without import-map integrity
+  support still load the modules, just without the check.
+- Only the client build is affected; server rendering still uses `node_modules`.
+- Disable: `PERF_CDN_MODULES=0 npm run build` (Preact bundled again).
+
+### Inventory: what is on a CDN and what is not
+
+| Asset | Where | Why |
+|---|---|---|
+| Satoshi font | Fontshare CDN | Vendor CDN; the license does not allow committing the files here |
+| Preact 11, hooks, compat, jsx-runtime | jsDelivr | npm package with a public CDN, pinned + SRI |
+| @preact/signals, @preact/signals-core | jsDelivr | Same |
+| Google Analytics `gtag.js`, PostHog | Vendor CDNs (already) | Loaded after `load` + idle (section 4) |
+| Tailwind CSS v4 utilities | Bundled (inlined CSS) | Built at compile time from only the classes used; the CDN build is the full JIT runtime, larger and render-blocking |
+| `@pyrlyn/brand` tokens/components CSS, logos, favicons | Own | Our own package, not on a public CDN |
+| `@pyrlyn/sdk` | Own | Vendored tarball, not published |
+| `marked`, Astro runtime | Build time only | Not shipped to the browser (Astro's island loader is inlined in the HTML) |
+| Icons (`Icon.astro`) | Inline SVG | Own icon set rendered into the HTML; no icon font or library |
 
 ## Testing
 
@@ -57,8 +85,7 @@ for an extra request. No new dependency, no change in the CSS itself.
 ## Limitations
 
 - Visitors who leave before `load` + idle are not counted by GA/PostHog (bounces under ~1 s).
-- The self-hosted font does not update automatically when Fontshare ships a new version; delete
-  `public/fonts/` and rebuild to refresh it. CI builds always fetch a fresh copy.
-- Home and `/rtok/` mobile LCP is still ~6 s in Lighthouse: the LCP element (hero `<h1>`) spends
-  ~93% in render delay, not in loading the font or analytics. `/rtok/docs/` reaches ~2.9 s.
+- The page depends on two more third-party origins (`cdn.fontshare.com`, `cdn.jsdelivr.net`); if one is
+  down, text waits up to ~3 s (`font-display: block`) and then uses the fallback font, and islands do
+  not hydrate (static HTML still renders).
 - Inlining helps the first visit; repeat navigations re-download the CSS inside each HTML page.
