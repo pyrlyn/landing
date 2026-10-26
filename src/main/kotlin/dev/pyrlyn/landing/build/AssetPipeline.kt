@@ -1,11 +1,9 @@
 package dev.pyrlyn.landing.build
 
-import java.io.File
 import java.security.MessageDigest
 
 /**
- * Own CSS/JS pipeline, no third-party tooling: CSS minification, a small ES-module
- * bundler for src/main/web/js (relative imports inlined in dependency order), content hashing.
+ * Asset helpers: CSS minification, content hashing and the client-bundle guard.
  */
 object AssetPipeline {
     fun hash(s: String): String = MessageDigest.getInstance("SHA-256").digest(s.toByteArray()).joinToString("") { "%02x".format(it) }.take(10)
@@ -32,35 +30,6 @@ object AssetPipeline {
             out.append(c); i++
         }
         return out.toString().trim()
-    }
-
-    /** Bundle an entry module with its relative imports (each module once, dependencies first). */
-    fun bundleJs(entry: File): String {
-        val done = hashSetOf<String>()
-        val ordered = mutableListOf<String>()
-        fun visit(f: File) {
-            val key = f.canonicalPath
-            if (!done.add(key)) return
-            val src = f.readText()
-            val importRe = Regex("^import\\s*\\{[^}]*\\}\\s*from\\s*\"(\\.[^\"]+)\";?\\s*$", RegexOption.MULTILINE)
-            for (m in importRe.findAll(src)) {
-                val p = m.groupValues[1].let { if (it.endsWith(".js")) it else "$it.js" }
-                visit(File(f.parentFile, p))
-            }
-            val exportRe = Regex("^export\\s+((?:async\\s+)?function\\*?|const|let|class)\\s+([A-Za-z0-9_$]+)", RegexOption.MULTILINE)
-            val names = exportRe.findAll(src).map { it.groupValues[2] }.toList()
-            val body = src.replace(importRe, "").replace(exportRe) { "${it.groupValues[1]} ${it.groupValues[2]}" }
-            // Each module gets its own scope so private top-level names cannot collide; only exports are lifted.
-            ordered += if (names.isEmpty()) "{\n$body\n}" else "const {${names.joinToString(",")}}=(()=>{\n$body\nreturn {${names.joinToString(",")}};\n})();"
-        }
-        visit(entry)
-        return ordered.joinToString("\n")
-    }
-
-    /** Light JS minification: drop full-line // comments, block comments at line start, indentation and blank lines. */
-    fun minifyJs(js: String): String {
-        val noBlock = Regex("^\\s*/\\*[\\s\\S]*?\\*/\\s*$", RegexOption.MULTILINE).replace(js, "")
-        return noBlock.lines().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("//") }.joinToString("\n")
     }
 
     /** Names of Markdown parsers/renderers; none of them may reach the client. */

@@ -15,14 +15,16 @@ import kotlin.system.measureTimeMillis
 /** Static site generator: `./gradlew generateSite` → build/site (port of `astro build`). */
 fun main(args: Array<String>) {
     val out = File(args.getOrNull(0) ?: "build/site")
-    val ms = measureTimeMillis { generate(File("."), out, SiteConfig.fromEnv()) }
+    val js = File(args.getOrNull(1) ?: "web/build/kotlin-webpack/js/productionExecutable/web.js")
+    val intro = File(args.getOrNull(2) ?: "web-intro/build/kotlin-webpack/js/productionExecutable/web-intro.js")
+    val ms = measureTimeMillis { generate(File("."), out, SiteConfig.fromEnv(), js, intro) }
     println("landing: generated ${out.walkTopDown().count { it.extension == "html" }} pages into $out in ${ms}ms")
 }
 
-fun generate(root: File, out: File, cfg: SiteConfig) {
+/** Renders every route into [out]; [webJs] and [introJs] are the Kotlin/JS production bundles. */
+fun generate(root: File, out: File, cfg: SiteConfig, webJs: File, introJs: File) {
     val content = File(root, "content")
     val publicDir = File(root, "public")
-    val web = File(root, "src/main/web")
 
     // Product subcommands used anywhere in the synced copy, so "<name> <cmd>" stays lowercase.
     Names.harvestFromMarkdown(content.walkTopDown().filter { it.isFile && it.extension == "md" }.map { it.readText() }.toList())
@@ -32,7 +34,7 @@ fun generate(root: File, out: File, cfg: SiteConfig) {
     publicDir.copyRecursively(out, overwrite = true)
 
     // Assets: CSS is inlined into each page (like the Astro build) to keep first paint request-free;
-    // JS ships as one hashed, cacheable module plus the lazily imported WebGL intro.
+    // JS (Kotlin/JS, see web/ and web-intro/) ships as one hashed, cacheable script plus the lazily loaded intro.
     val siteCss = Styles.site
     val docsCss = Styles.docs
     val assetDir = File(out, "_assets").apply { mkdirs() }
@@ -42,8 +44,8 @@ fun generate(root: File, out: File, cfg: SiteConfig) {
         File(assetDir, file).writeText(body)
         return "/_assets/$file"
     }
-    val js = emit("site", "js", AssetPipeline.minifyJs(AssetPipeline.bundleJs(web.resolve("js/site.js"))))
-    val intro = emit("intro-gl", "js", AssetPipeline.minifyJs(web.resolve("js/lib/intro-gl.js").readText()))
+    val js = emit("site", "js", webJs.readText())
+    val intro = emit("intro-gl", "js", introJs.readText())
 
     val catalog = Catalog.load(File(content, "projects"))
     val docs = Docs(File(content, "docs"), cfg)
