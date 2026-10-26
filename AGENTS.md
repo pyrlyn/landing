@@ -8,7 +8,6 @@ Astro storefront for rtok, cox, and ketch ("listepo tools"). Product copy is `co
 npm ci
 npm run dev
 npm run build
-npm run check
 npm run check:docs
 npm run check:seo
 npm test
