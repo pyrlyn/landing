@@ -8,6 +8,7 @@ import dev.pyrlyn.landing.content.Names
 import dev.pyrlyn.landing.html.Assets
 import dev.pyrlyn.landing.html.Ctx
 import dev.pyrlyn.landing.pages.*
+import dev.pyrlyn.landing.styles.Styles
 import java.io.File
 import kotlin.system.measureTimeMillis
 
@@ -32,9 +33,8 @@ fun generate(root: File, out: File, cfg: SiteConfig) {
 
     // Assets: CSS is inlined into each page (like the Astro build) to keep first paint request-free;
     // JS ships as one hashed, cacheable module plus the lazily imported WebGL intro.
-    val css = web.resolve("css")
-    val siteCss = AssetPipeline.minifyCss(listOf("global.css", "tailwind-utilities.css", "products.css", "motion.css", "search.css", "light.css").joinToString("\n") { AssetPipeline.cssWithImports(css.resolve(it)) })
-    val docsCss = AssetPipeline.minifyCss(AssetPipeline.cssWithImports(css.resolve("docs.css")))
+    val siteCss = Styles.site
+    val docsCss = Styles.docs
     val assetDir = File(out, "_assets").apply { mkdirs() }
     fun emit(name: String, ext: String, body: String): String {
         val file = "$name.${AssetPipeline.hash(body)}.$ext"

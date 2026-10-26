@@ -10,6 +10,7 @@ dependencies {
     implementation(libs.kotlinx.html)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.server.cio)
+    implementation(libs.kotlin.css)
     testImplementation(kotlin("test"))
 }
 
