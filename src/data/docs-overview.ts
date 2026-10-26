@@ -24,7 +24,7 @@ export const OVERVIEWS: Record<string, Overview> = {
     headline: "Less context for your agent, every saving on record.",
     lead: "Rtok reduces the context AI coding agents must carry. One Rust binary, three surfaces: Claude Code hooks, an MCP server, and an API proxy. Each reduction is measured; shortened payloads stay retrievable by id.",
     strip: [
-      { label: "Install", cmd: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/rtok/releases/latest/download/rtok-installer.sh | sh" },
+      { label: "Install", cmd: "brew install pyrlyn/tap/rtok" },
       { label: "Configure", cmd: "rtok config init" },
       { label: "Inspect", cmd: "rtok doctor" },
       { label: "Wire in", cmd: "rtok agents install claude --dry-run" },

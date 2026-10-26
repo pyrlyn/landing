@@ -28,7 +28,7 @@ that keep 100 % of the matching facts. It always returns its top 8, padding weak
 rtok returns only FTS matches, so its answers are smaller (71–172), but its JSON objects repeated keys and
 quoting on every hit.
 
-Added to rtok: [#1081](https://github.com/pyrlyn/rtok/pull/1081). `mem_search` now returns one line per note
+Added to rtok: #1081. `mem_search` now returns one line per note
 (`id title: snippet`, title dropped when the snippet repeats it), 22–26 % fewer tokens on these queries
 (139 → 108, 92 → 68, 172 → 134, 112 → 88, 71 → 54).
 # rtok vs graymatter

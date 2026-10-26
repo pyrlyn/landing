@@ -3,7 +3,7 @@ title: rtok
 tagline: Token-reduction CLI for AI coding agents — hooks, an MCP server and an API proxy in one Rust binary.
 repo: https://github.com/pyrlyn/rtok
 homepage: https://github.com/pyrlyn/rtok
-install: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/rtok/releases/latest/download/rtok-installer.sh | sh"
+install: "brew install pyrlyn/tap/rtok"
 install_alternatives:
   - 'ketch install pyrlyn/rtok'
   - 'brew install pyrlyn/tap/rtok'
@@ -55,11 +55,6 @@ including rtok's own.
 
 ## Install
 
-macOS (Apple silicon) and Linux x86-64, installed into `~/.cargo/bin`:
-
-```bash
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/pyrlyn/rtok/releases/latest/download/rtok-installer.sh | sh
-```
 
 With [ketch](https://github.com/pyrlyn/ketch), straight from the GitHub Release archives:
 
@@ -128,9 +123,5 @@ rtok config show --sources
 ## Links
 
 - Repository: <https://github.com/pyrlyn/rtok>
-- Documentation: <https://github.com/pyrlyn/rtok/tree/main/docs>
-- Getting started: <https://github.com/pyrlyn/rtok/blob/main/docs/getting-started.md>
-- Releases: <https://github.com/pyrlyn/rtok/releases>
-- Changelog: <https://github.com/pyrlyn/rtok/blob/main/CHANGELOG.md>
 - License: your choice of GNU GPLv3, a royalty-free license for proprietary desktop, mobile and web
-  apps (with attribution), or a commercial license (see <https://github.com/pyrlyn/rtok#license>)
+  apps (with attribution), or a commercial license

@@ -23,7 +23,7 @@ harvestFromMarkdown(Object.values(RAW));
 /**
  * Service files (plans, research, to-do/done/roadmap notes, READMEs, agent instructions) are never
  * docs pages, even if a sync copied them in: they are skipped here whatever their case. Keep in
- * sync with SERVICE_DOC in scripts/check-docs.mjs and the filter in pyrlyn/ci's sync-docs.yml.
+ * sync with SERVICE_DOC in scripts/check-docs.mjs and the rsync filter in the product repositories' sync-docs.yml.
  * AGENTS.md only in that exact spelling (rtok has a user-facing agents.md).
  */
 const SERVICE_DOC = /^(?:(?:readme|notes|ideas|claude|agency)|(?:plan|todo|done|roadmap|research|next)[^/]*)\.md$/i;

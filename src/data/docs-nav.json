@@ -22,7 +22,6 @@
         { "file": "agents-and-worktrees.md", "title": "Agents and worktrees" },
         { "file": "tasks.md", "title": "Tasks" },
         { "file": "web-auth.md", "title": "Web access token" },
-        { "file": "ci-platforms.md", "title": "CI platforms" },
         { "file": "review.md", "title": "Graph review" },
         { "file": "review-context.md", "title": "Review context" }
       ] },
@@ -182,8 +181,6 @@
       "README.md": "Repository docs index; its reading order is the Start group",
       "contributing.md": "Contributor guide for building and changing Weft",
       "examples/": "Script used by the MCP page, not documentation",
-      "ru/": "Translations of internal benchmark notes",
-      "uk/": "Translations of internal benchmark notes",
       "context-design.md": "Internal design note",
       "extension-catalogs-design.md": "Internal design note",
       "figma-style-overrides-design.md": "Internal design note",
@@ -215,9 +212,7 @@
       "release.md": "Maintainer release runbook",
       "research.md": "Internal research notes",
       "windows.md": "Contributor notes for running the tests in a Windows VM",
-      "spike/": "Internal spike write-ups",
-      "ru/": "Translation of the Windows contributor notes",
-      "uk/": "Translation of the Windows contributor notes"
+      "spike/": "Internal spike write-ups"
     }
   },
   "aulo": {

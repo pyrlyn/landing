@@ -17,18 +17,59 @@ npm run dev       # http://localhost:4321/landing/
 npm run build     # static site in dist/
 npm run check:docs  # after a build: docs coverage, headings, internal links under the base
 npm run check:seo   # after a build: title/description/canonical/OG per page, one h1, alt, JSON-LD, sitemap
-npm run preview   # serve dist
+npm run preview   # serve dist on port 4321
+npm test          # node --test tests/*.test.mjs (no build needed)
 ```
+
+`npm run brand` (also run by `predev`/`prebuild`) copies the brand logos into `public/`. Tools are
+pinned in `mise.toml` (`node`, `jactionlint`, `hk`, `shellcheck`, `agent-browser`):
+`mise x -- jactionlint` lints the workflows, `mise x -- hk install --mise` installs the pre-push hook (`hk.pkl`).
 
 `astro.config.mjs` reads `SITE_URL` (default `https://pyrlyn.dev`) and `SITE_BASE` (default
 `/landing/`). Every internal link and asset goes through `u()` in `src/lib/site.ts`, so moving the site is a
-one-line change. There is no hosted deploy: run `npm run build`, `check:docs` and `check:seo` locally.
+one-line change. Stack: Astro 7 (static output), Preact islands, Tailwind v4 via Vite.
+
+## Configuration
+
+Build-time env vars (names only; see `.env.example`, copy it to `.env.local`, never commit real values):
+
+| Variable | Purpose |
+|---|---|
+| `SITE_URL`, `SITE_BASE` | Canonical origin and base path |
+| `GA_MEASUREMENT_ID` | Google Analytics 4 (`off` disables it) |
+| `POSTHOG_KEY`, `POSTHOG_HOST` | PostHog product analytics (empty key disables it) |
+| `ALGOLIA_APP_ID`, `ALGOLIA_SEARCH_KEY`, `ALGOLIA_INDEX` | Site search (search-only key) |
+| `API_URL` | Backend GraphQL endpoint for Pro prices and the wishlist (empty = placeholders) |
+| `PERF_INLINE_CSS`, `PERF_DEFER_ANALYTICS`, `PERF_CDN_MODULES` | `0` turns a performance setting off (see [`docs/performance.md`](docs/performance.md)) |
+
+Analytics: Google Analytics 4 and PostHog are configured from these variables (`src/lib/config.ts`) and
+load after the page `load` event (`src/layouts/Base.astro`). Google Search Console reads the sitemap
+written by `@astrojs/sitemap`; site verification is not configured in this repository. Values live in
+`.env.example`, the `Dockerfile` and repo variables.
+
+## CDN rule
+
+Fonts and libraries that have a public CDN load from it with a pinned version and without blocking
+render: Satoshi from Fontshare (preloaded `@font-face`), Preact and signals from jsDelivr through an
+import map with SRI, versions taken from `package-lock.json`. Our own images, CSS and JS (brand
+package, `@pyrlyn/sdk`, Tailwind output, icons) are self-hosted. Inventory: [`docs/performance.md`](docs/performance.md).
+
+## CI and deploy
+
+- `.github/workflows/lighthouse.yaml` (generated from `lighthouse.main.kts`): YAML consistency check,
+  then `npm test`, build, `check:seo` and `check:docs` on PRs and pushes to `main`. The Lighthouse job
+  runs only when the repo variable `LIGHTHOUSE_ENABLED` is `true`; it is currently skipped, to be
+  revisited. It calls `npx --yes --ignore-scripts @lhci/cli@0.15.1`. See [`docs/lighthouse-ci.md`](docs/lighthouse-ci.md).
+- `.github/workflows/jactionlint.yml` lints the workflows.
+- `.github/workflows/release.yml` (manual): `npm ci --ignore-scripts`, build, tag `vX.Y.Z`, GitHub
+  Release with the `dist/` tarball; with the `deploy` input it deploys to production through
+  Semaphore (a `--check --diff` run first) and checks `https://pyrlyn.dev`.
 
 ## Run with Docker
 
 The `Dockerfile` builds the site for the domain root (`SITE_URL=https://pyrlyn.dev`, `SITE_BASE=/`) in a
-Node 22 stage and serves `dist/` with nginx (`docker/nginx.conf`: static files, `404.html` for unknown
-paths, gzip, long-lived cache headers for `/_astro/`). The container listens on port 80.
+Node 22 stage and serves `dist/` with unprivileged nginx (`docker/nginx.conf`: static files, `404.html` for unknown
+paths, gzip, long-lived cache headers for `/_astro/`). The container runs as uid 101 and listens on port 8080.
 
 ```sh
 docker build -t pyrlyn-landing .
@@ -56,7 +97,7 @@ Build args: `SITE_URL`, `SITE_BASE` (e.g. `--build-arg SITE_BASE=/landing/` to s
   commit on GitHub), builds the TOC and summaries; `src/data/docs-nav.json` — tab order, titles,
   groups and exclusions; `src/layouts/DocsLayout.astro` + `src/components/DocsNav.astro` — the sticky
   horizontal docs nav, ~70ch column, on-page TOC (≥1280px) and prev/next; `src/styles/docs.css`.
-- `scripts/check-docs.mjs`, `scripts/check-seo.mjs` — post-build checks; run them locally after `npm run build`.
+- `scripts/check-docs.mjs`, `scripts/check-seo.mjs` — post-build checks of `dist/` (run after `npm run build`, also in CI).
 - `src/lib/seo.ts` — titles, meta descriptions and schema.org JSON-LD (Organization/WebSite on the home
   page, SoftwareApplication + BreadcrumbList per product, TechArticle + BreadcrumbList per docs page);
   values come from the content only — no ratings, and Pro placeholder prices never reach structured data.
@@ -67,7 +108,7 @@ Build args: `SITE_URL`, `SITE_BASE` (e.g. `--build-arg SITE_BASE=/landing/` to s
   caveats, Pro placeholders; `src/lib/catalog.ts` — collection helpers.
 - `src/styles/global.css` — the design system (it imports the brand tokens and components from
   `@pyrlyn/brand`, see [Brand tokens](#brand-tokens)); `src/styles/base.css` — reset and background mesh;
-  `src/scripts/main.ts` — progressive enhancement.
+  client behaviour lives in Preact islands under `src/components/islands/` (see `AGENTS.md`).
 - `src/styles/tailwind.css` — Tailwind v4 (`@tailwindcss/vite`), theme + utilities only, **no preflight**,
   default theme replaced by the tokens from `global.css`. Responsive fixes go in markup as prefixed
   utilities (`tw:max-sm:px-3!`); the `tw:` prefix keeps them apart from the site's own class names

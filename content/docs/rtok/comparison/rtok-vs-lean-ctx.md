@@ -37,7 +37,7 @@ rtok's output is smaller on `ls -laR`, `find` (lean-ctx saves 0 %) and the repet
 Its smaller `git log` outputs came from dropping most commits (see Kept), which #1079 fixes.
 On that log lean-ctx keeps more distinct WARN/ERROR lines (45 % vs 18 %).
 
-Added to rtok: [#1079](https://github.com/pyrlyn/rtok/pull/1079), git log one line per commit (the lean-ctx case). After [#1079](https://github.com/pyrlyn/rtok/pull/1079) (git log one line per commit), on the same raw bytes:
+Added to rtok: #1079, git log one line per commit (the lean-ctx case). After #1079 (git log one line per commit), on the same raw bytes:
 `git log -n 100` 454 → 2801 tokens, SHAs kept 3 % → 89 %; `git log --stat -n 20` 394 → 2910, kept 9 % → 99 %.
 
 What rtok still needs:

@@ -6,15 +6,7 @@ measured; shortened payloads stay retrievable by id.
 
 ## Install
 
-macOS (Apple silicon) and Linux x86-64 have prebuilt binaries. The
-installer is POSIX `sh` and puts `rtok` (plus `rtok-update`) in `~/.cargo/bin`.
-
-```bash
-curl --proto '=https' --tlsv1.2 -LsSf \
-  https://github.com/pyrlyn/rtok/releases/latest/download/rtok-installer.sh | sh
-```
-
-Or with [ketch](https://github.com/pyrlyn/ketch), from the same release archives:
+Install with [ketch](https://github.com/pyrlyn/ketch), from GitHub Release archives:
 
 ```bash
 ketch install pyrlyn/rtok
