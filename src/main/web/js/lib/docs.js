@@ -63,7 +63,7 @@ export function initDocsNav(nav             ) {
 }
 
 /** Pure: the last heading whose top is above `line` (px from the viewport top); the first one otherwise. */
-export function activeHeading(heads                               , line = 200)                     {
+function activeHeading(heads                               , line = 200)                     {
   let active = heads[0]?.id;
   for (const h of heads) if (h.top < line) active = h.id;
   return active;

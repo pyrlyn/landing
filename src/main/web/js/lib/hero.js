@@ -5,7 +5,7 @@ const reduce = () => matchMedia(REDUCE_MOTION);
 const fine = () => matchMedia(FINE_POINTER);
 
 /** Pure: one lerp step of the stage tilt toward the pointer; `settling` is false once close enough. */
-export function lerpTilt(cx        , cy        , tx        , ty        , k = 0.08) {
+function lerpTilt(cx        , cy        , tx        , ty        , k = 0.08) {
   const nx = cx + (tx - cx) * k, ny = cy + (ty - cy) * k;
   return { cx: nx, cy: ny, settling: Math.abs(tx - nx) + Math.abs(ty - ny) > 0.0005 };
 }
@@ -81,7 +81,7 @@ export function initStill() {
   return () => io.disconnect();
 }
 
-export const REVEAL_SELECTOR = "main .section__head, main .grid > li, main .grid > article, main .featured, main .showcase, main .prose, main .install-card, main .usage > .card, main .links > li, main .license, main .faq__item, main .steps > li, main .cta";
+const REVEAL_SELECTOR = "main .section__head, main .grid > li, main .grid > article, main .featured, main .showcase, main .prose, main .install-card, main .usage > .card, main .links > li, main .license, main .faq__item, main .steps > li, main .cta";
 
 /** Scroll reveals: blocks below the fold rise in once as they enter. Elements already on screen at load
  *  are never hidden, so nothing flashes; under reduced motion nothing is touched. Not on docs pages. */

@@ -24,7 +24,7 @@ const SAMPLE              = [
 ];
 
 /** Stub provider: filters SAMPLE locally. Type "error" to preview the error state. No network. */
-export const stubProvider                 = (q, signal) =>
+const stubProvider                 = (q, signal) =>
   new Promise((resolve, reject) => {
     const t = setTimeout(() => {
       if (q.trim().toLowerCase() === "error") return reject(new Error("stub error"));
@@ -38,7 +38,7 @@ export const stubProvider                 = (q, signal) =>
                                                                                                                              
 
 /** Algolia over REST (search-only key from build config, see src/lib/config.ts). Toha's request code from #49. */
-export function algoliaProvider({ appId, searchKey, index = "pyrlyn" }                                                                      )                 {
+function algoliaProvider({ appId, searchKey, index = "pyrlyn" }                                                                      )                 {
   const endpoint = `https://${appId}-dsn.algolia.net/1/indexes/${encodeURIComponent(index)}/query`;
   return async (q, signal) => {
     const res = await fetch(endpoint, {
