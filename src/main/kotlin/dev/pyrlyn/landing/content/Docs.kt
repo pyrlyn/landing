@@ -1,9 +1,9 @@
 package dev.pyrlyn.landing.content
 
 import dev.pyrlyn.landing.config.SiteConfig
-import dev.pyrlyn.landing.markdown.Block
 import dev.pyrlyn.landing.markdown.Esc
-import dev.pyrlyn.landing.markdown.Renderer
+import dev.pyrlyn.landing.markdown.MarkdownRenderer
+import dev.pyrlyn.landing.markdown.Table
 import dev.pyrlyn.landing.markdown.SafeHtml
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
@@ -103,7 +103,7 @@ class Docs(private val root: File, private val cfg: SiteConfig) {
             val kind = if (pathPart.endsWith("/") || !Regex("\\.[a-z0-9]+$", RegexOption.IGNORE_CASE).containsMatchIn(pathPart)) "tree" else "blob"
             return "https://github.com/$repo/$kind/$ref/$clean$anchor"
         }
-        val r = object : Renderer() {
+        val r = object : MarkdownRenderer() {
             override fun heading(depth: Int, raw: String, inner: String): String {
                 val id = slugger(raw)
                 val d = depth.coerceIn(2, 6)
@@ -121,10 +121,10 @@ class Docs(private val root: File, private val cfg: SiteConfig) {
                 val src = if (Regex("^https?:").containsMatchIn(href)) href else "https://raw.githubusercontent.com/$repo/$ref/${posixJoin("docs/$dir", href)}"
                 return "<img src=\"${Esc.attr(src)}\" alt=\"${Esc.attr(alt)}\" loading=\"lazy\" decoding=\"async\">"
             }
-            override fun table(t: Block.Table): String {
+            override fun table(t: Table): String {
                 fun al(a: String?) = a?.let { " style=\"text-align:$it\"" } ?: ""
-                val head = t.header.mapIndexed { k, c -> "<th${al(t.aligns.getOrNull(k))}>${cellHtml(c)}</th>" }.joinToString("")
-                val rows = t.rows.joinToString("") { row -> "<tr>" + row.mapIndexed { k, c -> "<td${al(t.aligns.getOrNull(k))}>${cellHtml(c)}</td>" }.joinToString("") + "</tr>" }
+                val head = t.header.mapIndexed { k, c -> "<th${al(t.aligns.getOrNull(k))}>$c</th>" }.joinToString("")
+                val rows = t.rows.joinToString("") { row -> "<tr>" + row.mapIndexed { k, c -> "<td${al(t.aligns.getOrNull(k))}>$c</td>" }.joinToString("") + "</tr>" }
                 return "<div class=\"table-wrap\" tabindex=\"0\" role=\"region\" aria-label=\"${Esc.attr(tableName())}\"><table><thead><tr>$head</tr></thead><tbody>$rows</tbody></table></div>"
             }
             override fun html(raw: String) = SafeHtml.clean(raw)

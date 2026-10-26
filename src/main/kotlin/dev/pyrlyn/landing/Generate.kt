@@ -37,6 +37,7 @@ fun generate(root: File, out: File, cfg: SiteConfig) {
     val docsCss = Styles.docs
     val assetDir = File(out, "_assets").apply { mkdirs() }
     fun emit(name: String, ext: String, body: String): String {
+        if (ext == "js") AssetPipeline.assertNoMarkdownParser("$name.$ext", body)
         val file = "$name.${AssetPipeline.hash(body)}.$ext"
         File(assetDir, file).writeText(body)
         return "/_assets/$file"
