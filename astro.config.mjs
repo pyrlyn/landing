@@ -17,6 +17,9 @@ export default defineConfig({
   base,
   trailingSlash: "ignore",
   output: "static",
+  // Inline the per-page CSS into <style> so first paint does not wait for a stylesheet request
+  // (see docs/performance.md). Set PERF_INLINE_CSS=0 to go back to external <link> files.
+  build: { inlineStylesheets: process.env.PERF_INLINE_CSS === "0" ? "auto" : "always" },
   // sitemap-index.xml + sitemap-0.xml under the base; robots.txt (src/pages/robots.txt.ts) points to it.
   // The wishlist pages are noindex mail-link targets (src/pages/wishlist/), not content.
   integrations: [sitemap({ filter: (page) => !/\/wishlist\//.test(page) }), preact({ compat: true })],
