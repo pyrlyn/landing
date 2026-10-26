@@ -84,7 +84,6 @@ workflow(
     permissions = mapOf(Permission.Contents to Mode.Read),
 ) {
     job(id = "test", name = "Tests and site checks", runsOn = UbuntuLatest, timeoutMinutes = 15) {
-        // The docs-nav unit test fails on main today (docs-nav.json is missing 7 docs).
         checkoutAndNode()
         run(name = "Unit tests", command = "npm test")
         // Later steps run even if the unit tests fail, so one run reports every failing check.

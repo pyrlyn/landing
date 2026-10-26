@@ -25,24 +25,20 @@ server. The desktop run executes even if the mobile assertions fail.
 
 ## Thresholds
 
-The same thresholds apply to mobile and desktop. A score below the threshold on the median run
+A score below the threshold on the median run
 fails the job (`error` level).
 
 | Category | Min score | Why |
 |---|---|---|
-| Performance | 0.90 | Lighthouse's own "good" band starts at 90. The site was at 93–94 on mobile before the external font and analytics were added, so 90 is a reachable target, not an aspiration |
+| Performance, mobile | 0.70 | Set by Ivan as a regression guard: above today's mobile scores after #80 on all three pages, while the LCP work on the h1 hero is still open. Raise it toward 0.90 as LCP improves |
+| Performance, desktop | 0.90 | Lighthouse's own "good" band starts at 90; desktop is at 92–100 |
 | Accessibility | 0.95 | High bar with room for one or two minor audits that Lighthouse flags on static content (for example a contrast edge case) without blocking every PR |
 | Best practices | 0.95 | Same reasoning: third-party scripts (GA, PostHog) can trip one audit such as console errors or third-party cookies |
 | SEO | 1.00 | The site is at 100 on every page and `check:seo` already enforces the same basics; any regression is a real bug |
 
-**Expect the job to be red for now.** At the time of writing `main` scores about 0.64–0.67 on mobile
-performance (mobile LCP ~7 s, blocked by the external Satoshi stylesheet, GA and PostHog). PR #80
-brings it to 0.76–0.94 (`/` 0.76, `/rtok/` 0.78, `/rtok/docs/` 0.94). The `lighthouse` job stays red
-until #80 and further LCP work on `/` and `/rtok/` (the h1 hero) land. The threshold is the target
-and is deliberately not lowered to match the current scores.
+Mobile performance was about 0.64–0.67 on the old `main` and 0.76–0.94 with #80, so the 0.70 mobile
+gate passes only once #80 is in. Thresholds other than mobile performance apply to both form factors.
 
-The `test` job is also red on `main` today: the `docs-nav` unit test fails because `docs-nav.json`
-is missing 7 new rtok and stator docs. That is a pre-existing issue, not caused by this workflow.
 
 ## Kotlin workflow config
 
