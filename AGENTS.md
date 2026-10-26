@@ -8,13 +8,12 @@ Astro storefront for rtok, cox, and ketch ("listepo tools"). Product copy is `co
 npm ci
 npm run dev
 npm run build
-npm run check
 npm run check:docs
 npm run check:seo
 npm test
 ```
 
-`predev` and `prebuild` copy logo files with `pyrlyn-brand-copy`. `npm test` imports `src/lib` and `src/data` under Node. `tests/hooks.mjs` supplies `import.meta.env`, `import.meta.glob`, and `astro:content` because those exist only in the Astro build. Do not test `art/` or `_prototype-vite/`.
+`predev` and `prebuild` copy logo files with `pyrlyn-brand-copy`. `npm test` imports `src/lib` and `src/data` under Node. `tests/hooks.mjs` supplies `import.meta.env`, `import.meta.glob`, and `astro:content` because those exist only in the Astro build. Do not test `art/`.
 
 jactionlint and hk are pinned in `mise.toml`. `.github/jactionlint.yaml` applies the default profile and the baseline `.github/jactionlint-baseline.json`. `hk.pkl` runs jactionlint as a pre-push hook:
 

@@ -23,7 +23,7 @@ Audit note (2026-10-07): no XSS — every `set:html` sink passes the allowlist/`
 
 ### T1. Home share card advertises the wrong brand ("Tiller")
 
-`public/images/home/og.jpg` — used as `og:image`/`twitter:image` for the home page via `src/layouts/Base.astro:36` — reads "Tiller / Ship with agents. Keep the receipts." while the site is "listepo tools". The generator is stale too (`art/og.mjs:3,24` hardcodes Tiller), as is the comment at `src/styles/global.css:2`. Done means: `art/og.mjs` cards and brand updated, `public/images/home/og.jpg` regenerated, stale CSS comment fixed.
+`public/images/home/og.jpg` — used as `og:image`/`twitter:image` for the home page via `src/layouts/Base.astro:36` — reads "Tiller / Ship with agents. Keep the receipts." while the site is "listepo tools". The old Tiller generator `art/og.mjs` was removed on 2026-10-26; also stale is the comment at `src/styles/global.css:2`. Done means: `public/images/home/og.jpg` regenerated, stale CSS comment fixed.
 
 ### T3. Contract violation: product art is mandatory, not optional
 
@@ -43,7 +43,7 @@ Audit note (2026-10-07): no XSS — every `set:html` sink passes the allowlist/`
 
 ### T7. Robustness and cleanup batch
 
-`src/lib/docs.ts:196` takes the first `# ` line anywhere as the title (would misparse inside fenced code; use the fence-aware scan `check-docs.mjs:26-39` already has); `CONTENT_CONTRACT.md:74-76` misdescribes `check:docs` as failing when it only warns; `_prototype-vite/` is dead weight already excluded everywhere — archive it to a branch like the previous site. Done means: all three addressed.
+`src/lib/docs.ts:196` takes the first `# ` line anywhere as the title (would misparse inside fenced code; use the fence-aware scan `check-docs.mjs:26-39` already has); `CONTENT_CONTRACT.md:74-76` misdescribes `check:docs` as failing when it only warns; `_prototype-vite/` was removed on 2026-10-26 (done). Done means: all three addressed.
 
 ### T8. Land the 2026-10-17 site QA fixes and close the hosting findings
 

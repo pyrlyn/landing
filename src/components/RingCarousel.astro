@@ -22,7 +22,7 @@ const n = tools.length;
           <li class="ring__item" style={`--i:${i};--card-accent:${t.data.accent}`} data-ring-item aria-roledescription="slide" aria-label={`${i + 1} of ${n}: ${t.data.title}`}>
             <div class="ring__face">
               <a class="ring__card glass glass--thick" href={u(`/${t.id}/`)} draggable="false">
-                <Picture class="ring__art" dir={t.id} name="prop" widths={[400]} sizes="240px" w={400} h={400} loading="eager" />
+                <Picture class="ring__art" dir={t.id} name="prop" widths={[400]} sizes="240px" w={400} h={400} />
                 <span class="ring__meta"><span class="badge badge--version" style={`--accent:${t.data.accent}`}>{versionLabel(t)}</span></span>
                 <strong class="ring__title">{t.data.title}<span>.</span></strong>
                 <span class="ring__tag">{t.data.tagline}</span>
