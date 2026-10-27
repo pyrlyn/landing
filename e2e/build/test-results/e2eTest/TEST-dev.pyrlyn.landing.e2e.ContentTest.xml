@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.pyrlyn.landing.e2e.ContentTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-27T13:36:27.447Z" hostname="Ivans-MacBook-Pro.local" time="10.306">
+  <properties/>
+  <testcase name="third-party assets are pinned and non-blocking()" classname="dev.pyrlyn.landing.e2e.ContentTest" time="1.259"/>
+  <testcase name="markdown pages render HTML, not raw markdown()" classname="dev.pyrlyn.landing.e2e.ContentTest" time="8.584"/>
+  <testcase name="pinned CDN font loads()" classname="dev.pyrlyn.landing.e2e.ContentTest" time="0.455"/>
+  <testcase name="analytics config is present in the output()" classname="dev.pyrlyn.landing.e2e.ContentTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

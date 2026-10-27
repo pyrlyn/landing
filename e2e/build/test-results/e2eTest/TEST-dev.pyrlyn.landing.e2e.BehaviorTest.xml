@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.pyrlyn.landing.e2e.BehaviorTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-27T13:36:22.537Z" hostname="Ivans-MacBook-Pro.local" time="4.909">
+  <properties/>
+  <testcase name="cox scenes switch tabs()" classname="dev.pyrlyn.landing.e2e.BehaviorTest" time="2.913"/>
+  <testcase name="home ring carousel moves with next and prev()" classname="dev.pyrlyn.landing.e2e.BehaviorTest" time="0.705"/>
+  <testcase name="docs pages get the enhanced docs nav()" classname="dev.pyrlyn.landing.e2e.BehaviorTest" time="0.135"/>
+  <testcase name="menu opens and closes on Escape and outside click()" classname="dev.pyrlyn.landing.e2e.BehaviorTest" time="0.254"/>
+  <testcase name="audience toggle switches OSS and Pro()" classname="dev.pyrlyn.landing.e2e.BehaviorTest" time="0.491"/>
+  <testcase name="theme toggle switches and persists the mode()" classname="dev.pyrlyn.landing.e2e.BehaviorTest" time="0.404"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

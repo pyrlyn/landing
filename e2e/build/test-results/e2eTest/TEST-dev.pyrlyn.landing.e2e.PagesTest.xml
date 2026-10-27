@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.pyrlyn.landing.e2e.PagesTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-27T13:36:37.753Z" hostname="Ivans-MacBook-Pro.local" time="13.064">
+  <properties/>
+  <testcase name="header navigation from home reaches product pages()" classname="dev.pyrlyn.landing.e2e.PagesTest" time="0.534"/>
+  <testcase name="every page loads with 200, no console errors and no broken same-origin requests()" classname="dev.pyrlyn.landing.e2e.PagesTest" time="9.168"/>
+  <testcase name="every page has title, description, canonical, og tags, lang and one h1()" classname="dev.pyrlyn.landing.e2e.PagesTest" time="0.277"/>
+  <testcase name="every internal link and asset resolves, and sitemap URLs exist()" classname="dev.pyrlyn.landing.e2e.PagesTest" time="2.818"/>
+  <testcase name="unknown URL serves the 404 page with status 404()" classname="dev.pyrlyn.landing.e2e.PagesTest" time="0.266"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
