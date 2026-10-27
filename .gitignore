@@ -8,3 +8,4 @@
 .DS_Store
 /web/build/
 /web-intro/build/
+.lighthouseci/

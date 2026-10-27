@@ -52,6 +52,19 @@ default cache, outside the repo) with `./gradlew :e2e:playwrightInstall` (add `-
 OS packages). `-Pheaded` shows the browser. `./gradlew build` does not run the e2e tests. CI runs them nightly only (`.github/workflows/e2e-nightly.yml`,
 03:00 UTC = 05:00 Kyiv in winter, 06:00 in summer; also manual via workflow_dispatch).
 
+## Lighthouse
+
+`.github/workflows/lighthouse-nightly.yaml` (generated from `lighthouse-nightly.main.kts` with
+github-workflows-kt, like pyrlyn/landing) runs Lighthouse CI `@lhci/cli@0.15.1` nightly (03:00 UTC = 05:00 Kyiv in
+winter, 06:00 in summer) and on workflow_dispatch against `/`, `/rtok/`, `/rtok/docs/` with the budgets from
+`lighthouserc.{mobile,desktop}.json`; reports are uploaded as artifacts. Locally:
+
+```sh
+SITE_URL=https://pyrlyn.dev ./gradlew generateSite
+npx --yes --ignore-scripts @lhci/cli@0.15.1 autorun --config=lighthouserc.mobile.json   # or .desktop.json
+kotlin .github/workflows/lighthouse-nightly.main.kts   # regenerate the YAML after editing the script
+```
+
 ## Environment
 
 Same variables as the Astro site (`src/lib/config.ts`). All are optional at build time:
