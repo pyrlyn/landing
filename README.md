@@ -27,9 +27,29 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 ./gradlew generateSite   # build the static site into build/site
 ./gradlew run            # generateSite, then preview on http://localhost:4321 (PORT overrides)
 ./gradlew build          # compile + tests
+./gradlew e2eTest        # generateSite, then Playwright e2e tests in headless Chromium
 ```
 
 Requires JDK 21. Gradle comes from the wrapper; the Kotlin Gradle plugin downloads its own Node/webpack toolchain for the JS build.
+
+## E2E tests
+
+`e2e/` holds browser tests written in Kotlin with [Playwright for Java](https://playwright.dev/java/).
+`./gradlew e2eTest` generates the site, serves `build/site` on a free local port (a tiny JDK
+`HttpServer`, `/x/` → `/x/index.html`, misses → `404.html`) and checks, in headless Chromium:
+
+- every page returns 200 with no console errors, page errors or failing same-origin requests;
+- SEO basics on every page (title, description, canonical unless `noindex`, OG, lang, one `h1`), robots and sitemap;
+- every internal link, asset and sitemap URL resolves; unknown URLs get the 404 page;
+- docs pages render Markdown as HTML (no raw `#`, fences, `**`, `[x](y)` in prose);
+- GA and PostHog config is still in the output (matched by shape, values never printed);
+- third-party scripts are async/module, no third-party stylesheets, the Fontshare font is a pinned `/wf/` URL
+  that loads, and pages still work with all third-party requests blocked;
+- Kotlin/JS widgets: theme toggle, menu, home ring carousel, OSS/Pro toggle, Cox scenes, docs nav.
+
+Analytics hosts are always aborted, so tests never send events. Install Chromium once (into Playwright's
+default cache, outside the repo) with `./gradlew :e2e:playwrightInstall` (add `-PwithDeps` on Linux CI for
+OS packages). `-Pheaded` shows the browser. `./gradlew build` does not run the e2e tests.
 
 ## Environment
 
@@ -63,6 +83,7 @@ src/main/kotlin/dev/pyrlyn/landing/
   Preview.kt  Ktor dev server
 web/          Kotlin/JS site bundle (progressive enhancement)
 web-intro/    Kotlin/JS WebGL intro, loaded lazily
+e2e/          Playwright (Java API, Kotlin) browser tests: ./gradlew e2eTest
 kotlin-js-store/ yarn.lock for the Kotlin/JS toolchain
 content/      markdown content
 public/       static files copied as-is
