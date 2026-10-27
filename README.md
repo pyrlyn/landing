@@ -49,7 +49,8 @@ Requires JDK 21. Gradle comes from the wrapper; the Kotlin Gradle plugin downloa
 
 Analytics hosts are always aborted, so tests never send events. Install Chromium once (into Playwright's
 default cache, outside the repo) with `./gradlew :e2e:playwrightInstall` (add `-PwithDeps` on Linux CI for
-OS packages). `-Pheaded` shows the browser. `./gradlew build` does not run the e2e tests.
+OS packages). `-Pheaded` shows the browser. `./gradlew build` does not run the e2e tests. CI runs them nightly only (`.github/workflows/e2e-nightly.yml`,
+03:00 UTC = 05:00 Kyiv in winter, 06:00 in summer; also manual via workflow_dispatch).
 
 ## Environment
 
