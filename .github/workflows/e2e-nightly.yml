@@ -6,7 +6,6 @@ on:
     # 03:00 UTC = 05:00 Kyiv in winter (UTC+2). GitHub cron is UTC-only, so in summer (UTC+3) this runs at 06:00 Kyiv.
     - cron: '0 3 * * *'
   workflow_dispatch:
-  push: { branches: [ci/e2e-nightly] } # TEMP: verification run only, removed before merge
 
 permissions:
   contents: read
