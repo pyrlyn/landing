@@ -3,7 +3,6 @@ package dev.pyrlyn.landing.pages
 import dev.pyrlyn.landing.content.Data
 import dev.pyrlyn.landing.html.*
 import kotlinx.html.*
-import java.io.File
 
 /** Not-found page; nginx serves 404.html for any missing path. */
 fun Ctx.notFoundPage() = page(PageMeta("/404", "Page not found | Pyrlyn", "This page doesn't exist. Browse Pyrlyn's developer tools: Rtok, Ketch, Cox, Runa, Swarfr, Stator and more.", "home", noindex = true, bare = true)) {
@@ -51,56 +50,64 @@ fun Ctx.supportPage() = page(PageMeta("/support", "Support | Pyrlyn", "Get help 
     }
 }
 
-private const val TEAM_CSS = ".team__title{text-align:center}.team__orbit{--r:min(38vw,220px);position:relative;width:calc(var(--r)*2 + 120px);aspect-ratio:1;margin:2rem auto 1rem;max-width:100%}.team__me{position:absolute;inset:50% auto auto 50%;transform:translate(-50%,-50%);margin:0;text-align:center}.team__me img{width:clamp(110px,26vw,180px);height:auto;aspect-ratio:1;object-fit:cover;border-radius:50%;border:3px solid var(--accent)}.team__me figcaption{margin-top:.4rem;font-weight:600}.team__tools{list-style:none;margin:0;padding:0}.team__tool{position:absolute;left:50%;top:50%;display:flex;flex-direction:column;align-items:center;width:92px;transform:rotate(calc(360deg / var(--n) * var(--i))) translateY(calc(var(--r) * -1)) rotate(calc(-360deg / var(--n) * var(--i))) translate(-50%,-50%);transform-origin:0 0}.team__head{display:grid;place-items:center;width:48px;height:48px;border-radius:50%;background:var(--glass-bg-strong,#1e293b);border:1px solid var(--line-strong,#334155);color:var(--text,inherit)}.team__mono{font-weight:700;font-size:1.2rem}.team__body{width:34px;height:22px;margin-top:3px;border-radius:17px 17px 6px 6px;background:color-mix(in srgb,var(--accent) 35%,transparent)}.team__name{margin-top:.3rem;font-size:var(--fs-xs,.75rem);color:var(--muted);text-align:center;line-height:1.2}.team__note{text-align:center;font-size:var(--fs-xs,.75rem);color:var(--muted);max-width:40rem;margin:0 auto 2rem}.team__text{margin:0 auto}@media (prefers-reduced-motion:no-preference){.team__head{transition:transform .2s ease}.team__tool:hover .team__head{transform:translateY(-3px)}}@media (max-width:560px){.team__orbit{width:auto;aspect-ratio:auto;display:flex;flex-direction:column;align-items:center;gap:1.25rem}.team__me{position:static;transform:none}.team__tools{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem .5rem}.team__tool{position:static;transform:none;width:auto}}"
+private const val TEAM_CSS = ".team-hero{padding-block:var(--s8,6rem) var(--s7,4rem)}.team-hero__inner{display:grid;gap:var(--s4,1rem);max-width:720px}.team-hero__eyebrow{margin:0;font-family:var(--font-mono,ui-monospace,monospace);font-size:var(--fs-xs,.75rem);text-transform:uppercase;letter-spacing:.14em;color:var(--accent-2)}.team-hero h1,.team-hero .lead{margin:0}.team-hero h1{color:var(--fg-strong)}.team{padding-bottom:var(--s9,8rem)}.team figure{margin:0}.team-photo__frame{position:relative;overflow:hidden;border-radius:16px;aspect-ratio:16/9;background:var(--bg-elev);isolation:isolate;box-shadow:var(--shadow-3),0 0 0 1px var(--hairline)}.team-photo__frame::after{content:\"\";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 1px 0 rgba(255,255,255,.08);pointer-events:none}.team-photo__layer{position:absolute;inset:-6%}.team-photo__layer img{display:block;width:100%;height:100%;object-fit:cover}.team-pin{position:absolute;z-index:2;transform:translate(-50%,-50%);display:grid;place-items:center;width:28px;height:28px;border-radius:50%;font-family:var(--font-mono,ui-monospace,monospace);font-size:.75rem;font-weight:600;color:var(--fg-strong);background:rgba(10,15,23,.6);border:1px solid var(--hairline-strong);backdrop-filter:blur(10px)}.team-list{list-style:none;margin:var(--s6,2.5rem) 0 0;padding:0;display:grid;gap:var(--s4,1rem);grid-template-columns:repeat(6,1fr)}.team-card{display:grid;align-content:start;gap:var(--s1,.25rem);padding:var(--s4,1rem);border-radius:12px;border:1px solid var(--hairline);background:var(--surface)}.team-card--lead{border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 10%,transparent),var(--surface))}.team-card img{width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid var(--hairline-strong);margin-bottom:var(--s2,.5rem)}.team-card b{font-family:var(--font-mono,ui-monospace,monospace);font-size:.75rem;font-weight:600;color:var(--accent)}.team-card strong{color:var(--fg-strong);font-weight:600;letter-spacing:-.01em}.team-card span{font-size:.875rem;color:var(--muted)}.team__note{margin:var(--s5,1.5rem) 0 0;font-size:.875rem;color:var(--subtle)}.team__note+.team__note{margin-top:var(--s2,.5rem)}.team-photo[data-state=armed]{opacity:0;transform:scale(.96);filter:blur(8px)}.team-photo[data-state=in]{opacity:1;transform:none;filter:none;transition:opacity .6s var(--ease,ease),transform .6s var(--ease,ease),filter .6s var(--ease,ease)}@supports (animation-timeline:view()){.team-photo[data-parallax=css] .team-photo__layer{animation:team-parallax linear both;animation-timeline:view(block);animation-range:cover}@keyframes team-parallax{from{transform:translate3d(0,-6%,0)}to{transform:translate3d(0,6%,0)}}}@media (max-width:1279px){.team-list{grid-template-columns:repeat(3,1fr)}}@media (max-width:900px){.team-list{grid-template-columns:repeat(2,1fr)}}@media (max-width:560px){.team-list{grid-template-columns:1fr}.team-pin{width:22px;height:22px;font-size:10px}.team-photo__frame{border-radius:12px}}@media (prefers-reduced-motion:reduce){.team-photo,.team-photo__layer{opacity:1!important;transform:none!important;filter:none!important;animation:none!important;transition:none!important}}"
 
-/** About us / Our team. Drop public/team/ivan.jpg to replace the placeholder photo. */
-fun Ctx.teamPage(): String {
-    val photo = url(if (File(publicDir, "team/ivan.jpg").exists()) "/team/ivan.jpg" else "/team/ivan-placeholder.svg")
-    val tools = Data.teamTools
-    return page(PageMeta("/team", "Our team | Pyrlyn", "About Pyrlyn: open-source developer tools in Rust, Swift and TypeScript, such as Rtok, Cox, Ketch, Runa and Stator, and the engineer who builds them.", "home", extraCss = TEAM_CSS)) {
-        section("section container team") {
-            attr("aria-labelledby", "team-title")
-            h1("team__title") { id = "team-title"; +"Our team" }
-            div("team__orbit") {
-                style = "--n:${tools.size}"
-                figure("team__me") {
-                    img("Ivan Tugay", photo) { width = "240"; height = "240"; attr("loading", "eager") }
-                    figcaption { +"Ivan Tugay" }
-                }
-                ul("team__tools") {
-                    attr("aria-label", "AI tools Ivan works with")
-                    tools.forEachIndexed { i, t ->
-                        li("team__tool") {
-                            style = "--i:$i"
-                            span("team__head") {
-                                attr("aria-hidden", "true")
-                                if (t.path != null) raw("<svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" width=\"28\" height=\"28\" fill=\"currentColor\"><path d=\"${esc(t.path)}\"></path></svg>")
-                                else span("team__mono") { +(t.monogram ?: "") }
-                            }
-                            span("team__body") { attr("aria-hidden", "true") }
-                            span("team__name") { +t.name }
+private class TeamMember(val name: String, val role: String, val avatar: String, val x: Double, val y: Double, val lead: Boolean = false)
+
+// Pin positions are percentages of the photo (head centers). Robot names are invented; no affiliation implied.
+private val TEAM = listOf(
+    TeamMember("Gronk Halvorsen", "Engineering · says the quiet part out loud", "grok", 10.9, 14.0),
+    TeamMember("Claudette Ambergris", "Docs & product · writes the long answer", "claude", 27.0, 14.0),
+    TeamMember("Ivan Tuhai", "Founder · the only one with a face", "ivan", 51.5, 17.0, lead = true),
+    TeamMember("Geppetto Tran", "Tooling · autocompletes your sentences", "gpt", 59.8, 14.0),
+    TeamMember("Gemma Starling", "Design · thinks in gradients and grids", "gemini", 75.0, 14.0),
+    TeamMember("Kimball Moonshot", "Research · reads the whole repo before lunch", "kimi", 89.6, 14.0),
+)
+
+private const val TEAM_ALT = "Group photo of the Pyrlyn team in a dark studio: founder Ivan Tuhai in a charcoal sweater, third from left, among five robot teammates in casual clothes with abstract AI-style heads: a black sphere with a white ring and slash, a terracotta rounded square with a cream starburst, a sage sphere with a white knot, a glass sphere with a rainbow four-point star, and a black sphere with a white K-like glyph and a blue dot."
+
+/** Team: one group photo with numbered pins and a numbered caption of avatars (motion in web/Team.kt). */
+fun Ctx.teamPage(): String = page(PageMeta("/team", "Team · Pyrlyn", "The people behind Pyrlyn: founder Ivan Tuhai and five very fast AI colleagues building Rtok and other developer tools.", "home", extraCss = TEAM_CSS)) {
+    section("container team-hero") {
+        attr("aria-labelledby", "team-title")
+        div("team-hero__inner") {
+            p("team-hero__eyebrow") { +"Team" }
+            h1("display") { id = "team-title"; +"The people behind the tools." }
+            p("lead") { +"One human, five very fast colleagues. We build developer tools for people who work alongside AI — and only one of us needs coffee." }
+        }
+    }
+    section("container team") {
+        attr("aria-label", "Team photo")
+        figure {
+            div("team-photo") {
+                attr("data-team-photo", "")
+                div("team-photo__frame") {
+                    attr("data-team-frame", "")
+                    div("team-photo__layer") {
+                        attr("data-team-layer", "")
+                        img(TEAM_ALT, url("/team/team-photo.jpg")) { width = "1280"; height = "720"; attr("loading", "eager"); attr("fetchpriority", "high"); attr("decoding", "async") }
+                        TEAM.forEachIndexed { i, m ->
+                            span("team-pin") { attr("aria-hidden", "true"); style = "left:${m.x}%;top:${m.y}%"; +"${i + 1}" }
                         }
                     }
                 }
             }
-            p("team__note") { +"The figures around the photo are AI tools used day to day. Names and logos belong to their owners; no affiliation or endorsement is implied." }
-            div("prose team__text") {
-                h2 { +"About Pyrlyn" }
-                p { +"Pyrlyn is a GitHub organization of open-source developer tools, most of them written in Rust, with Swift and TypeScript where a platform needs it. Every tool has a free open-source edition. Examples:" }
-                ul {
-                    li { a(url("/rtok/")) { +"Rtok" }; +": a token-reduction CLI for AI coding agents (hooks, MCP server and API proxy)." }
-                    li { a(url("/cox/")) { +"Cox" }; +": a modular terminal coding agent with a safe, event-driven core." }
-                    li { a(url("/ketch/")) { +"Ketch" }; +": a single-binary CLI package manager that installs releases straight from GitHub." }
-                    li { a(url("/runa/")) { +"Runa" }; +": a local-first AI runner with an OpenAI-compatible server." }
-                    li { a(url("/stator/")) { +"Stator" }; +": an ahead-of-time TypeScript/JavaScript compiler to native binaries." }
-                    li { a("https://github.com/pyrlyn/crates") { +"crates" }; +": small focused Rust crates shared by Ketch and Rtok." }
+            figcaption {
+                ol("team-list") {
+                    attr("aria-label", "Who is who, left to right")
+                    TEAM.forEachIndexed { i, m ->
+                        li(if (m.lead) "team-card team-card--lead" else "team-card") {
+                            img(if (m.lead) "Portrait of Ivan Tuhai" else "Robot head of ${m.name}", url("/team/avatar-${m.avatar}.jpg")) { width = "56"; height = "56"; attr("loading", "lazy"); attr("decoding", "async") }
+                            b { +(i + 1).toString().padStart(2, '0') }
+                            strong { +m.name }
+                            span { +m.role }
+                        }
+                    }
                 }
-                p { +"This site is built from "; a("https://github.com/pyrlyn/landing") { +"pyrlyn/landing" }; +"." }
-                h2 { +"About me" }
-                p { +"I'm Ivan Tugay ("; a("https://github.com/listepo") { +"listepo" }; +"), an engineer. I work with Cursor and GitHub every day and build Pyrlyn: the backend, this landing site, CI on GitHub Actions and code quality checks with SonarCloud." }
-                p { +"Need help? See "; a(url("/support")) { +"Support" }; +"." }
             }
         }
+        p("team__note") { +"Ivan is real. His five teammates’ names and faces are invented; the heads only evoke AI assistants we work with, and imply no affiliation or endorsement." }
+        p("team__note") { +"Ivan on GitHub: "; a("https://github.com/listepo") { +"listepo" }; +". Need help? See "; a(url("/support")) { +"Support" }; +"." }
     }
 }
 

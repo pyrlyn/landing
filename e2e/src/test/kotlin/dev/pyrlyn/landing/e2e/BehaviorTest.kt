@@ -79,4 +79,15 @@ class BehaviorTest {
         assertTrue(p.locator("[data-dnav]").count() > 0, "docs nav present")
         assertTrue(p.locator(".prose h2, .prose h3").count() > 0, "docs content has headings")
     }
+
+    @Test
+    fun `team page shows the photo, six numbered members and reveals the photo`() = onPage("/team/") { p ->
+        assertEquals(6, p.locator(".team-pin").count())
+        assertEquals(6, p.locator(".team-list > li").count())
+        assertEquals(1, p.locator(".team-card--lead").count())
+        assertTrue(p.locator(".team-list").innerText().contains("Ivan Tuhai"))
+        assertTrue(p.locator(".team-photo__layer img").evaluate("i => i.complete && i.naturalWidth > 0") as Boolean)
+        p.locator("[data-team-photo]").scrollIntoViewIfNeeded()
+        p.waitForFunction("() => document.querySelector('[data-team-photo]').dataset.state === 'in'")
+    }
 }

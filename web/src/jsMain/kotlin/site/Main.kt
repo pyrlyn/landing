@@ -10,7 +10,7 @@ fun main() {
     initMenus(); initTheme(); initNavPin(); initAudience(); initCopy()
     initScrollReveal(); initShine(); initStill(); initStepReveal()
     initHero(me)
-    initTerminals(); initVisuals(); initScenes(); initRing()
+    initTerminals(); initVisuals(); initScenes(); initRing(); initTeamPhoto()
     for (n in qa("[data-dnav]")) initDocsNav(n)
     idle { for (t in qa("[data-toc]")) initToc(t) }
     initSearch(); initWishlist(me)
