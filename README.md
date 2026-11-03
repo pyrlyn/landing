@@ -122,6 +122,7 @@ public/       static files copied as-is
 
 ### Credentials (values are never stored in this repo)
 
+- Login (SSH username): set in pyrlyn/infra `inventory` as `ansible_user=deploy` (for the sites playbooks, `deploy_remote_user` in `sites/playbooks/deploy.yml`, default `deploy`).
 - SSH: user `deploy` with the private key `~/.ssh/id_ed25519` on Ivan's Mac. Do not try other users: fail2ban bans the IP after a few failed logins.
 - Ansible vault password: file `~/Grok/secrets/infra_vault_pass` on Ivan's Mac (mode 600), passed via `ANSIBLE_VAULT_PASSWORD_FILE`.
 - `CONTABO_HOST`: see `deploy/deploy-contabo.md` in the cox repo; it is not stored in infra.
