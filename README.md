@@ -102,3 +102,10 @@ kotlin-js-store/ yarn.lock for the Kotlin/JS toolchain
 content/      markdown content
 public/       static files copied as-is
 ```
+
+## Production deploy notes (2026-11-03)
+
+1. The first deploy attempt failed: the production site runs in a Docker Compose stack, not where the sites playbook expected.
+2. The rollout was redone for that stack via Ansible ([pyrlyn/infra#22](https://github.com/pyrlyn/infra/pull/22)): first a `--check --diff` run, then the live run as the `deploy` user.
+3. Canonical tags on the Kotlin landing pages were already correct (each page points to itself), so no code changes were needed.
+4. Other variants (the Astro landing, the CV) were left untouched; only the Kotlin landing was changed.
