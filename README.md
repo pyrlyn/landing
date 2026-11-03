@@ -109,3 +109,19 @@ public/       static files copied as-is
 2. The rollout was redone for that stack via Ansible ([pyrlyn/infra#22](https://github.com/pyrlyn/infra/pull/22)): first a `--check --diff` run, then the live run as the `deploy` user.
 3. Canonical tags on the Kotlin landing pages were already correct (each page points to itself), so no code changes were needed.
 4. Other variants (the Astro landing, the CV) were left untouched; only the Kotlin landing was changed.
+
+### Site and how to deploy
+
+- Site: https://pyrlyn.dev (production, Contabo host, Docker Compose stack in `/opt/sites/web/web`, service `landing`).
+- Deploy is done with Ansible from [pyrlyn/infra](https://github.com/pyrlyn/infra) (playbook `web-landing-production.yml`, added in pyrlyn/infra#22):
+  1. Build the site: `./gradlew generateSite` (output in `build/site`).
+  2. Build the amd64 image from `web-landing-kotlin/` in infra and save it as a `.tar.gz`.
+  3. Check first: `CONTABO_HOST=<host> ANSIBLE_SSH_ARGS='-o IdentitiesOnly=yes' ansible-playbook -i inventory web-landing-production.yml -e confirm_production=production -e landing_image=pyrlyn-landing-kotlin:<sha> -e landing_image_tar=<path-to-tar.gz> --check --diff`
+  4. If the check shows `failed=0` and only the landing changes, run the same command without `--check --diff`.
+  5. Rollback: the same command with `-e landing_image=pyrlyn-landing:dev -e landing_image_tar=`.
+
+### Credentials (values are never stored in this repo)
+
+- SSH: user `deploy` with the private key `~/.ssh/id_ed25519` on Ivan's Mac. Do not try other users: fail2ban bans the IP after a few failed logins.
+- Ansible vault password: file `~/Grok/secrets/infra_vault_pass` on Ivan's Mac (mode 600), passed via `ANSIBLE_VAULT_PASSWORD_FILE`.
+- `CONTABO_HOST`: see `deploy/deploy-contabo.md` in the cox repo; it is not stored in infra.
