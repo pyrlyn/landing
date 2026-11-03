@@ -23,6 +23,8 @@ data class PageMeta(
     val jsonLd: List<JsonElement> = emptyList(),
     val noindex: Boolean = false,
     val analytics: Boolean = true,
+    /** Error pages: no site header or footer. */
+    val bare: Boolean = false,
     /** Extra page CSS (the Astro pages' own <style> blocks, docs.css). */
     val extraCss: String = "",
 )
@@ -100,7 +102,7 @@ fun Ctx.page(meta: PageMeta, main: MAIN.() -> Unit): String {
                 for (k in 1..5) span("mesh__blob mesh__blob--$k") {}
                 span("mesh__grid") {}; span("mesh__grain") {}
             }
-            header(if (current != null) "nav tw:max-[459px]:px-2! nav--auto" else "nav tw:max-[459px]:px-2!") {
+            if (!meta.bare) header(if (current != null) "nav tw:max-[459px]:px-2! nav--auto" else "nav tw:max-[459px]:px-2!") {
                 if (current != null) {
                     attr("data-nav-auto", "")
                     div("nav__peek") {
@@ -144,7 +146,7 @@ fun Ctx.page(meta: PageMeta, main: MAIN.() -> Unit): String {
                 }
             }
             main("tw:overflow-x-clip") { id = "main"; attr("tabindex", "-1"); main() }
-            footer("footer container") {
+            if (!meta.bare) footer("footer container") {
                 div("footer__row") {
                     pyrlynLogo(this@page)
                     nav {

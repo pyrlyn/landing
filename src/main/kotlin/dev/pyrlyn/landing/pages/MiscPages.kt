@@ -6,7 +6,7 @@ import kotlinx.html.*
 import java.io.File
 
 /** Not-found page; nginx serves 404.html for any missing path. */
-fun Ctx.notFoundPage() = page(PageMeta("/404", "Page not found | Pyrlyn", "This page doesn't exist. Browse Pyrlyn's developer tools: Rtok, Ketch, Cox, Runa, Swarfr, Stator and more.", "home", noindex = true)) {
+fun Ctx.notFoundPage() = page(PageMeta("/404", "Page not found | Pyrlyn", "This page doesn't exist. Browse Pyrlyn's developer tools: Rtok, Ketch, Cox, Runa, Swarfr, Stator and more.", "home", noindex = true, bare = true)) {
     section("err") {
         attr("aria-labelledby", "err-title")
         p("err__code") { attr("aria-hidden", "true"); +"404" }
@@ -17,7 +17,7 @@ fun Ctx.notFoundPage() = page(PageMeta("/404", "Page not found | Pyrlyn", "This 
 }
 
 /** Server-error page; the home link is a literal "/" on purpose. */
-fun Ctx.serverErrorPage() = page(PageMeta("/500", "Server error · Pyrlyn", "Something went wrong on our side.", "home", noindex = true)) {
+fun Ctx.serverErrorPage() = page(PageMeta("/500", "Server error · Pyrlyn", "Something went wrong on our side.", "home", noindex = true, bare = true)) {
     section("err err--500") {
         attr("aria-labelledby", "err-title")
         p("err__code") { attr("aria-hidden", "true"); +"500" }

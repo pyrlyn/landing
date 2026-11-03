@@ -3224,6 +3224,9 @@ private fun CssBuilder.globalCssPart4() {
         prop("text-align", "center")
     }
     sel(".err__code") {
+        prop("background", "none")
+        prop("user-select", "none")
+        prop("-webkit-tap-highlight-color", "transparent")
         prop("margin", "0")
         prop("font-family", "var(--font-mono)")
         prop("font-weight", "700")

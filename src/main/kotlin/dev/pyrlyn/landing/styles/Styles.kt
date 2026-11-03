@@ -11,7 +11,7 @@ import kotlinx.css.CssBuilder
 object Styles {
     /** Every page: global (with tokens, base, brand components), utilities, products, motion, search, light theme. */
     val site: String by lazy {
-        sheet { globalCss(); tailwindUtilitiesCss(); productsCss(); motionCss(); searchCss(); lightCss() }
+        sheet { globalCss(); tailwindUtilitiesCss(); productsCss(); motionCss(); searchCss(); lightCss(); wideCss() }
     }
 
     /** Docs pages only, appended after [site]. */
