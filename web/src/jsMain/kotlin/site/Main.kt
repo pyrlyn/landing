@@ -5,6 +5,7 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLScriptElement
 
 fun main() {
+    initErrorRoute()
     val me = (document.currentScript ?: document.querySelector("script[data-intro]")).unsafeCast<HTMLScriptElement?>()
     initMenus(); initTheme(); initNavPin(); initAudience(); initCopy()
     initScrollReveal(); initShine(); initStill(); initStepReveal()
