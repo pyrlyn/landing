@@ -32,7 +32,6 @@ import kotlinx.serialization.json.JsonObject
     val concept: Concept, val table: OverviewTable, val notice: Notice, val faq: List<Faq>, val next: List<String>, val from: List<String> = emptyList(),
 )
 
-@Serializable data class TeamTool(val name: String, val path: String? = null, val monogram: String? = null)
 
 @Serializable data class NavItem(val file: String? = null, val page: String? = null, val title: String? = null, val summary: String? = null)
 @Serializable data class NavGroup(val label: String, val items: List<NavItem>)
@@ -44,7 +43,6 @@ object Data {
 
     val showcase: Showcase by lazy { json.decodeFromString(res("showcase.json")) }
     val overviews: Map<String, Overview> by lazy { json.decodeFromString(res("docs-overview.json")) }
-    val teamTools: List<TeamTool> by lazy { json.decodeFromString(res("team-tools.json")) }
     val docsNav: Map<String, ProductNav> by lazy {
         val all = json.parseToJsonElement(res("docs-nav.json")) as JsonObject
         all.filterKeys { !it.startsWith("$") }.mapValues { json.decodeFromJsonElement(ProductNav.serializer(), it.value) }

@@ -156,7 +156,7 @@ fun Ctx.page(meta: PageMeta, main: MAIN.() -> Unit): String {
                             li { a(url("/#pricing")) { +"Pricing" } }
                             li { a(url("/#faq")) { +"FAQ" } }
                             li { a("https://github.com/pyrlyn") { +"GitHub" } }
-                            li { a(url("/team")) { +"Our team" } }
+                            li { a(url("/team")) { +"Team" } }
                             li { a(url("/support")) { +"Support" } }
                         }
                     }
