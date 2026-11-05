@@ -86,6 +86,8 @@ class BehaviorTest {
         assertEquals(6, p.locator(".team-list > li").count())
         assertEquals(1, p.locator(".team-card--lead").count())
         assertTrue(p.locator(".team-list").innerText().contains("Ivan Tuhai"))
+        assertEquals("https://listepo.dev", p.locator(".team-card--lead a.team-card__link").getAttribute("href"))
+        assertTrue(p.locator(".team-card--lead a.team-card__link").innerText().contains("listepo.dev"))
         assertTrue(p.locator(".team-photo__layer img").evaluate("i => i.complete && i.naturalWidth > 0") as Boolean)
         p.locator("[data-team-photo]").scrollIntoViewIfNeeded()
         p.waitForFunction("() => document.querySelector('[data-team-photo]').dataset.state === 'in'")
