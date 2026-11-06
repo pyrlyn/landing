@@ -63,16 +63,16 @@ class BehaviorTest {
     }
 
     @Test
-    fun `cox scenes switch tabs`() = onPage("/cox/") { p ->
-        val scenes = p.locator("[data-scenes].is-ready").first()
-        scenes.scrollIntoViewIfNeeded()
-        val tabs = scenes.locator("[role=tab]")
-        assertTrue(tabs.count() > 1, "expected several scene tabs")
-        tabs.nth(1).click()
-        assertEquals("true", tabs.nth(1).getAttribute("aria-selected"))
-        assertEquals("false", tabs.nth(0).getAttribute("aria-selected"))
-        assertTrue(scenes.locator("[data-scene]").nth(1).getAttribute("class")!!.contains("is-active"))
+    fun `hidden product routes return HTTP 404`() {
+        val page = Site.newPage()
+        try {
+            for (path in listOf("/cox/", "/runa/", "/aulo/", "/swarfr/", "/weft/", "/stator/", "/scull/", "/kerf/", "/bindsmith/")) {
+                val res = page.navigate(Site.server.origin + path)
+                assertEquals(404, res?.status(), "$path should be HTTP 404 when hidden")
+            }
+        } finally { Site.close(page) }
     }
+
 
     @Test
     fun `docs pages get the enhanced docs nav`() = onPage("/rtok/docs/install/") { p ->
