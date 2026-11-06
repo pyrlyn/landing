@@ -32,8 +32,16 @@ object AssetPipeline {
         return out.toString().trim()
     }
 
-    /** Names of Markdown parsers/renderers; none of them may reach the client. */
-    private val markdownParserMarkers = Regex("\\b(marked|markdown-it|micromark|commonmark|remark|showdown|snarkdown|MarkdownParser|intellij\\.markdown|parseMarkdown)\\b", RegexOption.IGNORE_CASE)
+    /**
+     * Names of Markdown parsers/renderers; none of them may reach the client. `marked` matches only as the
+     * library is called, because the bare word is English ("is marked as '@Serializable'" in
+     * kotlinx.serialization's messages, which the plans bundle ships).
+     */
+    private val markdownParserMarkers = Regex(
+        "\\b(markdown-it|micromark|commonmark|remark|showdown|snarkdown|MarkdownParser|intellij\\.markdown|parseMarkdown)\\b" +
+            "|\\bmarked(\\(\\)|\\.(parse|parseInline|use|lexer|setOptions)\\b)",
+        RegexOption.IGNORE_CASE,
+    )
 
     /**
      * Markdown is parsed only at build time (generateSite) into static HTML. Fails the build if a shipped

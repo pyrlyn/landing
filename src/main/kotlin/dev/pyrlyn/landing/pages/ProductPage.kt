@@ -192,14 +192,19 @@ fun Ctx.productPage(entry: Project): String {
             }
         }
 
-        // PRICING: Free/OSS (real) + Pro (PLACEHOLDER)
+        // PRICING: Free/OSS (real) + Pro (PLACEHOLDER). With API_URL the plans widget swaps the tiers for the
+        // backend's plans; without JS, without the API or when it fails, the placeholders stay.
+        val livePlans = withPro && assets.plansJs != null
         section("section section--tight container") {
             id = "pricing"; attr("aria-labelledby", "pr-title")
+            if (livePlans) { attr("data-plans", slug); attr("data-api", cfg.apiUrl) }
             header("section__head") {
-                div("section-flag") { p("eyebrow") { +"Pricing" }; if (withPro) span("badge badge--placeholder") { +"Pro is a placeholder" } }
+                div("section-flag") { p("eyebrow") { +"Pricing" }; if (withPro) span("badge badge--placeholder") { attr("data-plans-placeholder", ""); +"Pro is a placeholder" } }
                 h2("h2") { id = "pr-title"; +(if (withPro) "Free forever. Pro when you need it." else "${entry.title} is free.") }
             }
+            if (livePlans) planTemplate(entry)
             div(if (withPro) "grid pricing-pair grid--2" else "grid pricing-pair pricing-pair--free") {
+                attr("data-plans-grid", "")
                 article("card glass tier") {
                     attr("aria-labelledby", "t-free")
                     div("tier__head") { h3("h3") { id = "t-free"; +"Free · open source" }; span("badge badge--line") { +lic.short } }
@@ -213,8 +218,8 @@ fun Ctx.productPage(entry: Project): String {
                     div("tier__head") { h3("h3") { id = "t-pro"; +"${entry.title} Pro" }; span("badge badge--placeholder") { +"Placeholder" } }
                     p("price") { span("price__num") { span { attr("data-pro-price", slug); +pro.price }; +"*" }; span("muted small") { +"per seat" } }
                     ul("checklist") { pro.features.forEach { f -> li { icon("check", 16); +" $f" } } }
-                    proWishlist(ctx, entry, "t-pro-note")
-                    p("muted small") { id = "t-pro-note"; +"${Site.PRO_PRICE_NOTE} ${if (cat.hasWishlist(entry)) "The wishlist mails you once, when paid plans open." else "Placeholder — the Pro waitlist is not open yet."}" }
+                    proWishlist(entry, "t-pro-note")
+                    p("muted small") { id = "t-pro-note"; +"${Site.PRO_PRICE_NOTE} Placeholder — the Pro wishlist is not open yet." }
                 }
             }
         }

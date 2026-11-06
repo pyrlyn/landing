@@ -173,7 +173,7 @@ fun Ctx.page(meta: PageMeta, main: MAIN.() -> Unit): String {
             script(src = url(assets.js)) {
                 type = "module"
                 attr("data-intro", url(assets.introJs))
-                if (cfg.apiUrl.isNotEmpty()) attr("data-api", cfg.apiUrl)
+                assets.plansJs?.let { attr("data-plans", url(it)) }
             }
         }
     }

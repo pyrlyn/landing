@@ -13,5 +13,5 @@ fun main() {
     initTerminals(); initVisuals(); initScenes(); initRing(); initTeamPhoto()
     for (n in qa("[data-dnav]")) initDocsNav(n)
     idle { for (t in qa("[data-toc]")) initToc(t) }
-    initSearch(); initWishlist(me)
+    initSearch(); initPlans(me)
 }

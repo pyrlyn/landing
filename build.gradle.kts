@@ -30,26 +30,44 @@ val siteStamp = layout.buildDirectory.file("site.stamp")
 // Kotlin/JS bundles (production webpack: DCE + terser) that generateSite hashes into /_assets/.
 val webBundle = project(":web").layout.buildDirectory.file("kotlin-webpack/js/productionExecutable/web.js")
 val introBundle = project(":web-intro").layout.buildDirectory.file("kotlin-webpack/js/productionExecutable/web-intro.js")
+val plansBundle = project(":web-plans").layout.buildDirectory.file("kotlin-webpack/js/productionExecutable/web-plans.js")
 
-/** Static site generation: renders every page into build/site. */
-val generateSite by tasks.registering(JavaExec::class) {
-    group = "site"
-    description = "Generates the static site into build/site."
+/** Renders every page into [out]; [apiUrl] replaces the API_URL from the environment. */
+fun JavaExec.renderSite(out: Provider<Directory>, stamp: Provider<RegularFile>?, apiUrl: String? = null) {
     classpath = sourceSets.main.get().runtimeClasspath
     mainClass.set("dev.pyrlyn.landing.GenerateKt")
     workingDir = projectDir
-    dependsOn(":web:jsBrowserProductionWebpack", ":web-intro:jsBrowserProductionWebpack")
-    args(siteDir.get().asFile.absolutePath, webBundle.get().asFile.absolutePath, introBundle.get().asFile.absolutePath, siteStamp.get().asFile.absolutePath)
+    dependsOn(":web:jsBrowserProductionWebpack", ":web-intro:jsBrowserProductionWebpack", ":web-plans:jsBrowserProductionWebpack")
+    args(listOfNotNull(out, webBundle, introBundle, plansBundle, stamp).map { it.get().asFile.absolutePath })
     inputs.dir("content")
     inputs.dir("public")
     inputs.file(webBundle)
     inputs.file(introBundle)
+    inputs.file(plansBundle)
     inputs.files(sourceSets.main.get().runtimeClasspath)
     // Build-time config from env; declared so a change re-runs the task.
     listOf("SITE_URL", "SITE_BASE", "GA_MEASUREMENT_ID", "POSTHOG_KEY", "POSTHOG_HOST", "ALGOLIA_APP_ID", "ALGOLIA_SEARCH_KEY", "ALGOLIA_INDEX", "API_URL")
         .forEach { inputs.property("env.$it", providers.environmentVariable(it).orElse("")) }
-    outputs.dir(siteDir)
-    outputs.file(siteStamp)
+    if (apiUrl != null) {
+        environment("API_URL", apiUrl)
+        inputs.property("apiUrl", apiUrl)
+    }
+    outputs.dir(out)
+    stamp?.let { outputs.file(it) }
+}
+
+/** Static site generation: renders every page into build/site. */
+val generateSite = tasks.register<JavaExec>("generateSite") {
+    group = "site"
+    description = "Generates the static site into build/site."
+    renderSite(siteDir, siteStamp)
+}
+
+// The plans widget runs only on a site built with an API URL; the e2e tests answer this host themselves.
+tasks.register<JavaExec>("generateApiSite") {
+    group = "site"
+    description = "Generates the site with a stub API_URL into build/site-api, for the e2e tests of the plans widget."
+    renderSite(layout.buildDirectory.dir("site-api"), null, apiUrl = "https://api.e2e.test")
 }
 
 tasks.named<JavaExec>("run") {
@@ -75,6 +93,8 @@ tasks.register<JavaExec>("dev") {
         siteStamp.get().asFile.absolutePath,
         layout.projectDirectory.file(if (System.getProperty("os.name").startsWith("Windows")) "gradlew.bat" else "gradlew").asFile.absolutePath,
     )
+    // The child build must use the same client source as this one.
+    providers.gradleProperty("backendDir").orNull?.let { args("-PbackendDir=${file(it).absolutePath}") }
 }
 
 tasks.test { useJUnitPlatform() }

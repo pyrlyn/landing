@@ -20,7 +20,7 @@ class Ctx(
 }
 
 /** Hashed, minified asset URLs and the CSS inlined into each page. */
-class Assets(val siteCss: String, val docsCss: String, val js: String, val introJs: String)
+class Assets(val siteCss: String, val docsCss: String, val js: String, val introJs: String, val plansJs: String? = null)
 
 fun Tag.attr(name: String, value: String?) { if (value != null) attributes[name] = value }
 fun Tag.raw(html: String) = consumer.onTagContentUnsafe { +html }

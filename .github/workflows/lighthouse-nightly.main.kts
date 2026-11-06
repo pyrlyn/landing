@@ -39,7 +39,13 @@ val uploadArtifactSha = "cf430e030ddbb5b0abf93d22962f4752f3646cd9" // v7.0.2
 val lhciVersion = "0.15.1"
 
 // Production build env, served from the root so the audited URLs are /, /rtok/, /rtok/docs/.
-val buildEnv = mapOf("SITE_URL" to "https://pyrlyn.dev", "SITE_BASE" to "/")
+// backend:landing-client comes from the GitHub Packages of the private pyrlyn/backend, which this
+// repository's own token cannot read: the secret is a token with read:packages that can.
+val buildEnv = mapOf(
+    "SITE_URL" to "https://pyrlyn.dev",
+    "SITE_BASE" to "/",
+    "GITHUB_TOKEN" to "\${{ secrets.BACKEND_PACKAGES_TOKEN }}",
+)
 
 workflow(
     name = "lighthouse-nightly",

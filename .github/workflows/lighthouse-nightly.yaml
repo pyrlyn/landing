@@ -57,6 +57,7 @@ jobs:
       env:
         SITE_URL: 'https://pyrlyn.dev'
         SITE_BASE: '/'
+        GITHUB_TOKEN: '${{ secrets.BACKEND_PACKAGES_TOKEN }}'
       run: './gradlew generateSite'
     - id: 'step-5'
       name: 'Lighthouse (mobile)'
