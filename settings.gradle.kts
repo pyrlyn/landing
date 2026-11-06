@@ -4,8 +4,8 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         // The landing API's client (backend:landing-client) lives in the GitHub Packages of the private
-        // listepo/backend; reading it takes a token with read:packages, even for a public consumer.
-        maven("https://maven.pkg.github.com/listepo/backend") {
+        // pyrlyn/backend; reading it takes a token with read:packages, even for a public consumer.
+        maven("https://maven.pkg.github.com/pyrlyn/backend") {
             name = "backendPackages"
             credentials {
                 username = providers.gradleProperty("gpr.user").orElse(providers.environmentVariable("GITHUB_ACTOR")).getOrElse("token")

@@ -27,7 +27,7 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 
 ## Backend: plans and the wishlist
 
-Plans and the wishlist come from the landing API of [listepo/backend](https://github.com/listepo/backend)
+Plans and the wishlist come from the landing API of [pyrlyn/backend](https://github.com/pyrlyn/backend)
 through its generated Kotlin client, `backend:landing-client` (version in `gradle/libs.versions.toml`).
 `web-plans/` uses it in the browser:
 
@@ -41,7 +41,7 @@ through its generated Kotlin client, `backend:landing-client` (version in `gradl
   tiers stay, with the disabled "Join the Pro wishlist" button. The plans bundle is not shipped at all
   without `API_URL`.
 
-The client is published to the GitHub Packages of the private `listepo/backend`, so every build that
+The client is published to the GitHub Packages of the private `pyrlyn/backend`, so every build that
 resolves it (`build`, `generateSite`, `e2eTest`) needs a token with `read:packages` that can see that
 repository: `GITHUB_TOKEN` (and optionally `GITHUB_ACTOR`) in the environment, or `gpr.key` (and `gpr.user`)
 in `~/.gradle/gradle.properties`. Locally, with the GitHub CLI:

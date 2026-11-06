@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      # backend:landing-client comes from the GitHub Packages of the private listepo/backend, which this
+      # backend:landing-client comes from the GitHub Packages of the private pyrlyn/backend, which this
       # repository's own token cannot read: the secret is a token with read:packages that can.
       GITHUB_TOKEN: ${{ secrets.BACKEND_PACKAGES_TOKEN }}
     steps:
