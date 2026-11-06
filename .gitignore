@@ -8,4 +8,8 @@
 .DS_Store
 /web/build/
 /web-intro/build/
+/e2e/build/
+# Left over from the Astro site.
+/dist/
+/node_modules/
 .lighthouseci/
