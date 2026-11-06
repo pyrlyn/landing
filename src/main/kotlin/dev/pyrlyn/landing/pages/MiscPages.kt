@@ -117,20 +117,3 @@ fun Ctx.teamPage(): String = page(PageMeta("/team", "Team · Pyrlyn", "The peopl
         p("team__note") { +"Ivan on GitHub: "; a("https://github.com/listepo") { +"listepo" }; +". Need help? See "; a(url("/support")) { +"Support" }; +"." }
     }
 }
-
-/** Targets of the backend's wishlist mails; the one-time token is sent only on a click (site.js). */
-fun Ctx.wishlistPage(action: String): String {
-    val (title, text, button, pageTitle, desc) = if (action == "confirm")
-        listOf("Confirm your Pro wishlist place.", "We mail you once, when paid plans for this tool open.", "Confirm", "Confirm your Pro wishlist place | Pyrlyn", "Confirm the address you gave for a Pyrlyn Pro wishlist, so we can mail you once when paid plans open.")
-    else listOf("Leave the Pro wishlist.", "Your address is deleted from this tool's wishlist.", "Unsubscribe", "Leave the Pro wishlist | Pyrlyn", "Remove your address from a Pyrlyn Pro wishlist; you get no more mail about that tool's paid plans.")
-    return page(PageMeta("/wishlist/$action/", pageTitle, desc, "home", noindex = true, analytics = false)) {
-        section("err") {
-            attr("aria-labelledby", "wl-title"); attr("data-wishlist-link", action)
-            h1 { id = "wl-title"; +title }
-            p("err__text") { +text }
-            button(classes = "btn btn--primary btn--lg", type = ButtonType.button) { disabled = true; attr("data-wishlist-action", action); +button }
-            p("err__text") { attr("role", "status"); attr("aria-live", "polite"); if (cfg.apiUrl.isEmpty()) +"The wishlist is not available on this site yet." }
-            a(url("/")) { +"Back to home" }
-        }
-    }
-}

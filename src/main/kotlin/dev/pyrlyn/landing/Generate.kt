@@ -60,8 +60,6 @@ fun generate(root: File, out: File, cfg: SiteConfig, webJs: File, introJs: File)
     pages["50x.html"] = pages.getValue("500.html")
     pages["support/index.html"] = ctx.supportPage()
     pages["team/index.html"] = ctx.teamPage()
-    pages["wishlist/confirm/index.html"] = ctx.wishlistPage("confirm")
-    pages["wishlist/unsubscribe/index.html"] = ctx.wishlistPage("unsubscribe")
     val withDocs = docs.productsWithDocs().toSet()
     for (t in catalog.tools) {
         pages["${t.id}/index.html"] = ctx.productPage(t)
@@ -72,8 +70,8 @@ fun generate(root: File, out: File, cfg: SiteConfig, webJs: File, introJs: File)
     }
     for ((path, html) in pages) File(out, path).apply { parentFile.mkdirs() }.writeText(html)
 
-    // robots.txt + sitemap (wishlist pages are noindex mail-link targets, not content).
-    val urls = pages.keys.filter { it.endsWith("index.html") && !it.startsWith("wishlist/") }
+    // robots.txt + sitemap.
+    val urls = pages.keys.filter { it.endsWith("index.html") }
         .map { cfg.abs("/" + it.removeSuffix("index.html")) }
     File(out, "sitemap-0.xml").writeText(
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?><urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">" +
