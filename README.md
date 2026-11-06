@@ -15,13 +15,50 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 - **CSS:** written in Kotlin with kotlin-css (JetBrains kotlin-wrappers) in `styles/`, rendered at
   build time, minified and inlined into each page. The sheets use the `sel`/`atMedia`/`atSupports`/`at`/`prop` helpers
   from `styles/Dsl.kt`, which keep the source order and never merge rules.
-- **JS:** Kotlin/JS (IR, browser target) in `web/` (site bundle) and `web-intro/` (the WebGL intro sweep).
-  Production webpack builds apply DCE and minification. `generateSite` builds both, hashes them into
-  `/_assets/` and loads the intro only on hero pages when motion is allowed. Pages are fully pre-rendered
-  and work without JS; the scripts only enhance widgets (menus, theme, search, carousels, terminals,
-  visuals, docs nav/TOC, wishlist links). The web code sticks to externals and native JS helpers
-  (`web/.../Dom.kt`) instead of Kotlin collections, Regex and exceptions, which keeps the stdlib out of the bundle.
+- **JS:** Kotlin/JS (IR, browser target) in `web/` (site bundle), `web-intro/` (the WebGL intro sweep) and
+  `web-plans/` (product plans and the wishlist form, on the backend client). Production webpack builds apply
+  DCE and minification. `generateSite` builds all three and hashes them into `/_assets/`; the intro loads
+  only on hero pages when motion is allowed, the plans widget only on product pages of a site built with
+  `API_URL`. Pages are fully pre-rendered and work without JS; the scripts only enhance widgets (menus,
+  theme, search, carousels, terminals, visuals, docs nav/TOC, plans). The `web/` code sticks to externals
+  and native JS helpers (`web/.../Dom.kt`) instead of Kotlin collections, Regex and exceptions, which keeps
+  the stdlib out of the bundle.
 - **Font:** Satoshi from the Fontshare CDN, preloaded with `font-display: swap`.
+
+## Backend: plans and the wishlist
+
+Plans and the wishlist come from the landing API of [listepo/backend](https://github.com/listepo/backend)
+through its generated Kotlin client, `backend:landing-client` (version in `gradle/libs.versions.toml`).
+`web-plans/` uses it in the browser:
+
+- With `API_URL` set, each product page with a Pro tier carries `data-plans`/`data-api` and a `<template>` of a
+  tier card; `site.js` loads the plans bundle on idle. It calls `GET /v1/projects/{slug}/plans` and swaps the
+  placeholder tiers for the API's plans: a waitlist plan gets the join form, a free plan the install link, a
+  paid plan on sale neither (the API has no checkout yet).
+- The join form sends `POST /v1/projects/{slug}/waitlist` with the email and reports success, an invalid
+  address (400), a closed wishlist (404), rate limiting (429) and an unreachable API.
+- Without `API_URL`, without JS, when the API fails or does not know the product (404), the placeholder
+  tiers stay, with the disabled "Join the Pro wishlist" button. The plans bundle is not shipped at all
+  without `API_URL`.
+
+The client is published to the GitHub Packages of the private `listepo/backend`, so every build that
+resolves it (`build`, `generateSite`, `e2eTest`) needs a token with `read:packages` that can see that
+repository: `GITHUB_TOKEN` (and optionally `GITHUB_ACTOR`) in the environment, or `gpr.key` (and `gpr.user`)
+in `~/.gradle/gradle.properties`. Locally, with the GitHub CLI:
+
+```sh
+gh auth refresh -s read:packages
+GITHUB_TOKEN=$(gh auth token) ./gradlew build
+```
+
+CI reads it from the `BACKEND_PACKAGES_TOKEN` secret. To build against a backend checkout instead of the
+published client (to try an API change before it is released), pass its path; Gradle then builds
+`:shared:landing-client` from it in a composite build and needs no token:
+
+```sh
+./gradlew build -PbackendDir=../backend
+./gradlew dev -PbackendDir=../backend
+```
 
 ## Commands
 
@@ -30,7 +67,7 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 ./gradlew run            # generateSite, then preview on http://localhost:4321 (PORT overrides)
 ./gradlew dev            # the same preview with live reload: any change regenerates the site, open pages reload
 ./gradlew build          # compile + tests
-./gradlew e2eTest        # generateSite, then Playwright e2e tests in headless Chromium
+./gradlew e2eTest        # generateSite + generateApiSite, then Playwright e2e tests in headless Chromium
 ```
 
 Requires JDK 21. Gradle comes from the wrapper; the Kotlin Gradle plugin downloads its own Node/webpack toolchain for the JS build.
@@ -48,7 +85,11 @@ Requires JDK 21. Gradle comes from the wrapper; the Kotlin Gradle plugin downloa
 - GA and PostHog config is still in the output (matched by shape, values never printed);
 - third-party scripts are async/module, no third-party stylesheets, the Fontshare font is a pinned `/wf/` URL
   that loads, and pages still work with all third-party requests blocked;
-- Kotlin/JS widgets: theme toggle, menu, home ring carousel, OSS/Pro toggle, Cox scenes, docs nav.
+- Kotlin/JS widgets: theme toggle, menu, home ring carousel, OSS/Pro toggle, Cox scenes, docs nav;
+- the plans widget, on a second site built by `generateApiSite` into `build/site-api` with the stub
+  `API_URL` `https://api.e2e.test`, whose plans and waitlist routes the tests answer themselves: plans replace
+  the placeholders, the join form posts the email and reports 204, 429, 400 and network errors, and the
+  placeholders stay on a failure or a 404. The main site, built without `API_URL`, ships no plans widget.
 
 Analytics hosts are always aborted, so tests never send events. Install Chromium once (into Playwright's
 default cache, outside the repo) with `./gradlew :e2e:playwrightInstall` (add `-PwithDeps` on Linux CI for
@@ -79,7 +120,7 @@ Same variables as the Astro site (`src/lib/config.ts`). All are optional at buil
 | `GA_MEASUREMENT_ID` | GA4 (public fallback built in) |
 | `POSTHOG_KEY`, `POSTHOG_HOST` | PostHog EU (public fallback built in) |
 | `PERF_DEFER_ANALYTICS` | `0` loads analytics immediately (default: after load + idle) |
-| `API_URL` | backend for prices and the wishlist (empty means placeholders) |
+| `API_URL` | landing API for plans and the wishlist (empty means placeholders); see Backend above |
 | `ALGOLIA_APP_ID`, `ALGOLIA_SEARCH_KEY`, `ALGOLIA_INDEX` | docs search (off when unset) |
 
 Search Console is verified via a DNS TXT record, so the site needs no meta tag.
@@ -100,6 +141,7 @@ src/main/kotlin/dev/pyrlyn/landing/
   Preview.kt  Ktor dev server
 web/          Kotlin/JS site bundle (progressive enhancement)
 web-intro/    Kotlin/JS WebGL intro, loaded lazily
+web-plans/    Kotlin/JS plans and wishlist widget on the backend client, loaded lazily
 e2e/          Playwright (Java API, Kotlin) browser tests: ./gradlew e2eTest
 kotlin-js-store/ yarn.lock for the Kotlin/JS toolchain
 content/      markdown content

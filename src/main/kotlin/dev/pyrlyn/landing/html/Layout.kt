@@ -173,6 +173,7 @@ fun Ctx.page(meta: PageMeta, main: MAIN.() -> Unit): String {
             script(src = url(assets.js)) {
                 type = "module"
                 attr("data-intro", url(assets.introJs))
+                assets.plansJs?.let { attr("data-plans", url(it)) }
             }
         }
     }

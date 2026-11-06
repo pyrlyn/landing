@@ -219,14 +219,14 @@ fun Ctx.homePage(): String {
                                 span("price__num price__num--sm") { span { attr("data-pro-price", p.id); +cat.proFor(p).price }; +"*" }
                             }
                             ul("checklist") { cat.proFor(p).features.forEach { f -> li { icon("check", 16); +" $f" } } }
-                            proWishlist(ctx, p, "pricing-note")
+                            proWishlist(p, "pricing-note")
                         }
                     }
                 }
             }
             p("footnote") {
                 id = "pricing-note"
-                +"${Site.PRO_PRICE_NOTE} ${if (tools.any(cat::hasWishlist)) "A Pro wishlist mails you once, when paid plans open; checkout is not wired up yet." else "Placeholder — the Pro waitlist is not open yet; checkout is not wired up in this MVP."}"
+                +"${Site.PRO_PRICE_NOTE} Placeholder — each product page shows its real plans and wishlist; checkout is not wired up in this MVP."
             }
         }
 

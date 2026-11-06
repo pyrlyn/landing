@@ -257,20 +257,38 @@ fun FlowOrPhrasingContent.proLabel(cat: Catalog, t: Project) {
     if (cat.hasPro(t)) { +"Free · Pro "; span { attr("data-pro-price", t.id); +cat.proFor(t).price }; +"*" } else +"Free"
 }
 
-/** The Pro wishlist action: an email form for products the backend knows, else the disabled button. */
-fun FlowContent.proWishlist(ctx: Ctx, t: Project, describedBy: String) {
-    if (ctx.catalog.hasWishlist(t)) {
-        form(classes = "wishlist") {
-            attr("data-wishlist", t.id); attr("data-api", ctx.cfg.apiUrl)
-            input(InputType.email, name = "email", classes = "wishlist__email") {
-                required = true; maxLength = "254"; attr("autocomplete", "email"); placeholder = "you@example.com"; attr("aria-label", "Email for the ${t.title} Pro wishlist")
+/** The placeholder Pro wishlist action; on product pages the plans widget swaps it for the backend's plans. */
+fun FlowContent.proWishlist(t: Project, describedBy: String) {
+    button(classes = "btn btn--primary btn--block", type = ButtonType.button) {
+        attr("aria-disabled", "true"); attr("aria-describedby", describedBy); style = "--accent:${t.accent}"; +"Join the Pro wishlist"
+    }
+}
+
+/**
+ * The tier card the plans widget (web-plans) clones once per backend plan. The markup stays here, next to
+ * the static tiers, so both share one look. Waitlist plans keep the join form, free plans the install
+ * link; a paid plan on sale keeps neither, because the API has no checkout yet.
+ */
+fun FlowContent.planTemplate(t: Project) {
+    // kotlinx.html offers template() only inside phrasing content, though HTML allows it here too.
+    TEMPLATE(attributesMapOf("data-plan-tpl", ""), consumer).visit {
+        article("card glass tier") {
+            div("tier__head") {
+                h3("h3") { attr("data-plan-name", "") }
+                span("badge badge--line") { attr("data-plan-badge", ""); +"Wishlist" }
             }
-            button(classes = "btn btn--primary btn--block", type = ButtonType.submit) { disabled = true; attr("aria-describedby", describedBy); +"Join the Pro wishlist" }
-            p("wishlist__status muted small") { attr("role", "status"); attr("aria-live", "polite") }
-        }
-    } else {
-        button(classes = "btn btn--primary btn--block", type = ButtonType.button) {
-            attr("aria-disabled", "true"); attr("aria-describedby", describedBy); style = "--accent:${t.accent}"; +"Join the Pro wishlist"
+            p("price") { span("price__num") { attr("data-plan-price", "") }; span("muted small") { attr("data-plan-interval", "") } }
+            p("muted small") { attr("data-plan-desc", "") }
+            ul("checklist") { attr("data-plan-features", ""); li { icon("check", 16); +" "; span { attr("data-plan-feature", "") } } }
+            form(classes = "wishlist") {
+                attr("data-plan-join", "")
+                input(InputType.email, name = "email", classes = "wishlist__email") {
+                    required = true; maxLength = "254"; attr("autocomplete", "email"); placeholder = "you@example.com"; attr("aria-label", "Email for the ${t.title} wishlist")
+                }
+                button(classes = "btn btn--primary btn--block", type = ButtonType.submit) { +"Join the wishlist" }
+                p("wishlist__status muted small") { attr("role", "status"); attr("aria-live", "polite") }
+            }
+            a("#install", classes = "btn btn--glass btn--block") { attr("data-plan-install", ""); +"Install free" }
         }
     }
 }

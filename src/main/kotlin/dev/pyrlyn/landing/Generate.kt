@@ -17,14 +17,15 @@ fun main(args: Array<String>) {
     val out = File(args.getOrNull(0) ?: "build/site")
     val js = File(args.getOrNull(1) ?: "web/build/kotlin-webpack/js/productionExecutable/web.js")
     val intro = File(args.getOrNull(2) ?: "web-intro/build/kotlin-webpack/js/productionExecutable/web-intro.js")
-    val ms = measureTimeMillis { generate(File("."), out, SiteConfig.fromEnv(), js, intro) }
+    val plans = File(args.getOrNull(3) ?: "web-plans/build/kotlin-webpack/js/productionExecutable/web-plans.js")
+    val ms = measureTimeMillis { generate(File("."), out, SiteConfig.fromEnv(), js, intro, plans) }
     println("landing: generated ${out.walkTopDown().count { it.extension == "html" }} pages into $out in ${ms}ms")
     // Written last, after a complete site, so `./gradlew dev` never reloads onto a half-written build/site.
-    args.getOrNull(3)?.let { File(it).writeText(System.currentTimeMillis().toString()) }
+    args.getOrNull(4)?.let { File(it).writeText(System.currentTimeMillis().toString()) }
 }
 
-/** Renders every route into [out]; [webJs] and [introJs] are the Kotlin/JS production bundles. */
-fun generate(root: File, out: File, cfg: SiteConfig, webJs: File, introJs: File) {
+/** Renders every route into [out]; [webJs], [introJs] and [plansJs] are the Kotlin/JS production bundles. */
+fun generate(root: File, out: File, cfg: SiteConfig, webJs: File, introJs: File, plansJs: File) {
     val content = File(root, "content")
     val publicDir = File(root, "public")
 
@@ -48,10 +49,12 @@ fun generate(root: File, out: File, cfg: SiteConfig, webJs: File, introJs: File)
     }
     val js = emit("site", "js", webJs.readText())
     val intro = emit("intro-gl", "js", introJs.readText())
+    // The backend client is only reachable with an API URL, so without one the bundle is not shipped.
+    val plans = if (cfg.apiUrl.isNotEmpty()) emit("plans", "js", plansJs.readText()) else null
 
     val catalog = Catalog.load(File(content, "projects"))
     val docs = Docs(File(content, "docs"), cfg)
-    val ctx = Ctx(cfg, catalog, docs, publicDir, Assets(siteCss, docsCss, js, intro))
+    val ctx = Ctx(cfg, catalog, docs, publicDir, Assets(siteCss, docsCss, js, intro, plans))
 
     val pages = linkedMapOf<String, String>()
     pages["index.html"] = ctx.homePage()

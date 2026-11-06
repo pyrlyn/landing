@@ -6,6 +6,7 @@ ktor = "3.6.0"
 kotlin-wrappers = "2026.10.5"
 jetbrains-markdown = "0.7.18"
 playwright = "1.64.0"
+landing-client = "0.1.1"
 
 [libraries]
 kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kotlinx-html" }
@@ -15,6 +16,7 @@ ktor-server-sse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor" }
 kotlin-css = { module = "org.jetbrains.kotlin-wrappers:kotlin-css-jvm", version.ref = "kotlin-wrappers" }
 jetbrains-markdown = { module = "org.jetbrains:markdown-jvm", version.ref = "jetbrains-markdown" }
 playwright = { module = "com.microsoft.playwright:playwright", version.ref = "playwright" }
+landing-client = { module = "backend:landing-client", version.ref = "landing-client" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

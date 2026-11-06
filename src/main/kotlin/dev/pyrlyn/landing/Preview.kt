@@ -25,14 +25,14 @@ private const val RELOAD_SCRIPT = "<script>new EventSource(\"$RELOAD_PATH\").onm
  * `/x/` → `/x/index.html`, `/x` → `/x/index.html` or `/x.html`, unknown paths → 404.html.
  * Not a production server; the site deploys as static files.
  *
- * Args: `<siteDir> [<stampFile> <gradlew>]`. With the stamp and gradlew (`./gradlew dev`) it runs
- * `gradlew --continuous generateSite` as a child and reloads open pages whenever the stamp changes.
+ * Args: `<siteDir> [<stampFile> <gradlew> <gradle args>...]`. With the stamp and gradlew (`./gradlew dev`)
+ * it runs `gradlew --continuous generateSite` as a child and reloads open pages whenever the stamp changes.
  */
 fun main(args: Array<String>) {
     val root = File(args.getOrNull(0) ?: "build/site").canonicalFile
     val stamp = args.getOrNull(1)?.let(::File)
     val port = System.getenv("PORT")?.toIntOrNull() ?: 4321
-    args.getOrNull(2)?.let(::startContinuousBuild)
+    args.getOrNull(2)?.let { startContinuousBuild(it, args.drop(3)) }
     println("landing: preview of $root on http://localhost:$port/" + if (stamp != null) " (live reload)" else "")
     embeddedServer(CIO, port = port) {
         if (stamp != null) install(SSE)
@@ -84,8 +84,8 @@ private fun withReload(html: String): String {
 }
 
 /** Gradle's own file watching decides what to rebuild; the child dies with the preview. */
-private fun startContinuousBuild(gradlew: String) {
-    val build = ProcessBuilder(gradlew, "--continuous", "--quiet", "generateSite")
+private fun startContinuousBuild(gradlew: String, gradleArgs: List<String>) {
+    val build = ProcessBuilder(listOf(gradlew, "--continuous", "--quiet") + gradleArgs + "generateSite")
         .directory(File(gradlew).parentFile)
         .inheritIO()
         .start()
