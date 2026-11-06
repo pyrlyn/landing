@@ -114,12 +114,23 @@ object Site {
         Category("apps", "Apps", "End-user applications.", 4),
     )
 
+    /**
+     * Products shown in the catalog, nav, footer and generated routes.
+     * Everything else under content/projects stays on disk but is hidden: Catalog.load filters it out,
+     * so no product page or docs are generated (preview/nginx return HTTP 404 for those paths).
+     * Visible set (Ivan): AirTalk → rtok, Catch → ketch, Mailoon → mailune.
+     */
+    val VISIBLE_PRODUCTS: Set<String> = setOf("rtok", "ketch", "mailune")
+
     /** Category per product slug. A new, renamed or removed product must be updated here. */
     val PRODUCT_CATEGORY: Map<String, String> = mapOf(
-        "rtok" to "ai", "cox" to "ai", "runa" to "ai", "aulo" to "ai",
-        "ketch" to "devtools", "swarfr" to "devtools", "scull" to "devtools", "kerf" to "devtools", "bindsmith" to "devtools",
-        "weft" to "languages", "stator" to "languages",
+        "rtok" to "ai",
+        "ketch" to "devtools",
         "mailune" to "apps",
+        // Hidden (not in VISIBLE_PRODUCTS — kept commented so categories stay documented):
+        // "cox" to "ai", "runa" to "ai", "aulo" to "ai",
+        // "swarfr" to "devtools", "scull" to "devtools", "kerf" to "devtools", "bindsmith" to "devtools",
+        // "weft" to "languages", "stator" to "languages",
     )
     fun categoryOf(slug: String) = CATEGORIES.find { it.id == PRODUCT_CATEGORY[slug] }
 }

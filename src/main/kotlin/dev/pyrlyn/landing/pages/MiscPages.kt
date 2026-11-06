@@ -5,7 +5,7 @@ import dev.pyrlyn.landing.html.*
 import kotlinx.html.*
 
 /** Not-found page; nginx serves 404.html for any missing path. */
-fun Ctx.notFoundPage() = page(PageMeta("/404", "Page not found | Pyrlyn", "This page doesn't exist. Browse Pyrlyn's developer tools: Rtok, Ketch, Cox, Runa, Swarfr, Stator and more.", "home", noindex = true, bare = true)) {
+fun Ctx.notFoundPage() = page(PageMeta("/404", "Page not found | Pyrlyn", "This page doesn't exist. Browse Pyrlyn's developer tools: Rtok, Ketch and Mailune.", "home", noindex = true, bare = true)) {
     section("err") {
         attr("aria-labelledby", "err-title")
         p("err__code") { attr("aria-hidden", "true"); +"404" }

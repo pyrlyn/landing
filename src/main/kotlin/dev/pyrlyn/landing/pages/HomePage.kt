@@ -25,7 +25,7 @@ fun Ctx.homePage(): String {
     val minPro = tools.filter(cat::hasPro).map { cat.proFor(it).price }
         .sortedBy { it.replace(Regex("[^\\d.]"), "").toDoubleOrNull() ?: Double.NaN }.firstOrNull()
     val homeTitle = "${Site.BRAND}: local AI developer tools for agentic coding"
-    val homeDescription = "Pyrlyn builds local-first developer tools for agentic coding: Rtok, Ketch, Cox, Runa, Swarfr, Stator and more."
+    val homeDescription = "Pyrlyn builds local-first developer tools for agentic coding: Rtok, Ketch and Mailune."
     val jsonLd = listOf(
         seo.organization(),
         seo.website(homeDescription),
@@ -41,9 +41,9 @@ fun Ctx.homePage(): String {
     )
     val glyph = mapOf("rtok" to "Δ", "cox" to "◎", "ketch" to "↓", "runa" to "ᛉ", "mailune" to "✉", "weft" to "⋕", "swarfr" to "@", "aulo" to "∿", "scull" to "▌", "kerf" to "⌿", "stator" to "⟨⟩", "bindsmith" to "⚒")
     val hotspots = listOf(
-        Hotspot(60, 34, "cox", "Cox · TUI and editors", Site.theme("cox").accent, "/cox/", "Terminal UI with streaming replies, approval prompts and a diff view; cox acp serves Zed and JetBrains."),
         Hotspot(80, 58, "rtok", "Rtok · code graph", Site.theme("rtok").accent, "/rtok/", "Code graph over MCP: agents query symbol, callers, impact, outline and explore instead of grep-and-read."),
         Hotspot(35, 64, "ketch", "Ketch · verified installs", Site.theme("ketch").accent, "/ketch/", "Installs from any repo that ships releases and checks the published SHA-256 sums against what landed on disk."),
+        Hotspot(60, 34, "mailune", "Mailune · private AI mail", Site.theme("mailune").accent, "/mailune/", "Local-first mail with on-device AI for macOS, iOS, Windows, Linux, Android and the web."),
     )
     val ctx = this
     return page(PageMeta(path = "/", title = homeTitle, description = homeDescription, theme = "home", imageAlt = homeTitle, jsonLd = jsonLd)) {
@@ -189,7 +189,7 @@ fun Ctx.homePage(): String {
                 fun card(ic: String, t: String, body: String) = li("card glass shine") { span("icon") { attr("aria-hidden", "true"); icon(ic) }; h3("h3") { +t }; p { +body } }
                 card("box", "One binary each", "Written in Rust and shipped as a single native binary for macOS and Linux; ketch runs on Windows too.")
                 card("tree", "Local first", "Ledgers, archives and installs live on your machine; export telemetry only if you choose.")
-                card("chart", "Measured and verified", "Rtok records every saving, Cox records every request’s cost, Ketch checks every checksum.")
+                card("chart", "Measured and verified", "Rtok records every saving; Ketch checks every checksum; Mailune keeps mail and AI on your device.")
                 card("lock", "Open licensing", "${Site.LICENSE.short}; Weft is Apache-2.0.")
             }
         }
