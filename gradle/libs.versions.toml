@@ -11,6 +11,7 @@ playwright = "1.64.0"
 kotlinx-html = { module = "org.jetbrains.kotlinx:kotlinx-html-jvm", version.ref = "kotlinx-html" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 ktor-server-cio = { module = "io.ktor:ktor-server-cio", version.ref = "ktor" }
+ktor-server-sse = { module = "io.ktor:ktor-server-sse", version.ref = "ktor" }
 kotlin-css = { module = "org.jetbrains.kotlin-wrappers:kotlin-css-jvm", version.ref = "kotlin-wrappers" }
 jetbrains-markdown = { module = "org.jetbrains:markdown-jvm", version.ref = "jetbrains-markdown" }
 playwright = { module = "com.microsoft.playwright:playwright", version.ref = "playwright" }

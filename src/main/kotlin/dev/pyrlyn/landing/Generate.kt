@@ -19,6 +19,8 @@ fun main(args: Array<String>) {
     val intro = File(args.getOrNull(2) ?: "web-intro/build/kotlin-webpack/js/productionExecutable/web-intro.js")
     val ms = measureTimeMillis { generate(File("."), out, SiteConfig.fromEnv(), js, intro) }
     println("landing: generated ${out.walkTopDown().count { it.extension == "html" }} pages into $out in ${ms}ms")
+    // Written last, after a complete site, so `./gradlew dev` never reloads onto a half-written build/site.
+    args.getOrNull(3)?.let { File(it).writeText(System.currentTimeMillis().toString()) }
 }
 
 /** Renders every route into [out]; [webJs] and [introJs] are the Kotlin/JS production bundles. */

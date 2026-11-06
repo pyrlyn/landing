@@ -5,7 +5,9 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 
 - **Templates:** kotlinx.html
 - **Data:** kotlinx-serialization (JSON copy in `src/main/resources/data`)
-- **Dev preview:** Ktor CIO. It is for preview only; production serves the static `build/site`.
+- **Dev preview:** Ktor CIO. It is for preview only; production serves the static `build/site`. `./gradlew dev`
+  runs `gradlew --continuous generateSite` beside it; after each successful generation the generator writes
+  `build/site.stamp`, and the preview tells open pages (Server-Sent Events on `/__livereload`) to reload.
 - **Content:** `content/projects/*.md` (products) and `content/docs/<product>/` (docs). Markdown is parsed
   only at build time by JetBrains markdown (GFM) behind `markdown/MarkdownRenderer`, and baked into static
   HTML. No Markdown parser ships to the browser (`generateSite` fails if a JS asset contains one), and the
@@ -26,6 +28,7 @@ generated statically, with the same routes, HTML structure and CSS as the origin
 ```sh
 ./gradlew generateSite   # build the static site into build/site
 ./gradlew run            # generateSite, then preview on http://localhost:4321 (PORT overrides)
+./gradlew dev            # the same preview with live reload: any change regenerates the site, open pages reload
 ./gradlew build          # compile + tests
 ./gradlew e2eTest        # generateSite, then Playwright e2e tests in headless Chromium
 ```
