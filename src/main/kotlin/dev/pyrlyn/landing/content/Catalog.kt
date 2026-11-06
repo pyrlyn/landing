@@ -42,13 +42,17 @@ class Catalog(val tools: List<Project>, private val apiPrices: Map<String, Strin
         /** Short install for cards: prefer a `ketch install …` alternative. */
         fun cardInstall(t: Project) = t.installAlternatives.find { it.startsWith("ketch ") } ?: t.install
 
-        private val DEFAULT_ORDER = listOf("rtok", "cox", "ketch", "runa", "mailune", "weft", "swarfr", "aulo", "scull", "kerf", "stator", "bindsmith")
+        private val DEFAULT_ORDER = listOf("rtok", "ketch", "mailune") // hidden: cox, runa, weft, swarfr, aulo, scull, kerf, stator, bindsmith
 
         fun load(dir: File, apiPrices: Map<String, String?> = emptyMap()): Catalog {
             val files = dir.listFiles { f -> f.extension == "md" && f.name != "README.md" }.orEmpty()
             fun rank(p: Project) = p.order ?: DEFAULT_ORDER.indexOf(p.id).takeIf { it >= 0 } ?: 1000
-            val tools = files.map { Project.load(it) }.sortedWith(compareBy<Project> { rank(it) }.thenBy { it.title })
-            require(tools.isNotEmpty()) { "no projects in $dir" }
+            val tools = files.map { Project.load(it) }
+                .filter { it.id in Site.VISIBLE_PRODUCTS }
+                .sortedWith(compareBy<Project> { rank(it) }.thenBy { it.title })
+            require(tools.isNotEmpty()) { "no visible projects in $dir (VISIBLE_PRODUCTS=${Site.VISIBLE_PRODUCTS})" }
+            val missing = Site.VISIBLE_PRODUCTS - tools.map { it.id }.toSet()
+            require(missing.isEmpty()) { "VISIBLE_PRODUCTS missing project files: $missing" }
             return Catalog(tools, apiPrices)
         }
     }
