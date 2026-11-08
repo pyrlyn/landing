@@ -11,6 +11,13 @@ object Site {
     val root: File = File(System.getProperty("e2e.siteDir") ?: error("e2e.siteDir is not set; run ./gradlew e2eTest"))
         .also { require(File(it, "index.html").isFile) { "No generated site in $it; run ./gradlew generateSite" } }
     val server = StaticServer(root)
+
+    /** The stub API host the second site (`:generateApiSite`) calls; tests answer it with page routes. */
+    const val API = "https://api.e2e.test"
+    val apiServer = StaticServer(
+        File(System.getProperty("e2e.apiSiteDir") ?: error("e2e.apiSiteDir is not set; run ./gradlew e2eTest"))
+            .also { require(File(it, "index.html").isFile) { "No generated site in $it; run ./gradlew generateApiSite" } },
+    )
     private val playwright: Playwright = Playwright.create()
     val browser: Browser = playwright.chromium().launch(
         BrowserType.LaunchOptions().setHeadless(System.getProperty("e2e.headed") != "true"),
@@ -30,7 +37,7 @@ object Site {
 
     fun html(path: String): String = server.resolve(path)!!.readText()
 
-    fun isInternal(url: String) = url.startsWith(server.origin)
+    fun isInternal(url: String) = url.startsWith(server.origin) || url.startsWith(apiServer.origin)
 
     /** New page with analytics blocked; [blockExternal] also aborts every third-party request (offline mode). */
     fun newPage(blockExternal: Boolean = false, width: Int = 1280, height: Int = 900): Page {
@@ -51,6 +58,6 @@ object Site {
     fun close(page: Page) = page.context().close()
 
     init {
-        Runtime.getRuntime().addShutdownHook(Thread { runCatching { browser.close(); playwright.close(); server.close() } })
+        Runtime.getRuntime().addShutdownHook(Thread { runCatching { browser.close(); playwright.close(); server.close(); apiServer.close() } })
     }
 }
