@@ -5,7 +5,10 @@ FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 ARG SITE_URL=https://pyrlyn.dev
 ARG SITE_BASE=/
-ENV SITE_URL=$SITE_URL SITE_BASE=$SITE_BASE
+# Build-time only (this stage is discarded). Needed to resolve
+# maven.pkg.github.com/pyrlyn/backend (backend.landing-client).
+ARG GITHUB_TOKEN
+ENV SITE_URL=$SITE_URL SITE_BASE=$SITE_BASE GITHUB_TOKEN=$GITHUB_TOKEN
 COPY . .
 RUN ./gradlew --no-daemon -Dorg.gradle.configuration-cache=false generateSite && test -f build/site/index.html
 
