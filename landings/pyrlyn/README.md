@@ -1,5 +1,7 @@
 # landing-kotlin
 
+This project lives at `landings/pyrlyn/` in the [pyrlyn/landing](https://github.com/pyrlyn/landing) repository. Run Gradle commands from this directory.
+
 A 1:1 port of the pyrlyn.dev landing (the Astro `pyrlyn/landing`, main) to Kotlin/JVM. The site is
 generated statically, with the same routes, HTML structure and CSS as the original.
 
@@ -93,20 +95,21 @@ Requires JDK 21. Gradle comes from the wrapper; the Kotlin Gradle plugin downloa
 
 Analytics hosts are always aborted, so tests never send events. Install Chromium once (into Playwright's
 default cache, outside the repo) with `./gradlew :e2e:playwrightInstall` (add `-PwithDeps` on Linux CI for
-OS packages). `-Pheaded` shows the browser. `./gradlew build` does not run the e2e tests. CI runs them nightly only (`.github/workflows/e2e-nightly.yml`,
+OS packages). `-Pheaded` shows the browser. `./gradlew build` does not run the e2e tests. CI runs them nightly only (repository-root `.github/workflows/e2e-nightly.yml`, with `working-directory: landings/pyrlyn`;
 03:00 UTC = 05:00 Kyiv in winter, 06:00 in summer; also manual via workflow_dispatch).
 
 ## Lighthouse
 
-`.github/workflows/lighthouse-nightly.yaml` (generated from `lighthouse-nightly.main.kts` with
-github-workflows-kt, like pyrlyn/landing) runs Lighthouse CI `@lhci/cli@0.15.1` nightly (03:00 UTC = 05:00 Kyiv in
+`The repository-root `.github/workflows/lighthouse-nightly.yaml` (generated from `lighthouse-nightly.main.kts` with
+github-workflows-kt) runs Lighthouse CI `@lhci/cli@0.15.1` nightly from this directory (03:00 UTC = 05:00 Kyiv in
 winter, 06:00 in summer) and on workflow_dispatch against `/`, `/rtok/`, `/rtok/docs/` with the budgets from
 `lighthouserc.{mobile,desktop}.json`; reports are uploaded as artifacts. Locally:
 
 ```sh
 SITE_URL=https://pyrlyn.dev ./gradlew generateSite
 npx --yes --ignore-scripts @lhci/cli@0.15.1 autorun --config=lighthouserc.mobile.json   # or .desktop.json
-kotlin .github/workflows/lighthouse-nightly.main.kts   # regenerate the YAML after editing the script
+# From the repository root, after editing the script:
+kotlin .github/workflows/lighthouse-nightly.main.kts
 ```
 
 ## Environment
@@ -159,8 +162,8 @@ public/       static files copied as-is
 
 - Site: https://pyrlyn.dev (production, Contabo host, Docker Compose stack in `/opt/sites/web/web`, service `landing`).
 - Deploy is done with Ansible from [pyrlyn/infra](https://github.com/pyrlyn/infra) (playbook `web-landing-production.yml`, added in pyrlyn/infra#22):
-  1. Build the site: `./gradlew generateSite` (output in `build/site`).
-  2. Build the amd64 image from `web-landing-kotlin/` in infra and save it as a `.tar.gz`.
+  1. Build the site from this directory: `./gradlew generateSite` (output in `landings/pyrlyn/build/site`).
+  2. Build the amd64 image from `web-landing-kotlin/` in infra (context = `landings/pyrlyn/build/site`) and save it as a `.tar.gz`.
   3. Check first: `CONTABO_HOST=<host> ANSIBLE_SSH_ARGS='-o IdentitiesOnly=yes' ansible-playbook -i inventory web-landing-production.yml -e confirm_production=production -e landing_image=pyrlyn-landing-kotlin:<sha> -e landing_image_tar=<path-to-tar.gz> --check --diff`
   4. If the check shows `failed=0` and only the landing changes, run the same command without `--check --diff`.
   5. Rollback: the same command with `-e landing_image=pyrlyn-landing:dev -e landing_image_tar=`.
