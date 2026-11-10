@@ -71,23 +71,25 @@ workflow(
             name = "Set up JDK",
             action = SetupJava(distribution = SetupJava.Distribution.Temurin, javaVersion = "21", _customVersion = setupJavaSha),
         )
-        uses(name = "Set up Gradle", action = ActionsSetupGradle(_customVersion = setupGradleSha))
+        uses(name = "Set up Gradle", action = ActionsSetupGradle(_customInputs = mapOf("build-root-directory" to "landings/pyrlyn"), _customVersion = setupGradleSha))
         uses(name = "Set up Node", action = SetupNode(nodeVersion = "22", _customVersion = setupNodeSha))
-        run(name = "Build site", command = "./gradlew generateSite", env = buildEnv)
+        run(name = "Build site", command = "./gradlew generateSite", env = buildEnv, workingDirectory = "landings/pyrlyn")
         run(
             name = "Lighthouse (mobile)",
             command = "npx --yes --ignore-scripts @lhci/cli@$lhciVersion autorun --config=lighthouserc.mobile.json",
+            workingDirectory = "landings/pyrlyn",
         )
         run(
             name = "Lighthouse (desktop)",
             command = "npx --yes --ignore-scripts @lhci/cli@$lhciVersion autorun --config=lighthouserc.desktop.json",
+            workingDirectory = "landings/pyrlyn",
             condition = "\${{ !cancelled() }}",
         )
         uses(
             name = "Upload Lighthouse reports",
             action = UploadArtifact(
                 name = "lighthouse-reports",
-                path = listOf(".lighthouseci/"),
+                path = listOf("landings/pyrlyn/.lighthouseci/"),
                 ifNoFilesFound = UploadArtifact.BehaviorIfNoFilesFound.Warn,
                 // .lighthouseci is a dot-directory; upload-artifact skips hidden files by default.
                 includeHiddenFiles = true,

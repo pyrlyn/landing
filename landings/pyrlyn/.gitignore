@@ -1,0 +1,16 @@
+/.gradle/
+/build/
+/.kotlin/
+.idea/
+*.iml
+.env
+.env.local
+.DS_Store
+/web/build/
+/web-intro/build/
+/web-plans/build/
+/e2e/build/
+# Left over from the Astro site.
+/dist/
+/node_modules/
+.lighthouseci/
